@@ -1,0 +1,957 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <link rel="stylesheet" href="style.css">
+
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Materi Pertemuan 13 - Pemrograman Grafik API & Pengolahan Citra Digital</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Link to existing style.css -->
+    <link rel="stylesheet" href="style.css">
+    <style>
+        .controls {
+            margin-bottom: 20px;
+            background-color: #f8f9fa;
+            padding: 20px;
+            border-radius: 12px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+        }
+        .controls button {
+            background-color: #6c7cff;
+            color: white;
+            border: none;
+            padding: 12px 20px;
+            border-radius: 8px;
+            cursor: pointer;
+            margin-bottom: 10px;
+            transition: background-color 0.3s, transform 0.2s;
+            font-size: 16px;
+            font-weight: 500;
+            width: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .controls button:hover {
+            background-color: #5a6ae6;
+            transform: translateY(-2px);
+        }
+        .controls button i {
+            margin-right: 8px;
+        }
+        .slider-container {
+            margin: 20px 0;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+        .slider-container label {
+            min-width: 150px;
+            color: #333;
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+        }
+        .slider-container label i {
+            margin-right: 8px;
+        }
+        .slider-container input[type="range"] {
+            flex-grow: 1;
+            height: 6px;
+            border-radius: 5px;
+            background: #e0e0e0;
+            outline: none;
+            cursor: pointer;
+            -webkit-appearance: none;
+        }
+        .slider-container input[type="range"]::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            width: 18px;
+            height: 18px;
+            border-radius: 50%;
+            background: #6c7cff;
+            cursor: pointer;
+            border: none;
+        }
+        .slider-container input[type="range"]::-moz-range-thumb {
+            width: 18px;
+            height: 18px;
+            border-radius: 50%;
+            background: #6c7cff;
+            cursor: pointer;
+            border: none;
+        }
+        .slider-value {
+            min-width: 50px;
+            text-align: right;
+            font-weight: 500;
+            color: #6c7cff;
+            font-size: 16px;
+        }
+        #imageCanvas {
+            border-radius: 8px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+            max-width: 100%;
+            height: auto;
+        }
+        .info {
+            margin-top: 15px;
+            font-style: italic;
+            color: #666;
+        }
+        .output, .penjelasan-bawah {
+            margin-top: 30px;
+            background: #f9f9f9;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+            border: 1px solid #eee;
+        }
+        .penjelasan-bawah {
+            background: #f0f8ff;
+        }
+        .output h3, .penjelasan-bawah h3 {
+            margin-top: 0;
+            color: var(--primary-color);
+            border-bottom: 1px solid #eee;
+            padding-bottom: 10px;
+        }
+        pre {
+            background-color: #f5f5f5;
+            padding: 12px;
+            border-radius: 5px;
+            overflow-x: auto;
+            border-left: 3px solid var(--primary-color);
+        }
+        #tabelHasil {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 15px;
+            font-size: 14px;
+        }
+        #tabelHasil th, #tabelHasil td {
+            border: 1px solid #ddd;
+            padding: 8px;
+            text-align: center;
+        }
+        #tabelHasil th {
+            background-color: #f2f2f2;
+            color: var(--text-color);
+        }
+        #tabelHasil tr:nth-child(even) {
+            background-color: #f9f9f9;
+        }
+        #tabelHasil tr:hover {
+            background-color: #f0f0f0;
+        }
+        .calculation-example {
+            background-color: #fff;
+            border: 1px solid #e0e0e0;
+            border-radius: 5px;
+            padding: 15px;
+            margin: 15px 0;
+        }
+        .calculation-example strong {
+            color: var(--primary-color);
+        }
+    </style>
+</head>
+<body>
+    <!-- Sidebar Structure -->
+    <div id="sidebar" class="sidebar">
+        <div class="sidebar-header">
+            <h3><i class="fas fa-graduation-cap"></i> Menu</h3>
+            <a href="javascript:void(0)" class="closebtn" onclick="closeNav()">&times;</a>
+        </div>
+        <a href="index.html" class="menu-item "><i class="fas fa-chart-pie"></i> DASHBOARD</a>
+        <a href="per1.html" class="menu-item "><i class="fas fa-book"></i> Pertemuan 1</a>
+        <a href="per2.html" class="menu-item "><i class="fas fa-book"></i> Pertemuan 2</a>
+        <a href="per3.html" class="menu-item "><i class="fas fa-book"></i> Pertemuan 3</a>
+        <a href="per4.html" class="menu-item "><i class="fas fa-book"></i> Pertemuan 4</a>
+        <a href="per5.html" class="menu-item "><i class="fas fa-book"></i> Pertemuan 5</a>
+        <a href="per6.html" class="menu-item "><i class="fas fa-book"></i> Pertemuan 6</a>
+        <a href="per7.html" class="menu-item "><i class="fas fa-book"></i> Pertemuan 7</a>
+        <a href="per8.html" class="menu-item "><i class="fas fa-book"></i> Pertemuan 8</a>
+        <a href="per9.html" class="menu-item "><i class="fas fa-book"></i> Pertemuan 9</a>
+        <a href="per10.html" class="menu-item "><i class="fas fa-book"></i> Pertemuan 10</a>
+        <a href="per11.html" class="menu-item "><i class="fas fa-book"></i> Pertemuan 11</a>
+        <a href="per12.html" class="menu-item "><i class="fas fa-book"></i> Pertemuan 12</a>
+        <a href="per13.html" class="menu-item active"><i class="fas fa-book"></i> Pertemuan 13</a>
+        <a href="per14.html" class="menu-item "><i class="fas fa-book"></i> Pertemuan 14</a>
+    </div>
+
+    <!-- Main Content Structure -->
+    <div id="main">
+        <button class="openbtn" onclick="openNav()"><i class="fas fa-bars"></i> Menu</button>
+        <div id="content-container">
+            <!-- Pertemuan 13 Content Area -->
+            <div class="pertemuan-content-area">
+                <h1>Pertemuan 13: Pemrograman Grafik API & Pengolahan Citra Digital</h1>
+
+                <!-- Interactive Visualization Section (at the top) -->
+                <div class="interactive-section">
+                    <h3><i class="fas fa-image"></i> Visualisasi Interaktif: Pengolahan Citra Digital</h3>
+                    <p>Simulasi pengolahan citra digital dengan berbagai filter dan efek. Gunakan kontrol di bawah untuk melihat perubahan pada gambar.</p>
+                    <div class="controls">
+                        <button id="resetBtn"><i class="fas fa-undo"></i> Reset</button>
+                        
+                        <div class="slider-container">
+                            <label for="grayscaleSlider"><i class="fas fa-adjust"></i> Grayscale:</label>
+                            <input type="range" id="grayscaleSlider" min="0" max="100" value="0">
+                            <span id="grayscaleValue" class="slider-value">0%</span>
+                        </div>
+                        
+                        <div class="slider-container">
+                            <label for="invertSlider"><i class="fas fa-exchange-alt"></i> Invert:</label>
+                            <input type="range" id="invertSlider" min="0" max="100" value="0">
+                            <span id="invertValue" class="slider-value">0%</span>
+                        </div>
+                        
+                        <div class="slider-container">
+                            <label for="brightnessSlider"><i class="fas fa-sun"></i> Kecerahan:</label>
+                            <input type="range" id="brightnessSlider" min="0" max="200" value="100">
+                            <span id="brightnessValue" class="slider-value">100%</span>
+                        </div>
+                        
+                        <div class="slider-container">
+                            <label for="blurSlider"><i class="fas fa-cloud"></i> Intensitas Blur:</label>
+                            <input type="range" id="blurSlider" min="0" max="10" value="0">
+                            <span id="blurValue" class="slider-value">0</span>
+                        </div>
+                    </div>
+                    <canvas id="imageCanvas" width="500" height="300"></canvas>
+                    <div class="info">
+                        <p><i class="fas fa-info-circle"></i> Visualisasi ini menunjukkan beberapa teknik dasar pengolahan citra digital yang umum digunakan.</p>
+                    </div>
+                </div>
+
+                <!-- Formula Section (in the middle) -->
+                <div class="output" id="outputMath">
+                    <h3><i class="fas fa-calculator"></i> Rumus Dasar Pengolahan Citra Digital</h3>
+                    
+                    <p><strong>1. Konversi RGB ke Grayscale:</strong></p>
+                    <pre style="font-family: 'Courier New', monospace; line-height: 1.6; background-color: #f8f9fa; padding: 15px; border-radius: 5px; color: #333;">
+Gray = 0.299*R + 0.587*G + 0.114*B
+    </pre>
+                    
+                    <p><strong>2. Inversi Warna:</strong></p>
+                    <pre style="font-family: 'Courier New', monospace; line-height: 1.6; background-color: #f8f9fa; padding: 15px; border-radius: 5px; color: #333;">
+R_new = 255 - R
+G_new = 255 - G
+B_new = 255 - B
+    </pre>
+                    
+                    <p><strong>3. Pengaturan Kecerahan (Brightness):</strong></p>
+                    <pre style="font-family: 'Courier New', monospace; line-height: 1.6; background-color: #f8f9fa; padding: 15px; border-radius: 5px; color: #333;">
+R_new = R * <span style="display:inline-block; text-align:center;"><span>brightness</span><br><span style="border-top:1px solid">100</span></span>
+G_new = G * <span style="display:inline-block; text-align:center;"><span>brightness</span><br><span style="border-top:1px solid">100</span></span>
+B_new = B * <span style="display:inline-block; text-align:center;"><span>brightness</span><br><span style="border-top:1px solid">100</span></span>
+    </pre>
+                    
+                    <p><strong>4. Blur (Gaussian):</strong></p>
+                    <pre style="font-family: 'Courier New', monospace; line-height: 1.6; background-color: #f8f9fa; padding: 15px; border-radius: 5px; color: #333;">
+Kernel Gaussian 3x3:
+[<span style="display:inline-block; text-align:center;"><span>1</span><br><span style="border-top:1px solid">16</span></span>, <span style="display:inline-block; text-align:center;"><span>2</span><br><span style="border-top:1px solid">16</span></span>, <span style="display:inline-block; text-align:center;"><span>1</span><br><span style="border-top:1px solid">16</span></span>]
+[<span style="display:inline-block; text-align:center;"><span>2</span><br><span style="border-top:1px solid">16</span></span>, <span style="display:inline-block; text-align:center;"><span>4</span><br><span style="border-top:1px solid">16</span></span>, <span style="display:inline-block; text-align:center;"><span>2</span><br><span style="border-top:1px solid">16</span></span>]
+[<span style="display:inline-block; text-align:center;"><span>1</span><br><span style="border-top:1px solid">16</span></span>, <span style="display:inline-block; text-align:center;"><span>2</span><br><span style="border-top:1px solid">16</span></span>, <span style="display:inline-block; text-align:center;"><span>1</span><br><span style="border-top:1px solid">16</span></span>]
+    </pre>
+
+                    <p><strong>Jumlah titik yang diproses: </strong><span id="processedPixels">0</span></p>
+                    <table id="tabelHasil">
+                        <thead>
+                            <tr>
+                                <th>Koordinat (x,y)</th>
+                                <th>R Original</th>
+                                <th>G Original</th>
+                                <th>B Original</th>
+                                <th>R Hasil</th>
+                                <th>G Hasil</th>
+                                <th>B Hasil</th>
+                            </tr>
+                        </thead>
+                        <tbody id="pixelTableBody">
+                            <!-- Pixel data will be inserted here -->
+                        </tbody>
+                    </table>
+                </div>
+
+                <!-- Explanation Section (at the bottom) -->
+                <div class="penjelasan-bawah" id="penjelasan">
+                    <h3><i class="fas fa-book"></i> Penjelasan Pengolahan Citra Digital</h3>
+                    
+                    <p><strong>Pengertian Citra Digital</strong></p>
+                    <p>Citra digital merupakan representasi dari citra yang diambil oleh mesin dengan pendekatan berdasarkan sampling dan kuantisasi. Sampling menyatakan besarnya kotak-kotak (pixel) yang disusun dalam baris dan kolom (resolusi), sedangkan kuantisasi menyatakan besarnya nilai tingkat kecerahan (grayscale) sesuai dengan jumlah bit biner yang digunakan.</p>
+                    
+                    <div class="calculation-example">
+                        <p><strong>Contoh Perhitungan Detail (Grayscale)</strong></p>
+                        <p>Misalkan kita memiliki sebuah piksel dengan nilai RGB = (240, 120, 60):</p>
+                        <pre style="font-family: 'Courier New', monospace; line-height: 1.6; background-color: #f8f9fa; padding: 15px; border-radius: 5px; color: #333;">
+Gray = 0.299*R + 0.587*G + 0.114*B
+Gray = 0.299*240 + 0.587*120 + 0.114*60
+Gray = 71.76 + 70.44 + 6.84
+Gray = 149.04 ≈ 149
+</pre>
+                        <p>Jadi nilai grayscale untuk piksel tersebut adalah 149.</p>
+                    </div>
+                    
+                    <div class="calculation-example">
+                        <p><strong>Contoh Perhitungan Detail (Inversi Warna)</strong></p>
+                        <p>Untuk piksel yang sama dengan nilai RGB = (240, 120, 60):</p>
+                        <pre style="font-family: 'Courier New', monospace; line-height: 1.6; background-color: #f8f9fa; padding: 15px; border-radius: 5px; color: #333;">
+R_new = 255 - 240 = 15
+G_new = 255 - 120 = 135
+B_new = 255 - 60 = 195
+</pre>
+                        <p>Jadi nilai RGB setelah inversi adalah (15, 135, 195).</p>
+                    </div>
+                    
+                    <div class="calculation-example">
+                        <p><strong>Contoh Perhitungan Detail (Brightness 150%)</strong></p>
+                        <p>Untuk piksel dengan nilai RGB = (240, 120, 60) dan brightness = 150%:</p>
+                        <pre style="font-family: 'Courier New', monospace; line-height: 1.6; background-color: #f8f9fa; padding: 15px; border-radius: 5px; color: #333;">
+R_new = 240 * <span style="display:inline-block; text-align:center;"><span>150</span><br><span style="border-top:1px solid">100</span></span> = 360 → dibatasi menjadi 255
+G_new = 120 * <span style="display:inline-block; text-align:center;"><span>150</span><br><span style="border-top:1px solid">100</span></span> = 180
+B_new = 60 * <span style="display:inline-block; text-align:center;"><span>150</span><br><span style="border-top:1px solid">100</span></span> = 90
+</pre>
+                        <p>Jadi nilai RGB setelah pengaturan kecerahan adalah (255, 180, 90).</p>
+                    </div>
+                    
+                    <div class="calculation-example">
+                        <p><strong>Contoh Perhitungan Detail (Blur)</strong></p>
+                        <p>Untuk menghitung blur pada sebuah piksel, kita menggunakan kernel Gaussian 3x3. Misalkan kita memiliki 9 piksel dalam grid 3x3 dengan nilai R berikut:</p>
+                        <pre style="font-family: 'Courier New', monospace; line-height: 1.6; background-color: #f8f9fa; padding: 15px; border-radius: 5px; color: #333;">
+[230, 240, 235]
+[220, 240, 225]
+[210, 220, 215]
+</pre>
+                        <p>Maka nilai R untuk piksel tengah setelah blur adalah:</p>
+                        <pre style="font-family: 'Courier New', monospace; line-height: 1.6; background-color: #f8f9fa; padding: 15px; border-radius: 5px; color: #333;">
+R_blur = <span style="display:inline-block; text-align:center;"><span>1</span><br><span style="border-top:1px solid">16</span></span> × 230 + <span style="display:inline-block; text-align:center;"><span>2</span><br><span style="border-top:1px solid">16</span></span> × 240 + <span style="display:inline-block; text-align:center;"><span>1</span><br><span style="border-top:1px solid">16</span></span> × 235 +
+       <span style="display:inline-block; text-align:center;"><span>2</span><br><span style="border-top:1px solid">16</span></span> × 220 + <span style="display:inline-block; text-align:center;"><span>4</span><br><span style="border-top:1px solid">16</span></span> × 240 + <span style="display:inline-block; text-align:center;"><span>2</span><br><span style="border-top:1px solid">16</span></span> × 225 +
+       <span style="display:inline-block; text-align:center;"><span>1</span><br><span style="border-top:1px solid">16</span></span> × 210 + <span style="display:inline-block; text-align:center;"><span>2</span><br><span style="border-top:1px solid">16</span></span> × 220 + <span style="display:inline-block; text-align:center;"><span>1</span><br><span style="border-top:1px solid">16</span></span> × 215
+
+R_blur = 14.375 + 30 + 14.6875 +
+       27.5 + 60 + 28.125 +
+       13.125 + 27.5 + 13.4375
+
+R_blur = 228.75 ≈ 229
+</pre>
+                        <p>Jadi nilai R untuk piksel tengah setelah blur adalah 229. Proses yang sama dilakukan untuk nilai G dan B.</p>
+                    </div>
+                    
+                    <p><strong>Jenis-jenis Citra Digital</strong></p>
+                    <ul>
+                        <li><strong>Citra Biner (Monokrom):</strong> Hanya memiliki dua warna, yaitu hitam dan putih. Dibutuhkan 1 bit di memori untuk menyimpan kedua warna ini.</li>
+                        <li><strong>Citra Grayscale (Skala Keabuan):</strong> Jumlah warna tergantung pada jumlah bit yang disediakan di memori. Semakin besar jumlah bit warna, semakin halus gradasi warna yang terbentuk.</li>
+                        <li><strong>Citra Warna (True Color):</strong> Setiap piksel mewakili warna yang merupakan kombinasi dari tiga warna dasar (RGB). Dengan 8 bit per warna dasar, dapat menghasilkan sekitar 16 juta warna.</li>
+                    </ul>
+                    
+                    <p><strong>Teknik Pengolahan Citra Digital</strong></p>
+                    <p>Dalam visualisasi interaktif di atas, kita mendemonstrasikan beberapa teknik dasar pengolahan citra:</p>
+                    
+                    <ol>
+                        <li><strong>Grayscale:</strong> Mengubah citra berwarna menjadi citra keabuan dengan menghitung rata-rata tertimbang dari komponen RGB. Pembobotan khusus (0.299R + 0.587G + 0.114B) digunakan untuk menyesuaikan dengan persepsi mata manusia terhadap kecerahan warna.</li>
+                        <li><strong>Inversi Warna:</strong> Membalik nilai setiap komponen warna dengan mengurangkannya dari nilai maksimum (255). Ini menghasilkan efek "negatif" seperti pada film fotografi.</li>
+                        <li><strong>Pengaturan Kecerahan:</strong> Mengubah intensitas warna dengan mengalikan setiap komponen RGB dengan faktor kecerahan. Nilai di atas 100% membuat gambar lebih terang, sementara nilai di bawah 100% membuatnya lebih gelap.</li>
+                        <li><strong>Blur:</strong> Menghaluskan citra dengan menerapkan filter Gaussian. Setiap piksel dipengaruhi oleh piksel-piksel di sekitarnya, dengan bobot yang ditentukan oleh kernel Gaussian. Intensitas blur dapat diatur untuk menghasilkan efek yang berbeda-beda.</li>
+                    </ol>
+                    
+                    <p><strong>Aplikasi Pengolahan Citra Digital</strong></p>
+                    <p>Pengolahan citra digital memiliki banyak aplikasi praktis, termasuk:</p>
+                    <ul>
+                        <li>Perbaikan kualitas citra medis untuk diagnosis yang lebih akurat</li>
+                        <li>Pengenalan wajah dan objek dalam sistem keamanan</li>
+                        <li>Pemrosesan gambar satelit untuk pemantauan lingkungan</li>
+                        <li>Efek visual dalam industri film dan game</li>
+                        <li>Pemulihan citra lama atau rusak</li>
+                        <li>Kompresi citra untuk penyimpanan dan transmisi yang efisien</li>
+                    </ul>
+                </div>
+            </div> <!-- End pertemuan-content-area -->
+        </div> <!-- End content-container -->
+    </div> <!-- End main -->
+
+    <!-- Link to existing script.js -->
+    <script src="script.js"></script>
+    <!-- Script for interactive visualization -->
+    <script>
+        // JavaScript for the image processing visualization
+        const canvas = document.getElementById("imageCanvas");
+        const ctx = canvas.getContext("2d");
+        
+        // Original image data
+        let originalImageData;
+        let currentImageData;
+        
+        // Create a sample image with color gradient
+        function createSampleImage() {
+            // Create gradient background
+            const gradient = ctx.createLinearGradient(0, 0, canvas.width, canvas.height);
+            gradient.addColorStop(0, "#667eea");
+            gradient.addColorStop(1, "#764ba2");
+            ctx.fillStyle = gradient;
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+            
+            // Add some shapes
+            ctx.fillStyle = "#ffffff";
+            ctx.beginPath();
+            ctx.arc(150, 150, 60, 0, Math.PI * 2);
+            ctx.fill();
+            
+            ctx.fillStyle = "#f7fafc";
+            ctx.beginPath();
+            ctx.rect(300, 100, 120, 120);
+            ctx.fill();
+            
+            // Add some text
+            ctx.font = "bold 24px Poppins, sans-serif";
+            ctx.fillStyle = "#ffffff";
+            ctx.textAlign = "center";
+            ctx.fillText("Pengolahan Citra Digital", canvas.width/2, 50);
+            
+            // Save the original image data
+            originalImageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+            currentImageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+        }
+        
+        // Apply grayscale filter with adjustable intensity
+        function applyGrayscale(intensity) {
+            // Reset to original first
+            ctx.putImageData(originalImageData, 0, 0);
+            
+            if (intensity <= 0) {
+                currentImageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+                return;
+            }
+            
+            const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+            const data = imageData.data;
+            
+            // Clear the table
+            const tableBody = document.getElementById("pixelTableBody");
+            tableBody.innerHTML = "";
+            
+            // Sample a few pixels for the table (5 samples)
+            const samplePoints = [
+                {x: 150, y: 150}, // White circle
+                {x: 300, y: 100}, // Rectangle corner
+                {x: 50, y: 50},   // Gradient area 1
+                {x: 400, y: 200}, // Gradient area 2
+                {x: 250, y: 50}   // Text area
+            ];
+            
+            const factor = intensity / 100;
+            
+            for (let i = 0; i < data.length; i += 4) {
+                const gray = 0.299 * data[i] + 0.587 * data[i + 1] + 0.114 * data[i + 2];
+                
+                // Add sample points to the table
+                const pixelIndex = i / 4;
+                const x = pixelIndex % canvas.width;
+                const y = Math.floor(pixelIndex / canvas.width);
+                
+                // Check if this pixel is one of our sample points
+                const isSample = samplePoints.some(point => point.x === x && point.y === y);
+                if (isSample) {
+                    const row = document.createElement("tr");
+                    const mixedR = Math.round(data[i] * (1 - factor) + gray * factor);
+                    const mixedG = Math.round(data[i+1] * (1 - factor) + gray * factor);
+                    const mixedB = Math.round(data[i+2] * (1 - factor) + gray * factor);
+                    
+                    row.innerHTML = `
+                        <td>(${x}, ${y})</td>
+                        <td>${data[i]}</td>
+                        <td>${data[i+1]}</td>
+                        <td>${data[i+2]}</td>
+                        <td>${mixedR}</td>
+                        <td>${mixedG}</td>
+                        <td>${mixedB}</td>
+                    `;
+                    tableBody.appendChild(row);
+                }
+                
+                // Apply grayscale to all pixels with intensity factor
+                data[i] = data[i] * (1 - factor) + gray * factor;         // Red
+                data[i + 1] = data[i + 1] * (1 - factor) + gray * factor; // Green
+                data[i + 2] = data[i + 2] * (1 - factor) + gray * factor; // Blue
+            }
+            
+            ctx.putImageData(imageData, 0, 0);
+            currentImageData = imageData;
+            
+            // Update processed pixels count
+            document.getElementById("processedPixels").textContent = samplePoints.length;
+            
+            // Update grayscale value display
+            document.getElementById("grayscaleValue").textContent = intensity + "%";
+        }
+        
+        // Apply invert filter with adjustable intensity
+        function applyInvert(intensity) {
+            // Reset to original first
+            ctx.putImageData(originalImageData, 0, 0);
+            
+            if (intensity <= 0) {
+                currentImageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+                return;
+            }
+            
+            const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+            const data = imageData.data;
+            
+            // Clear the table
+            const tableBody = document.getElementById("pixelTableBody");
+            tableBody.innerHTML = "";
+            
+            // Sample a few pixels for the table (5 samples)
+            const samplePoints = [
+                {x: 150, y: 150}, // White circle
+                {x: 300, y: 100}, // Rectangle corner
+                {x: 50, y: 50},   // Gradient area 1
+                {x: 400, y: 200}, // Gradient area 2
+                {x: 250, y: 50}   // Text area
+            ];
+            
+            const factor = intensity / 100;
+            
+            for (let i = 0; i < data.length; i += 4) {
+                // Add sample points to the table
+                const pixelIndex = i / 4;
+                const x = pixelIndex % canvas.width;
+                const y = Math.floor(pixelIndex / canvas.width);
+                
+                // Check if this pixel is one of our sample points
+                const isSample = samplePoints.some(point => point.x === x && point.y === y);
+                if (isSample) {
+                    const row = document.createElement("tr");
+                    const invertedR = 255 - data[i];
+                    const invertedG = 255 - data[i+1];
+                    const invertedB = 255 - data[i+2];
+                    
+                    const mixedR = Math.round(data[i] * (1 - factor) + invertedR * factor);
+                    const mixedG = Math.round(data[i+1] * (1 - factor) + invertedG * factor);
+                    const mixedB = Math.round(data[i+2] * (1 - factor) + invertedB * factor);
+                    
+                    row.innerHTML = `
+                        <td>(${x}, ${y})</td>
+                        <td>${data[i]}</td>
+                        <td>${data[i+1]}</td>
+                        <td>${data[i+2]}</td>
+                        <td>${mixedR}</td>
+                        <td>${mixedG}</td>
+                        <td>${mixedB}</td>
+                    `;
+                    tableBody.appendChild(row);
+                }
+                
+                // Apply invert to all pixels with intensity factor
+                const invertedR = 255 - data[i];
+                const invertedG = 255 - data[i+1];
+                const invertedB = 255 - data[i+2];
+                
+                data[i] = data[i] * (1 - factor) + invertedR * factor;         // Red
+                data[i + 1] = data[i + 1] * (1 - factor) + invertedG * factor; // Green
+                data[i + 2] = data[i + 2] * (1 - factor) + invertedB * factor; // Blue
+            }
+            
+            ctx.putImageData(imageData, 0, 0);
+            currentImageData = imageData;
+            
+            // Update processed pixels count
+            document.getElementById("processedPixels").textContent = samplePoints.length;
+            
+            // Update invert value display
+            document.getElementById("invertValue").textContent = intensity + "%";
+        }
+        
+        // Apply blur filter with adjustable intensity
+        function applyBlur(intensity) {
+            // Reset to original first
+            ctx.putImageData(originalImageData, 0, 0);
+            
+            if (intensity <= 0) {
+                currentImageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+                return;
+            }
+            
+            const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+            const data = imageData.data;
+            const width = canvas.width;
+            const height = canvas.height;
+            
+            // Create a copy of the image data
+            const tempData = new Uint8ClampedArray(data);
+            
+            // Clear the table
+            const tableBody = document.getElementById("pixelTableBody");
+            tableBody.innerHTML = "";
+            
+            // Sample points for the table
+            const samplePoints = [
+                {x: 150, y: 150}, // White circle
+                {x: 300, y: 100}, // Rectangle corner
+                {x: 50, y: 50},   // Gradient area 1
+                {x: 400, y: 200}, // Gradient area 2
+                {x: 250, y: 50}   // Text area
+            ];
+            
+            // Apply blur with intensity
+            // Higher intensity means more iterations of the blur algorithm
+            for (let iter = 0; iter < intensity; iter++) {
+                for (let y = 1; y < height - 1; y++) {
+                    for (let x = 1; x < width - 1; x++) {
+                        const idx = (y * width + x) * 4;
+                        
+                        // For each color channel
+                        for (let c = 0; c < 3; c++) {
+                            // Gaussian kernel weights
+                            const weights = [
+                                1/16, 2/16, 1/16,
+                                2/16, 4/16, 2/16,
+                                1/16, 2/16, 1/16
+                            ];
+                            
+                            let sum = 0;
+                            let weightIndex = 0;
+                            
+                            // Apply the kernel
+                            for (let dy = -1; dy <= 1; dy++) {
+                                for (let dx = -1; dx <= 1; dx++) {
+                                    const srcIdx = ((y + dy) * width + (x + dx)) * 4 + c;
+                                    sum += tempData[srcIdx] * weights[weightIndex++];
+                                }
+                            }
+                            
+                            data[idx + c] = sum;
+                            
+                            // For the first iteration, add sample points to the table
+                            if (iter === 0) {
+                                const isSample = samplePoints.some(point => point.x === x && point.y === y);
+                                if (isSample && c === 0) { // Only add once per pixel (when c=0)
+                                    const row = document.createElement("tr");
+                                    
+                                    // Calculate the blurred values for all channels
+                                    let sumR = 0, sumG = 0, sumB = 0;
+                                    weightIndex = 0;
+                                    
+                                    for (let dy = -1; dy <= 1; dy++) {
+                                        for (let dx = -1; dx <= 1; dx++) {
+                                            const srcIdx = ((y + dy) * width + (x + dx)) * 4;
+                                            sumR += tempData[srcIdx] * weights[weightIndex];
+                                            sumG += tempData[srcIdx + 1] * weights[weightIndex];
+                                            sumB += tempData[srcIdx + 2] * weights[weightIndex];
+                                            weightIndex++;
+                                        }
+                                    }
+                                    
+                                    row.innerHTML = `
+                                        <td>(${x}, ${y})</td>
+                                        <td>${tempData[idx]}</td>
+                                        <td>${tempData[idx+1]}</td>
+                                        <td>${tempData[idx+2]}</td>
+                                        <td>${Math.round(sumR)}</td>
+                                        <td>${Math.round(sumG)}</td>
+                                        <td>${Math.round(sumB)}</td>
+                                    `;
+                                    tableBody.appendChild(row);
+                                }
+                            }
+                        }
+                    }
+                }
+                
+                // Update tempData for the next iteration
+                if (iter < intensity - 1) {
+                    tempData.set(data);
+                }
+            }
+            
+            ctx.putImageData(imageData, 0, 0);
+            currentImageData = imageData;
+            
+            // Update processed pixels count
+            document.getElementById("processedPixels").textContent = samplePoints.length;
+            
+            // Update blur value display
+            document.getElementById("blurValue").textContent = intensity;
+        }
+        
+        // Apply brightness adjustment
+        function applyBrightness(value) {
+            // Reset to original first
+            ctx.putImageData(originalImageData, 0, 0);
+            
+            const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+            const data = imageData.data;
+            const factor = value / 100;
+            
+            // Clear the table
+            const tableBody = document.getElementById("pixelTableBody");
+            tableBody.innerHTML = "";
+            
+            // Sample a few pixels for the table (5 samples)
+            const samplePoints = [
+                {x: 150, y: 150}, // White circle
+                {x: 300, y: 100}, // Rectangle corner
+                {x: 50, y: 50},   // Gradient area 1
+                {x: 400, y: 200}, // Gradient area 2
+                {x: 250, y: 50}   // Text area
+            ];
+            
+            for (let i = 0; i < data.length; i += 4) {
+                // Add sample points to the table
+                const pixelIndex = i / 4;
+                const x = pixelIndex % canvas.width;
+                const y = Math.floor(pixelIndex / canvas.width);
+                
+                // Check if this pixel is one of our sample points
+                const isSample = samplePoints.some(point => point.x === x && point.y === y);
+                if (isSample) {
+                    const row = document.createElement("tr");
+                    row.innerHTML = `
+                        <td>(${x}, ${y})</td>
+                        <td>${data[i]}</td>
+                        <td>${data[i+1]}</td>
+                        <td>${data[i+2]}</td>
+                        <td>${Math.min(255, Math.round(data[i] * factor))}</td>
+                        <td>${Math.min(255, Math.round(data[i+1] * factor))}</td>
+                        <td>${Math.min(255, Math.round(data[i+2] * factor))}</td>
+                    `;
+                    tableBody.appendChild(row);
+                }
+                
+                // Apply brightness to all pixels
+                data[i] = Math.min(255, data[i] * factor);         // Red
+                data[i + 1] = Math.min(255, data[i + 1] * factor); // Green
+                data[i + 2] = Math.min(255, data[i + 2] * factor); // Blue
+            }
+            
+            ctx.putImageData(imageData, 0, 0);
+            currentImageData = imageData;
+            
+            // Update processed pixels count
+            document.getElementById("processedPixels").textContent = samplePoints.length;
+            
+            // Update brightness value display
+            document.getElementById("brightnessValue").textContent = value + "%";
+        }
+        
+        // Apply all effects based on current slider values
+        function applyAllEffects() {
+            // Get all slider values
+            const grayscaleValue = parseInt(document.getElementById("grayscaleSlider").value);
+            const invertValue = parseInt(document.getElementById("invertSlider").value);
+            const brightnessValue = parseInt(document.getElementById("brightnessSlider").value);
+            const blurValue = parseInt(document.getElementById("blurSlider").value);
+            
+            // Start with original image
+            ctx.putImageData(originalImageData, 0, 0);
+            let imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+            
+            // Sample points for the table
+            const samplePoints = [
+                {x: 150, y: 150}, // White circle
+                {x: 300, y: 100}, // Rectangle corner
+                {x: 50, y: 50},   // Gradient area 1
+                {x: 400, y: 200}, // Gradient area 2
+                {x: 250, y: 50}   // Text area
+            ];
+            
+            // Clear the table
+            const tableBody = document.getElementById("pixelTableBody");
+            tableBody.innerHTML = "";
+            
+            // Apply grayscale if needed
+            if (grayscaleValue > 0) {
+                const data = imageData.data;
+                const factor = grayscaleValue / 100;
+                
+                for (let i = 0; i < data.length; i += 4) {
+                    const gray = 0.299 * data[i] + 0.587 * data[i + 1] + 0.114 * data[i + 2];
+                    data[i] = data[i] * (1 - factor) + gray * factor;         // Red
+                    data[i + 1] = data[i + 1] * (1 - factor) + gray * factor; // Green
+                    data[i + 2] = data[i + 2] * (1 - factor) + gray * factor; // Blue
+                }
+                
+                ctx.putImageData(imageData, 0, 0);
+                imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+            }
+            
+            // Apply invert if needed
+            if (invertValue > 0) {
+                const data = imageData.data;
+                const factor = invertValue / 100;
+                
+                for (let i = 0; i < data.length; i += 4) {
+                    const invertedR = 255 - data[i];
+                    const invertedG = 255 - data[i+1];
+                    const invertedB = 255 - data[i+2];
+                    
+                    data[i] = data[i] * (1 - factor) + invertedR * factor;         // Red
+                    data[i + 1] = data[i + 1] * (1 - factor) + invertedG * factor; // Green
+                    data[i + 2] = data[i + 2] * (1 - factor) + invertedB * factor; // Blue
+                }
+                
+                ctx.putImageData(imageData, 0, 0);
+                imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+            }
+            
+            // Apply brightness if needed
+            if (brightnessValue !== 100) {
+                const data = imageData.data;
+                const factor = brightnessValue / 100;
+                
+                for (let i = 0; i < data.length; i += 4) {
+                    data[i] = Math.min(255, data[i] * factor);         // Red
+                    data[i + 1] = Math.min(255, data[i + 1] * factor); // Green
+                    data[i + 2] = Math.min(255, data[i + 2] * factor); // Blue
+                }
+                
+                ctx.putImageData(imageData, 0, 0);
+                imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+            }
+            
+            // Apply blur if needed
+            if (blurValue > 0) {
+                const data = imageData.data;
+                const width = canvas.width;
+                const height = canvas.height;
+                
+                // Create a copy of the image data
+                const tempData = new Uint8ClampedArray(data);
+                
+                // Apply blur with intensity
+                for (let iter = 0; iter < blurValue; iter++) {
+                    for (let y = 1; y < height - 1; y++) {
+                        for (let x = 1; x < width - 1; x++) {
+                            const idx = (y * width + x) * 4;
+                            
+                            // For each color channel
+                            for (let c = 0; c < 3; c++) {
+                                // Gaussian kernel weights
+                                const weights = [
+                                    1/16, 2/16, 1/16,
+                                    2/16, 4/16, 2/16,
+                                    1/16, 2/16, 1/16
+                                ];
+                                
+                                let sum = 0;
+                                let weightIndex = 0;
+                                
+                                // Apply the kernel
+                                for (let dy = -1; dy <= 1; dy++) {
+                                    for (let dx = -1; dx <= 1; dx++) {
+                                        const srcIdx = ((y + dy) * width + (x + dx)) * 4 + c;
+                                        sum += tempData[srcIdx] * weights[weightIndex++];
+                                    }
+                                }
+                                
+                                data[idx + c] = sum;
+                            }
+                        }
+                    }
+                    
+                    // Update tempData for the next iteration
+                    if (iter < blurValue - 1) {
+                        tempData.set(data);
+                    }
+                }
+                
+                ctx.putImageData(imageData, 0, 0);
+            }
+            
+            currentImageData = imageData;
+            
+            // Add sample points to the table
+            const data = imageData.data;
+            for (let point of samplePoints) {
+                const idx = (point.y * canvas.width + point.x) * 4;
+                const row = document.createElement("tr");
+                
+                // Get original pixel values
+                const origData = originalImageData.data;
+                const origIdx = (point.y * canvas.width + point.x) * 4;
+                
+                row.innerHTML = `
+                    <td>(${point.x}, ${point.y})</td>
+                    <td>${origData[origIdx]}</td>
+                    <td>${origData[origIdx+1]}</td>
+                    <td>${origData[origIdx+2]}</td>
+                    <td>${data[idx]}</td>
+                    <td>${data[idx+1]}</td>
+                    <td>${data[idx+2]}</td>
+                `;
+                tableBody.appendChild(row);
+            }
+            
+            // Update processed pixels count - now always show the number of sample points
+            // when any effect is applied
+            if (grayscaleValue > 0 || invertValue > 0 || brightnessValue !== 100 || blurValue > 0) {
+                document.getElementById("processedPixels").textContent = samplePoints.length;
+            } else {
+                document.getElementById("processedPixels").textContent = "0";
+            }
+        }
+        
+        // Reset to original image
+        function resetImage() {
+            ctx.putImageData(originalImageData, 0, 0);
+            currentImageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+            
+            // Reset sliders
+            document.getElementById("grayscaleSlider").value = 0;
+            document.getElementById("grayscaleValue").textContent = "0%";
+            document.getElementById("invertSlider").value = 0;
+            document.getElementById("invertValue").textContent = "0%";
+            document.getElementById("brightnessSlider").value = 100;
+            document.getElementById("brightnessValue").textContent = "100%";
+            document.getElementById("blurSlider").value = 0;
+            document.getElementById("blurValue").textContent = "0";
+            
+            // Clear the table
+            const tableBody = document.getElementById("pixelTableBody");
+            tableBody.innerHTML = "";
+            
+            // Reset processed pixels count
+            document.getElementById("processedPixels").textContent = "0";
+        }
+        
+        // Initialize the visualization
+        window.addEventListener("DOMContentLoaded", () => {
+            createSampleImage();
+            
+            // Add event listener to reset button
+            document.getElementById("resetBtn").addEventListener("click", resetImage);
+            
+            // Add event listener to grayscale slider
+            document.getElementById("grayscaleSlider").addEventListener("input", (e) => {
+                const value = parseInt(e.target.value);
+                document.getElementById("grayscaleValue").textContent = value + "%";
+                applyAllEffects();
+            });
+            
+            // Add event listener to invert slider
+            document.getElementById("invertSlider").addEventListener("input", (e) => {
+                const value = parseInt(e.target.value);
+                document.getElementById("invertValue").textContent = value + "%";
+                applyAllEffects();
+            });
+            
+            // Add event listener to brightness slider
+            document.getElementById("brightnessSlider").addEventListener("input", (e) => {
+                const value = parseInt(e.target.value);
+                document.getElementById("brightnessValue").textContent = value + "%";
+                applyAllEffects();
+            });
+            
+            // Add event listener to blur slider
+            document.getElementById("blurSlider").addEventListener("input", (e) => {
+                const value = parseInt(e.target.value);
+                document.getElementById("blurValue").textContent = value;
+                applyAllEffects();
+            });
+        });
+    </script>
+</body>
+</html>

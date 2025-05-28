@@ -1,0 +1,726 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Materi Pertemuan 3 - Algoritma Garis Bresenham</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap">
+    <link rel="stylesheet" href="style.css">
+    <style>
+        /* Gaya Umum untuk Konten */
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: #f5f7fa;
+            color: #333;
+            line-height: 1.6;
+        }
+        
+        .pertemuan-content-area {
+            padding: 25px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        
+        .pertemuan-content-area h1 {
+            /* color: #2c3e50; */
+            font-size: 2.2rem;
+            margin-bottom: 1.5rem;
+            padding-bottom: 0.8rem;
+            border-bottom: 2px solid #3498db;
+            font-weight: 600;
+        }
+        
+        .pertemuan-content-area h3 {
+            color: #2980b9;
+            font-size: 1.4rem;
+            margin-top: 1.2rem;
+            margin-bottom: 1rem;
+            font-weight: 500;
+        }
+        
+        /* Gaya untuk Bagian Interaktif */
+        .interactive-section {
+            margin-bottom: 30px;
+            padding: 25px;
+            border-radius: 12px;
+            background-color: #fff;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.08);
+            border-top: 4px solid #3498db;
+        }
+        
+        .controls-grid {
+            display: grid;
+            grid-template-columns: auto auto;
+            gap: 15px 25px;
+            align-items: center;
+            margin-bottom: 20px;
+            background-color: #f8f9fa;
+            padding: 15px;
+            border-radius: 8px;
+        }
+        
+        .controls-grid label {
+            font-weight: 500;
+            margin-bottom: 5px;
+            display: block;
+            color: #34495e;
+        }
+        
+        .controls-grid input[type="number"] {
+            width: 80px;
+            padding: 8px 10px;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            margin-right: 8px;
+            font-family: 'Poppins', sans-serif;
+        }
+        
+        .controls-grid input[type="number"]:focus {
+            border-color: #3498db;
+            outline: none;
+            box-shadow: 0 0 0 2px rgba(52, 152, 219, 0.2);
+        }
+        
+        .controls-grid button {
+            grid-column: 1 / -1;
+            justify-self: start;
+            margin-top: 10px;
+            padding: 10px 20px;
+            background-color: #3498db;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: 500;
+            font-family: 'Poppins', sans-serif;
+        }
+        
+        canvas#lineCanvas {
+            border: 1px solid #e0e0e0;
+            margin-top: 15px;
+            background-color: #fdfdfd;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+            display: block;
+            margin-left: auto;
+            margin-right: auto;
+        }
+        
+        /* Gaya untuk Bagian Informasi */
+        .info {
+            margin-top: 20px;
+            background: #f8f9fa;
+            padding: 18px;
+            border-radius: 8px;
+            border-left: 4px solid #3498db;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+        }
+        
+        .info p {
+            margin-bottom: 10px;
+            font-size: 0.95em;
+            color: #34495e;
+        }
+        
+        .info strong {
+            color: #2c3e50;
+        }
+        
+        .pixel-table-container {
+            max-height: 220px;
+            overflow-y: auto;
+            border: 1px solid #e0e0e0;
+            margin-top: 12px;
+            border-radius: 8px;
+            background-color: #fff;
+        }
+        
+        .pixel-table {
+            border-collapse: collapse;
+            width: 100%;
+            font-size: 0.9em;
+        }
+        
+        .pixel-table th {
+            border: 1px solid #ddd;
+            padding: 10px;
+            text-align: center;
+            background-color: #f1f8ff;
+            color: #2c3e50;
+            position: sticky;
+            top: 0;
+            z-index: 10;
+        }
+        
+        .pixel-table td {
+            border: 1px solid #ddd;
+            padding: 8px;
+            text-align: center;
+        }
+        
+        .pixel-table tr:nth-child(even) {
+            background-color: #f9f9f9;
+        }
+        
+        /* Gaya untuk Bagian Rumus */
+        .formula-section {
+            margin-top: 30px;
+            background: #e8f4fc;
+            padding: 25px;
+            border-radius: 12px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.08);
+            border-left: 5px solid #2980b9;
+        }
+        
+        .formula-section h3 {
+            color: #2c3e50;
+            margin-top: 0;
+            margin-bottom: 15px;
+            font-weight: 600;
+        }
+        
+        .formula-section p {
+            color: #34495e;
+            line-height: 1.7;
+            margin-bottom: 15px;
+        }
+        
+        .formula-section ol {
+            padding-left: 20px;
+            margin-bottom: 0;
+        }
+        
+        .formula-section li {
+            margin-bottom: 15px;
+            color: #34495e;
+        }
+        
+        .formula-section pre {
+            background: #f8f9fa;
+            padding: 12px;
+            border: 1px solid #e0e0e0;
+            border-radius: 6px;
+            margin: 10px 0;
+            font-family: 'Consolas', 'Monaco', monospace;
+            overflow-x: auto;
+            font-size: 0.95em;
+        }
+        
+        /* Gaya untuk Bagian Penjelasan */
+        .explanation-section {
+            margin-top: 30px;
+            background: #f0f8ff;
+            padding: 25px;
+            border-radius: 12px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.08);
+            border-left: 5px solid #3498db;
+        }
+        
+        .explanation-section h3 {
+            color: #2c3e50;
+            margin-top: 0;
+            margin-bottom: 15px;
+            font-weight: 600;
+        }
+        
+        .explanation-section p {
+            color: #34495e;
+            line-height: 1.7;
+            margin-bottom: 15px;
+        }
+        
+        .explanation-section ol {
+            padding-left: 20px;
+            margin-bottom: 0;
+        }
+        
+        .explanation-section li {
+            margin-bottom: 15px;
+            color: #34495e;
+        }
+        
+        .explanation-section table {
+            border-collapse: collapse;
+            width: auto;
+            min-width: 500px;
+            margin: 15px auto;
+            font-size: 0.9em;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+            border-radius: 8px;
+            overflow: hidden;
+        }
+        
+        .explanation-section th {
+            background-color: #f1f8ff;
+            color: #2c3e50;
+            font-weight: 600;
+            padding: 12px;
+            text-align: center;
+            border: 1px solid #ddd;
+        }
+        
+        .explanation-section td {
+            padding: 10px;
+            border: 1px solid #ddd;
+            text-align: center;
+        }
+        
+        .explanation-section tr:nth-child(even) {
+            background-color: #f9f9f9;
+        }
+        
+        /* Gaya LaTeX-like untuk rumus matematika - DITINGKATKAN */
+        .math {
+            font-family: 'Times New Roman', serif;
+            font-style: italic;
+            font-weight: normal;
+            font-size: 1.1em;
+        }
+        
+        .math-var {
+            font-style: italic;
+            font-family: 'Times New Roman', serif;
+            font-size: 1.1em;
+            font-weight: 500;
+            color: #000;
+        }
+        
+        .math-op {
+            font-family: 'Times New Roman', serif;
+            margin: 0 3px;
+            font-weight: bold;
+            font-size: 1.1em;
+            color: #000;
+        }
+        
+        .math-sub {
+            font-size: 0.85em;
+            position: relative;
+            bottom: -0.2em;
+            font-style: italic;
+            font-weight: bold;
+            color: #000;
+            margin-left: 1px;
+            margin-right: 1px;
+        }
+        
+        .math-sup {
+            font-size: 0.85em;
+            position: relative;
+            top: -0.5em;
+            font-style: italic;
+            font-weight: bold;
+            color: #000;
+        }
+        
+        .math-frac {
+            display: inline-block;
+            vertical-align: middle;
+            text-align: center;
+        }
+        
+        .math-num {
+            display: block;
+            border-bottom: 1px solid;
+            padding: 0 3px;
+            font-weight: bold;
+        }
+        
+        .math-denom {
+            display: block;
+            padding: 0 3px;
+            font-weight: bold;
+        }
+        
+        /* Responsif untuk Layar Kecil */
+        @media (max-width: 768px) {
+            .controls-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .pertemuan-content-area {
+                padding: 15px;
+            }
+            
+            .interactive-section, .formula-section, .explanation-section {
+                padding: 15px;
+            }
+            
+            .pertemuan-content-area h1 {
+                font-size: 1.8rem;
+            }
+            
+            canvas#lineCanvas {
+                width: 100%;
+                height: auto;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Sidebar Structure - TIDAK DIUBAH -->
+    <div id="sidebar" class="sidebar">
+        <div class="sidebar-header">
+            <h3><i class="fas fa-graduation-cap"></i> Menu</h3>
+            <a href="javascript:void(0)" class="closebtn" onclick="closeNav()">&times;</a>
+        </div>
+        <a href="index.html" class="menu-item"><i class="fas fa-chart-pie"></i> DASHBOARD</a>
+        <a href="per1.html" class="menu-item"><i class="fas fa-book"></i> Pertemuan 1</a>
+        <a href="per2.html" class="menu-item"><i class="fas fa-book"></i> Pertemuan 2</a>
+        <a href="per3.html" class="menu-item active"><i class="fas fa-book"></i> Pertemuan 3</a>
+        <a href="per4.html" class="menu-item"><i class="fas fa-book"></i> Pertemuan 4</a>
+        <a href="per5.html" class="menu-item"><i class="fas fa-book"></i> Pertemuan 5</a>
+        <a href="per6.html" class="menu-item"><i class="fas fa-book"></i> Pertemuan 6</a>
+        <a href="per7.html" class="menu-item"><i class="fas fa-book"></i> Pertemuan 7</a>
+        <a href="per8.html" class="menu-item"><i class="fas fa-book"></i> Pertemuan 8</a>
+        <a href="per9.html" class="menu-item"><i class="fas fa-book"></i> Pertemuan 9</a>
+        <a href="per10.html" class="menu-item"><i class="fas fa-book"></i> Pertemuan 10</a>
+        <a href="per11.html" class="menu-item"><i class="fas fa-book"></i> Pertemuan 11</a>
+        <a href="per12.html" class="menu-item"><i class="fas fa-book"></i> Pertemuan 12</a>
+        <a href="per13.html" class="menu-item"><i class="fas fa-book"></i> Pertemuan 13</a>
+        <a href="per14.html" class="menu-item"><i class="fas fa-book"></i> Pertemuan 14</a>
+    </div>
+
+    <!-- Main Content Structure -->
+    <div id="main">
+        <button class="openbtn" onclick="openNav()"><i class="fas fa-bars"></i> Menu</button>
+        <div id="content-container">
+            <div class="pertemuan-content-area">
+                <h1><i class="fas fa-code"></i> Pertemuan 3: Algoritma Garis Bresenham</h1>
+
+                <!-- Interactive Bresenham Section -->
+                <div class="interactive-section">
+                    <h3><i class="fas fa-pencil-ruler"></i> Interaktif: Algoritma Garis Bresenham (0 < m ≤ 1)</h3>
+                    <div class="controls-grid">
+                        <div>
+                            <label for="bresX0">Titik Awal (<span class="math-var">x</span><span class="math-sub">0</span>, <span class="math-var">y</span><span class="math-sub">0</span>):</label>
+                            <input type="number" id="bresX0" value="5" min="0"> 
+                            <input type="number" id="bresY0" value="5" min="0">
+                        </div>
+                        <div>
+                            <label for="bresX1">Titik Akhir (<span class="math-var">x</span><span class="math-sub">1</span>, <span class="math-var">y</span><span class="math-sub">1</span>):</label>
+                            <input type="number" id="bresX1" value="25" min="0"> 
+                            <input type="number" id="bresY1" value="15" min="0">
+                        </div>
+                        <button onclick="runBresenham()"><i class="fas fa-play"></i> Gambar Garis & Hitung</button>
+                    </div>
+                    <canvas id="lineCanvas" width="400" height="300"></canvas>
+                    <div class="info">
+                        <p><strong><i class="fas fa-calculator"></i> Parameter:</strong> 
+                           <span class="math-var">dx</span><span class="math-op">=</span><span id="bresDx" style="font-weight:bold;"></span>, 
+                           <span class="math-var">dy</span><span class="math-op">=</span><span id="bresDy" style="font-weight:bold;"></span>, 
+                           <span class="math">2<span class="math-var">dy</span></span><span class="math-op">=</span><span id="bres2Dy" style="font-weight:bold;"></span>, 
+                           <span class="math">2(<span class="math-var">dy</span><span class="math-op">-</span><span class="math-var">dx</span>)</span><span class="math-op">=</span><span id="bres2Dy2Dx" style="font-weight:bold;"></span>
+                        </p>
+                        <p><strong><i class="fas fa-map-marker-alt"></i> Titik Awal Plot:</strong> 
+                           (<span id="bresStartX" style="font-weight:bold;"></span>, <span id="bresStartY" style="font-weight:bold;"></span>)
+                        </p>
+                        <div class="pixel-table-container">
+                            <table id="bresenhamTable" class="pixel-table">
+                                <thead>
+                                    <tr>
+                                        <th><span class="math-var">k</span></th>
+                                        <th><span class="math-var">p</span><span class="math-sub">k</span></th>
+                                        <th>(<span class="math-var">x</span><span class="math-sub">k+1</span>, <span class="math-var">y</span><span class="math-sub">k+1</span>)</th>
+                                    </tr>
+                                </thead>
+                                <tbody><!-- Data diisi oleh JavaScript --></tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Formula Section -->
+                <div class="formula-section">
+                    <h3><i class="fas fa-square-root-alt"></i> Rumus Algoritma Garis Bresenham (untuk 0 < m ≤ 1)</h3>
+                    <p>Diberikan titik awal (<span class="math-var">x</span><span class="math-sub">0</span>, <span class="math-var">y</span><span class="math-sub">0</span>) dan titik akhir (<span class="math-var">x</span><span class="math-sub">1</span>, <span class="math-var">y</span><span class="math-sub">1</span>), dengan asumsi garis bergerak dari kiri ke kanan (<span class="math-var">dx</span> = <span class="math-var">x</span><span class="math-sub">1</span> <span class="math-op">-</span> <span class="math-var">x</span><span class="math-sub">0</span> > 0) dan kemiringan (<span class="math-var">m</span>) adalah 0 < <span class="math-var">m</span> ≤ 1 (sehingga <span class="math-var">dy</span> = <span class="math-var">y</span><span class="math-sub">1</span> <span class="math-op">-</span> <span class="math-var">y</span><span class="math-sub">0</span> ≥ 0 dan <span class="math-var">dy</span> ≤ <span class="math-var">dx</span>):</p>
+                    <ol>
+                        <li><strong>Hitung selisih <span class="math-var">dx</span> dan <span class="math-var">dy</span>:</strong>
+                            <ul style="list-style-type: disc; margin-left: 20px; margin-bottom: 10px;">
+                                <li><span class="math-var">dx</span> <span class="math-op">=</span> <span class="math-var">x</span><span class="math-sub">1</span> <span class="math-op">-</span> <span class="math-var">x</span><span class="math-sub">0</span></li>
+                                <li><span class="math-var">dy</span> <span class="math-op">=</span> <span class="math-var">y</span><span class="math-sub">1</span> <span class="math-op">-</span> <span class="math-var">y</span><span class="math-sub">0</span></li>
+                            </ul>
+                        </li>
+                        <li><strong>Parameter keputusan awal (<span class="math-var">p</span><span class="math-sub">0</span>):</strong>
+                            <pre><span class="math-var">p</span><span class="math-sub">0</span> <span class="math-op">=</span> 2 <span class="math-op">×</span> <span class="math-var">dy</span> <span class="math-op">-</span> <span class="math-var">dx</span></pre>
+                        </li>
+                        <li><strong>Konstanta untuk memperbarui parameter keputusan:</strong>
+                            <pre><span class="math-var">const</span><span class="math-sub">1</span> <span class="math-op">=</span> 2 <span class="math-op">×</span> <span class="math-var">dy</span>
+<span class="math-var">const</span><span class="math-sub">2</span> <span class="math-op">=</span> 2 <span class="math-op">×</span> (<span class="math-var">dy</span> <span class="math-op">-</span> <span class="math-var">dx</span>)</pre>
+                        </li>
+                        <li><strong>Iterasi untuk setiap kolom piksel:</strong>
+                            <ul style="list-style-type: disc; margin-left: 20px;">
+                                <li>Plot piksel awal (<span class="math-var">x</span><span class="math-sub">0</span>, <span class="math-var">y</span><span class="math-sub">0</span>).</li>
+                                <li>Untuk <span class="math-var">k</span> = 0 sampai <span class="math-var">dx</span>-1:
+                                    <ul style="list-style-type: circle; margin-left: 20px;">
+                                        <li>Jika <span class="math-var">p</span><span class="math-sub">k</span> < 0:
+                                            <ul style="list-style-type: square; margin-left: 20px;">
+                                                <li>Piksel berikutnya adalah (<span class="math-var">x</span><span class="math-sub">k</span>+1, <span class="math-var">y</span><span class="math-sub">k</span>). Jadi, <span class="math-var">y</span><span class="math-sub">k+1</span> = <span class="math-var">y</span><span class="math-sub">k</span>.</li>
+                                                <li><span class="math-var">p</span><span class="math-sub">k+1</span> = <span class="math-var">p</span><span class="math-sub">k</span> + <span class="math-var">const</span><span class="math-sub">1</span></li>
+                                            </ul>
+                                        </li>
+                                        <li>Jika <span class="math-var">p</span><span class="math-sub">k</span> ≥ 0:
+                                            <ul style="list-style-type: square; margin-left: 20px;">
+                                                <li>Piksel berikutnya adalah (<span class="math-var">x</span><span class="math-sub">k</span>+1, <span class="math-var">y</span><span class="math-sub">k</span>+1). Jadi, <span class="math-var">y</span><span class="math-sub">k+1</span> = <span class="math-var">y</span><span class="math-sub">k</span> + 1.</li>
+                                                <li><span class="math-var">p</span><span class="math-sub">k+1</span> = <span class="math-var">p</span><span class="math-sub">k</span> + <span class="math-var">const</span><span class="math-sub">2</span></li>
+                                            </ul>
+                                        </li>
+                                        <li><span class="math-var">x</span><span class="math-sub">k+1</span> = <span class="math-var">x</span><span class="math-sub">k</span> + 1 (selalu untuk kasus ini). Plot (<span class="math-var">x</span><span class="math-sub">k+1</span>, <span class="math-var">y</span><span class="math-sub">k+1</span>).</li>
+                                    </ul>
+                                </li>
+                            </ul>
+                        </li>
+                    </ol>
+                    <p><em><i class="fas fa-info-circle"></i> Catatan: Algoritma Bresenham dapat diadaptasi untuk semua kemiringan dan kuadran dengan mempertimbangkan simetri. Visual interaktif di atas secara spesifik mengimplementasikan kasus ini.</em></p>
+                </div>
+
+                <!-- Explanation Section -->
+                <div class="explanation-section">
+                    <h3><i class="fas fa-lightbulb"></i> Penjelasan dan Contoh Perhitungan (Bresenham 0 < m ≤ 1)</h3>
+                    <p>Algoritma Garis Bresenham sangat efisien karena hanya menggunakan operasi integer. Berikut adalah contoh perhitungan langkah demi langkah, sesuai dengan visual interaktif di atas (misalnya, untuk garis dari (5,5) ke (25,15) seperti nilai default pada visual):</p>
+                    <ol style="line-height: 1.8;">
+                        <li><strong>Input Titik:</strong>
+                            <ul style="list-style-type: disc; margin-left: 20px;">
+                                <li>Titik Awal (<span class="math-var">x</span><span class="math-sub">0</span>, <span class="math-var">y</span><span class="math-sub">0</span>) = (5, 5)</li>
+                                <li>Titik Akhir (<span class="math-var">x</span><span class="math-sub">1</span>, <span class="math-var">y</span><span class="math-sub">1</span>) = (25, 15)</li>
+                            </ul>
+                        </li>
+                        <li><strong>Hitung <span class="math-var">dx</span> dan <span class="math-var">dy</span>:</strong>
+                            <ul style="list-style-type: disc; margin-left: 20px;">
+                                <li><span class="math-var">dx</span> = <span class="math-var">x</span><span class="math-sub">1</span> <span class="math-op">-</span> <span class="math-var">x</span><span class="math-sub">0</span> = 25 <span class="math-op">-</span> 5 = 20</li>
+                                <li><span class="math-var">dy</span> = <span class="math-var">y</span><span class="math-sub">1</span> <span class="math-op">-</span> <span class="math-var">y</span><span class="math-sub">0</span> = 15 <span class="math-op">-</span> 5 = 10</li>
+                            </ul>
+                            (Kondisi 0 < <span class="math-var">dy</span> ≤ <span class="math-var">dx</span> terpenuhi: 0 < 10 ≤ 20)
+                        </li>
+                        <li><strong>Hitung Parameter Keputusan Awal (<span class="math-var">p</span><span class="math-sub">0</span>):</strong>
+                            <ul style="list-style-type: disc; margin-left: 20px;">
+                                <li><span class="math-var">p</span><span class="math-sub">0</span> = 2 <span class="math-op">×</span> <span class="math-var">dy</span> <span class="math-op">-</span> <span class="math-var">dx</span> = 2 <span class="math-op">×</span> 10 <span class="math-op">-</span> 20 = 20 <span class="math-op">-</span> 20 = 0</li>
+                            </ul>
+                        </li>
+                        <li><strong>Hitung Konstanta:</strong>
+                            <ul style="list-style-type: disc; margin-left: 20px;">
+                                <li><span class="math-var">const</span><span class="math-sub">1</span> = 2 <span class="math-op">×</span> <span class="math-var">dy</span> = 2 <span class="math-op">×</span> 10 = 20</li>
+                                <li><span class="math-var">const</span><span class="math-sub">2</span> = 2 <span class="math-op">×</span> (<span class="math-var">dy</span> <span class="math-op">-</span> <span class="math-var">dx</span>) = 2 <span class="math-op">×</span> (10 <span class="math-op">-</span> 20) = 2 <span class="math-op">×</span> (<span class="math-op">-</span>10) = <span class="math-op">-</span>20</li>
+                            </ul>
+                        </li>
+                        <li><strong>Iterasi (Plotting Piksel):</strong>
+                            <p>Piksel awal diplot di (<span class="math-var">x</span><span class="math-sub">0</span>, <span class="math-var">y</span><span class="math-sub">0</span>) = (5, 5). Tabel di bawah menunjukkan beberapa langkah awal (<span class="math-var">k</span> adalah nomor iterasi):</p>
+                            <div style="overflow-x:auto;">
+                            <table>
+                                <thead>
+                                    <tr>
+                                        <th><span class="math-var">k</span></th>
+                                        <th>Piksel Saat Ini (<span class="math-var">x</span><span class="math-sub">k</span>, <span class="math-var">y</span><span class="math-sub">k</span>)</th>
+                                        <th><span class="math-var">p</span><span class="math-sub">k</span></th>
+                                        <th>Keputusan & Piksel Berikutnya (<span class="math-var">x</span><span class="math-sub">k+1</span>, <span class="math-var">y</span><span class="math-sub">k+1</span>)</th>
+                                        <th><span class="math-var">p</span><span class="math-sub">k+1</span></th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td>0</td>
+                                        <td>(5, 5)</td>
+                                        <td>0</td>
+                                        <td style="text-align: left;"><span class="math-var">p</span><span class="math-sub">0</span> ≥ 0, maka <span class="math-var">y</span><span class="math-sub">k+1</span> = <span class="math-var">y</span><span class="math-sub">k</span> + 1 = 6. <span class="math-var">x</span><span class="math-sub">k+1</span> = <span class="math-var">x</span><span class="math-sub">k</span> + 1 = 6. Plot (6, 6).</td>
+                                        <td><span class="math-var">p</span><span class="math-sub">0</span> + <span class="math-var">const</span><span class="math-sub">2</span> = 0 + (<span class="math-op">-</span>20) = <span class="math-op">-</span>20</td>
+                                    </tr>
+                                    <tr>
+                                        <td>1</td>
+                                        <td>(6, 6)</td>
+                                        <td><span class="math-op">-</span>20</td>
+                                        <td style="text-align: left;"><span class="math-var">p</span><span class="math-sub">1</span> < 0, maka <span class="math-var">y</span><span class="math-sub">k+1</span> = <span class="math-var">y</span><span class="math-sub">k</span> = 6. <span class="math-var">x</span><span class="math-sub">k+1</span> = <span class="math-var">x</span><span class="math-sub">k</span> + 1 = 7. Plot (7, 6).</td>
+                                        <td><span class="math-var">p</span><span class="math-sub">1</span> + <span class="math-var">const</span><span class="math-sub">1</span> = <span class="math-op">-</span>20 + 20 = 0</td>
+                                    </tr>
+                                     <tr>
+                                        <td>2</td>
+                                        <td>(7, 6)</td>
+                                        <td>0</td>
+                                        <td style="text-align: left;"><span class="math-var">p</span><span class="math-sub">2</span> ≥ 0, maka <span class="math-var">y</span><span class="math-sub">k+1</span> = <span class="math-var">y</span><span class="math-sub">k</span> + 1 = 7. <span class="math-var">x</span><span class="math-sub">k+1</span> = <span class="math-var">x</span><span class="math-sub">k</span> + 1 = 8. Plot (8, 7).</td>
+                                        <td><span class="math-var">p</span><span class="math-sub">2</span> + <span class="math-var">const</span><span class="math-sub">2</span> = 0 + (<span class="math-op">-</span>20) = <span class="math-op">-</span>20</td>
+                                    </tr>
+                                    <tr>
+                                        <td colspan="5" style="text-align: center;"><em>... dan seterusnya. Tabel lengkap akan muncul di visual interaktif di atas sesuai input Anda.</em></td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                            </div>
+                        </li>
+                    </ol>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+    <script>
+    function drawGrid(ctx, canvasWidth, canvasHeight, gridSize, gridColor, axisColor) {
+        ctx.save();
+        ctx.strokeStyle = gridColor;
+        ctx.lineWidth = 0.5; // For crisp lines
+
+        // Draw vertical grid lines
+        for (let x = 0.5; x < canvasWidth; x += gridSize) {
+            ctx.beginPath();
+            ctx.moveTo(x, 0);
+            ctx.lineTo(x, canvasHeight);
+            ctx.stroke();
+        }
+
+        // Draw horizontal grid lines
+        for (let y = 0.5; y < canvasHeight; y += gridSize) {
+            ctx.beginPath();
+            ctx.moveTo(0, y);
+            ctx.lineTo(canvasWidth, y);
+            ctx.stroke();
+        }
+        
+        // Draw thicker axes (optional, can be styled further)
+        ctx.strokeStyle = axisColor;
+        ctx.lineWidth = 1;
+        ctx.beginPath();
+        ctx.moveTo(0.5, 0); // Y-axis
+        ctx.lineTo(0.5, canvasHeight);
+        ctx.stroke();
+        ctx.beginPath();
+        ctx.moveTo(0, canvasHeight - 0.5); // X-axis (bottom)
+        ctx.lineTo(canvasWidth, canvasHeight - 0.5);
+        ctx.stroke();
+        
+        ctx.restore();
+    }
+
+    function runBresenham() {
+        const canvas = document.getElementById("lineCanvas");
+        if (!canvas || !canvas.getContext) return;
+        const ctx = canvas.getContext("2d");
+        ctx.clearRect(0, 0, canvas.width, canvas.height); // Clear canvas
+
+        // Grid settings
+        const gridSize = 20; // Size of each grid square
+        const gridColor = "#e0e0e0"; // Light gray for grid lines
+        const axisColor = "#888888"; // Darker gray for axes
+        drawGrid(ctx, canvas.width, canvas.height, gridSize, gridColor, axisColor);
+
+        const x0_input = parseInt(document.getElementById("bresX0").value);
+        const y0_input = parseInt(document.getElementById("bresY0").value);
+        const x1_input = parseInt(document.getElementById("bresX1").value);
+        const y1_input = parseInt(document.getElementById("bresY1").value);
+
+        document.getElementById("bresStartX").textContent = x0_input;
+        document.getElementById("bresStartY").textContent = y0_input;
+
+        let dx = x1_input - x0_input;
+        let dy = y1_input - y0_input;
+
+        if (dx <= 0 || dy < 0 || dy > dx) {
+            ctx.font = "bold 12px Arial";
+            ctx.fillStyle = "red";
+            ctx.textAlign = "center";
+            ctx.fillText("Input tidak valid untuk contoh ini (0 <= m <= 1, dx > 0).", canvas.width/2, canvas.height/2);
+            document.getElementById("bresDx").textContent = "-";
+            document.getElementById("bresDy").textContent = "-";
+            document.getElementById("bres2Dy").textContent = "-";
+            document.getElementById("bres2Dy2Dx").textContent = "-";
+            document.querySelector("#bresenhamTable tbody").innerHTML = "<tr><td colspan=\"3\" style=\"text-align:center; color:red; padding: 8px;\">Input tidak valid untuk contoh ini. Pastikan x1 > x0, y1 >= y0, dan (y1-y0) <= (x1-x0).</td></tr>";
+            return;
+        }
+
+        document.getElementById("bresDx").textContent = dx;
+        document.getElementById("bresDy").textContent = dy;
+
+        let p = 2 * dy - dx;
+        const const1 = 2 * dy;
+        const const2 = 2 * (dy - dx);
+
+        document.getElementById("bres2Dy").textContent = const1;
+        document.getElementById("bres2Dy2Dx").textContent = const2;
+
+        const tableBody = document.querySelector("#bresenhamTable tbody");
+        tableBody.innerHTML = ""; // Clear previous results
+
+        let currentX = x0_input;
+        let currentY = y0_input;
+
+        const pointRadius = 3; 
+        const lineColor = "#3498db"; 
+        const pointColor = "#e74c3c"; 
+        const startPointColor = "#2ecc71";
+
+        function plotCanvasPoint(x_coord, y_coord, color) {
+            const canvasX = x_coord * gridSize + 0.5; 
+            const canvasY = canvas.height - (y_coord * gridSize + 0.5); 
+
+            ctx.beginPath();
+            ctx.arc(canvasX, canvasY, pointRadius, 0, 2 * Math.PI, false);
+            ctx.fillStyle = color;
+            ctx.fill();
+        }
+        
+        plotCanvasPoint(currentX, currentY, startPointColor);
+        
+        let linePoints = [{x: currentX, y: currentY}];
+
+        let k = 0;
+        for (k = 0; k < dx; k++) {
+            const row = tableBody.insertRow();
+            row.insertCell().textContent = k;
+            row.insertCell().textContent = p;
+            row.cells[0].style.textAlign = "center";
+            row.cells[1].style.textAlign = "center";
+
+            if (p < 0) {
+                p += const1;
+            } else {
+                currentY++;
+                p += const2;
+            }
+            currentX++;
+            plotCanvasPoint(currentX, currentY, pointColor);
+            linePoints.push({x: currentX, y: currentY});
+            let cell = row.insertCell();
+            cell.textContent = `(${currentX}, ${currentY})`;
+            cell.style.textAlign = "center";
+        }
+
+        if (linePoints.length > 1) {
+            ctx.beginPath();
+            ctx.strokeStyle = lineColor;
+            ctx.lineWidth = 2; 
+            const startCanvasX = linePoints[0].x * gridSize + 0.5;
+            const startCanvasY = canvas.height - (linePoints[0].y * gridSize + 0.5);
+            ctx.moveTo(startCanvasX, startCanvasY);
+
+            for (let i = 1; i < linePoints.length; i++) {
+                const canvasX = linePoints[i].x * gridSize + 0.5;
+                const canvasY = canvas.height - (linePoints[i].y * gridSize + 0.5);
+                ctx.lineTo(canvasX, canvasY);
+            }
+            ctx.stroke();
+        }
+    }
+
+    document.addEventListener("DOMContentLoaded", function() {
+        if (document.getElementById("lineCanvas")) {
+            runBresenham(); 
+        }
+        window.openNav = function() {
+            const sidebar = document.getElementById("sidebar");
+            const main = document.getElementById("main");
+            if (sidebar) sidebar.style.width = "250px";
+            if (main && window.innerWidth > 768) {
+                main.style.marginLeft = "250px";
+            }
+        }
+
+        window.closeNav = function() {
+            const sidebar = document.getElementById("sidebar");
+            const main = document.getElementById("main");
+            if (sidebar) sidebar.style.width = "0";
+            if (main) main.style.marginLeft = "0";
+        }
+    });
+    </script>
+    <!-- <script src="script.js"></script> --> 
+</body>
+</html>

@@ -1,0 +1,2655 @@
+@import url("https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap");
+/* General Styling */
+:root {
+    /* New Color Palette - Dark Sidebar Theme */
+    --primary-color: #667eea;
+    /* A modern purple/blue */
+    --primary-color-light: #7f8ff4;
+    --sidebar-bg: #2d3748;
+    /* Dark Gray */
+    --sidebar-text-color: #e2e8f0;
+    /* Light Gray */
+    --sidebar-icon-color: #a0aec0;
+    /* Medium Gray */
+    --sidebar-hover-bg: #4a5568;
+    /* Slightly Lighter Dark Gray */
+    --sidebar-active-bg: var(--primary-color);
+    --sidebar-active-text: #fff;
+    --sidebar-border-color: #4a5568;
+    /* Existing colors (can be adjusted if needed) */
+    --secondary-color: #f7fafc;
+    /* Light background for main content */
+    --text-color: #2d3748;
+    /* Dark text for main content */
+    --heading-color: #1a202c;
+    /* Very dark for headings */
+    --card-bg: #fff;
+    --border-color: #e2e8f0;
+    /* Lighter border for cards */
+    --shadow-color: rgba(0, 0, 0, 0.06)
+    }
+body {
+    font-family: "Poppins", sans-serif;
+    margin: 0;
+    background-color: var(--secondary-color);
+    color: var(--text-color);
+    line-height: 1.6;
+    overflow-x: hidden
+    }
+h2, h3, h4 {
+    color: var(--heading-color);
+    font-weight: 600
+    }
+/* --- Sidebar Redesign --- */
+.sidebar {
+    height: 100%;
+    width: 0;
+    /* Controlled by JS */
+    position: fixed;
+    z-index: 1001;
+    top: 0;
+    left: 0;
+    background-color: var(--sidebar-bg);
+    box-shadow: 4px 0 15px rgba(0, 0, 0, 0.15);
+    /* More pronounced shadow */
+    overflow-y: auto;
+    /* Allow vertical scroll */
+    overflow-x: hidden;
+    /* Hide horizontal overflow */
+    transition: width 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+    /* Smoother transition */
+    padding-top: 75px;
+    /* Increased space for header */
+    padding-bottom: 15px;
+    /* Add padding at the bottom */
+    box-sizing: border-box;
+    /* Include padding in height calculation */
+    border-right: none;
+    /* Remove border, rely on shadow */
+    /* Removed display: flex and flex-direction: column */
+    }
+/* Sidebar Header Redesign */
+.sidebar-header {
+    padding: 0 25px;
+    /* Increased padding */
+    background-color: transparent;
+    /* Inherit sidebar background */
+    border-bottom: 1px solid var(--sidebar-border-color);
+    /* Subtle border */
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    box-sizing: border-box;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    height: 75px;
+    /* Consistent height */
+    z-index: 10
+    }
+.sidebar-header h3 {
+    margin: 0;
+    color: var(--sidebar-text-color);
+    /* Light text */
+    font-size: 1.1em;
+    /* Adjusted size */
+    font-weight: 500;
+    /* Medium weight */
+    white-space: nowrap;
+    display: flex;
+    align-items: center
+    }
+.sidebar-header h3 i {
+    margin-right: 12px;
+    font-size: 1.2em;
+    color: var(--primary-color-light);
+    /* Use light primary color for icon */
+    }
+/* Sidebar Close Button Redesign */
+.sidebar .closebtn {
+    position: absolute;
+    top: 50%;
+    right: 25px;
+    transform: translatey(-50%);
+    font-size: 24px;
+    font-weight: 400;
+    padding: 8px;
+    /* Larger click area */
+    color: var(--sidebar-icon-color);
+    /* Icon color */
+    text-decoration: none;
+    line-height: 1;
+    transition: color 0.3s ease, transform 0.3s ease, background-color 0.3s ease;
+    /* Added background-color transition */
+    z-index: 11;
+    border-radius: 50%;
+    /* Make it circular */
+    }
+.sidebar .closebtn:hover {
+    color: var(--sidebar-text-color);
+    /* Lighter on hover */
+    background-color: var(--sidebar-hover-bg);
+    /* Subtle background */
+    transform: translatey(-50%) rotate(90deg)
+    }
+/* Sidebar Menu Items Redesign - Removed .sidebar nav selector */
+.sidebar a.menu-item {
+    display: flex;
+    align-items: center;
+    padding: 12px 25px;
+    /* Consistent horizontal padding */
+    text-decoration: none;
+    font-size: 15px;
+    font-weight: 400;
+    /* Regular weight */
+    color: var(--sidebar-text-color);
+    transition: background-color 0.2s ease, color 0.2s ease, border-left-color 0.2s ease;
+    border-left: 4px solid transparent;
+    /* Keep indicator */
+    white-space: nowrap;
+    margin: 0 0 2px 0;
+    /* Remove side margins, add small bottom margin */
+    position: relative;
+    border-radius: 0;
+    /* Remove previous rounding */
+    }
+.sidebar a.menu-item i {
+    margin-right: 15px;
+    /* More space for icon */
+    width: 20px;
+    text-align: center;
+    transition: color 0.2s ease;
+    flex-shrink: 0;
+    font-size: 1.05em;
+    /* Slightly smaller icon */
+    color: var(--sidebar-icon-color);
+    /* Use icon color */
+    }
+.sidebar a.menu-item:hover {
+    background-color: var(--sidebar-hover-bg);
+    color: #fff;
+    /* White text on hover */
+    border-left-color: transparent;
+    /* No border on hover */
+    }
+.sidebar a.menu-item:hover i {
+    color: var(--primary-color-light);
+    /* Icon color change on hover */
+    }
+.sidebar a.menu-item.active {
+    background-color: var(--sidebar-active-bg);
+    color: var(--sidebar-active-text);
+    border-left-color: var(--primary-color-light);
+    /* Use light primary for active border */
+    font-weight: 500;
+    /* Slightly bolder for active item */
+    }
+.sidebar a.menu-item.active i {
+    color: var(--sidebar-active-text);
+    /* White icon when active */
+    }
+#db {
+    border-bottom: 2px solid var(--primary-color);
+    padding-bottom: 10px;
+    margin-bottom: 25px;
+    color: var(--primary-color)
+    }
+/* Main Content Area Styling */
+#main {
+    transition: margin-left 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+    /* Match sidebar transition */
+    padding: 30px;
+    /* Slightly more padding */
+    position: relative;
+    z-index: 1
+    }
+.openbtn {
+    font-size: 18px;
+    cursor: pointer;
+    background-color: var(--primary-color);
+    color: white;
+    padding: 10px 18px;
+    /* Slightly larger button */
+    border: none;
+    border-radius: 8px;
+    /* More rounded */
+    margin-bottom: 30px;
+    transition: background-color 0.3s ease, box-shadow 0.3s ease;
+    box-shadow: 0 3px 8px rgba(102, 126, 234, 0.4);
+    /* Shadow using primary color */
+    display: inline-flex;
+    /* Align icon and text */
+    align-items: center
+    }
+.openbtn i {
+    margin-right: 8px
+    }
+.openbtn:hover {
+    background-color: var(--primary-color-light);
+    box-shadow: 0 5px 12px rgba(102, 126, 234, 0.5)
+    }
+#content-container {
+    background-color: var(--card-bg);
+    padding: 30px;
+    border-radius: 10px;
+    /* Slightly more rounded */
+    box-shadow: 0 5px 15px var(--shadow-color);
+    /* Softer shadow */
+    min-height: 75vh;
+    border: 1px solid var(--border-color)
+    }
+.loading {
+    text-align: center;
+    padding: 60px;
+    color: #a0aec0;
+    /* Use medium gray */
+    font-size: 1.1em
+    }
+.loading i {
+    margin-right: 10px;
+    font-size: 1.3em
+    }
+/* Dashboard Specific Styling (Keep as is for now) */
+.dashboard-page h2 {
+    margin-top: 0;
+    border-bottom: 1px solid var(--border-color);
+    padding-bottom: 15px;
+    margin-bottom: 25px;
+    display: flex;
+    align-items: center;
+    gap: 10px
+    }
+.summary-container {
+    background-color: transparent;
+    box-shadow: none;
+    padding: 0;
+    margin-bottom: 30px
+    }
+.chart-container {
+    position: relative;
+    margin: 25px auto;
+    width: 100%;
+    max-width: 400px;
+    /* Slightly smaller max width */
+    aspect-ratio: 1/1
+    }
+.chart-container canvas {
+    display: block;
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%
+    }
+.legend {
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 15px 30px;
+    /* Increased gap */
+    margin-top: 25px;
+    padding: 10px 0
+    }
+.legend-item {
+    display: flex;
+    align-items: center;
+    font-size: 0.95em;
+    /* Slightly larger legend text */
+    }
+.legend-color {
+    width: 12px;
+    /* Smaller color box */
+    height: 12px;
+    border-radius: 3px;
+    /* Square with rounded corners */
+    margin-right: 8px;
+    flex-shrink: 0
+    }
+.stats-container {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+    /* Slightly wider cards */
+    gap: 25px;
+    margin-top: 30px
+    }
+.stat-card {
+    background-color: var(--card-bg);
+    border-radius: 10px;
+    padding: 25px;
+    box-shadow: 0 4px 10px var(--shadow-color);
+    border: 1px solid var(--border-color);
+    transition: transform 0.3s ease, box-shadow 0.3s ease
+    }
+.stat-card:hover {
+    transform: translatey(-4px);
+    box-shadow: 0 8px 20px var(--shadow-color)
+    }
+.stat-card h3 {
+    margin-top: 0;
+    margin-bottom: 15px;
+    /* More space below heading */
+    font-size: 1.05em;
+    /* Slightly smaller card heading */
+    color: var(--primary-color);
+    display: flex;
+    align-items: center;
+    gap: 10px
+    }
+.stat-card p {
+    margin-bottom: 8px;
+    font-size: 0.95em;
+    color: #4a5568;
+    /* Darker text for stats */
+    }
+.progress-bar-container {
+    width: 100%;
+    height: 8px;
+    /* Thinner progress bar */
+    background-color: #e2e8f0;
+    /* Lighter background */
+    border-radius: 4px;
+    margin-top: 15px;
+    overflow: hidden
+    }
+.progress-bar {
+    height: 100%;
+    background: var(--primary-color);
+    /* background: linear-gradient(90deg, var(--primary-color) 0%, var(--primary-color-light) 100%); */
+    border-radius: 4px;
+    transition: width 1.5s ease-in-out
+    }
+.progress-label {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 8px;
+    font-size: 0.85em;
+    /* Smaller label */
+    color: #718096;
+    /* Medium gray */
+    }
+/* Responsive Design */
+@media screen and (max-width: 768px) {
+    #main {
+        padding: 20px;
+        margin-left: 0 !important
+        }
+    .openbtn {
+        margin-bottom: 20px;
+        padding: 8px 15px
+        }
+    #content-container {
+        padding: 20px
+        }
+    .sidebar {
+        padding-top: 60px;
+        /* Adjust for smaller header */
+        padding-bottom: 10px;
+        /* Adjust bottom padding */
+        box-shadow: 3px 0 12px rgba(0, 0, 0, 0.1)
+        }
+    .sidebar-header {
+        height: 60px;
+        padding: 0 15px
+        }
+    .sidebar-header h3 {
+        font-size: 1em
+        }
+    .sidebar-header h3 i {
+        margin-right: 8px;
+        font-size: 1.1em
+        }
+    .sidebar .closebtn {
+        right: 15px;
+        font-size: 22px
+        }
+    /* Removed .sidebar nav responsive styles */
+    .sidebar a.menu-item {
+        font-size: 14px;
+        padding: 10px 15px
+        }
+    .sidebar a.menu-item i {
+        margin-right: 12px;
+        font-size: 1em
+        }
+    .stats-container {
+        grid-template-columns: 1fr;
+        gap: 20px
+        }
+    .legend {
+        gap: 10px 20px;
+        justify-content: flex-start;
+        font-size: 0.9em
+        }
+    .chart-container {
+        max-width: 320px
+        }
+    }
+@media screen and (max-height: 450px) {
+    .sidebar {
+        padding-top: 10px;
+        padding-bottom: 5px
+        }
+    /* Minimal padding */
+    /* Removed .sidebar nav responsive styles */
+    .sidebar a.menu-item {
+        font-size: 14px;
+        padding: 8px 15px
+        }
+    .sidebar-header {
+        display: none
+        }
+    .sidebar .closebtn {
+        /* Adjust close button position if header is hidden */
+        top: 15px;
+        right: 15px;
+        transform: none;
+        background-color: transparent
+        }
+    .sidebar .closebtn:hover {
+        transform: rotate(90deg);
+        background-color: var(--sidebar-hover-bg)
+        }
+    }
+/* --- Embedded Full CSS --- */
+:root {
+    --primary-color: #667eea;
+    --primary-color-light: #7f8ff4;
+    --sidebar-bg: #2d3748;
+    --sidebar-text-color: #e2e8f0;
+    --sidebar-icon-color: #a0aec0;
+    --sidebar-hover-bg: #4a5568;
+    --sidebar-active-bg: var(--primary-color);
+    --sidebar-active-text: #fff;
+    --sidebar-border-color: #4a5568;
+    --secondary-color: #f7fafc;
+    --text-color: #2d3748;
+    --heading-color: #1a202c;
+    --card-bg: #fff;
+    --border-color: #e2e8f0;
+    --shadow-color: rgba(0, 0, 0, 0.06)
+    }
+.sidebar {
+    height: 100%;
+    width: 0;
+    position: fixed;
+    z-index: 1001;
+    top: 0;
+    left: 0;
+    background-color: var(--sidebar-bg);
+    box-shadow: 4px 0 15px rgba(0, 0, 0, 0.15);
+    overflow-y: auto;
+    overflow-x: hidden;
+    transition: width 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+    padding-top: 75px;
+    padding-bottom: 15px;
+    box-sizing: border-box;
+    border-right: none
+    }
+.sidebar-header {
+    padding: 0 25px;
+    background-color: transparent;
+    border-bottom: 1px solid var(--sidebar-border-color);
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    box-sizing: border-box;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    height: 75px;
+    z-index: 10
+    }
+.sidebar-header h3 {
+    margin: 0;
+    color: var(--sidebar-text-color);
+    font-size: 1.1em;
+    font-weight: 500;
+    white-space: nowrap;
+    display: flex;
+    align-items: center
+    }
+.sidebar-header h3 i {
+    margin-right: 12px;
+    font-size: 1.2em;
+    color: var(--primary-color-light)
+    }
+.sidebar .closebtn {
+    position: absolute;
+    top: 50%;
+    right: 25px;
+    transform: translatey(-50%);
+    font-size: 24px;
+    font-weight: 400;
+    padding: 8px;
+    color: var(--sidebar-icon-color);
+    text-decoration: none;
+    line-height: 1;
+    transition: color 0.3s ease, transform 0.3s ease, background-color 0.3s ease;
+    z-index: 11;
+    border-radius: 50%
+    }
+.sidebar .closebtn:hover {
+    color: var(--sidebar-text-color);
+    background-color: var(--sidebar-hover-bg);
+    transform: translatey(-50%) rotate(90deg)
+    }
+.sidebar a.menu-item {
+    display: flex;
+    align-items: center;
+    padding: 12px 25px;
+    text-decoration: none;
+    font-size: 15px;
+    font-weight: 400;
+    color: var(--sidebar-text-color);
+    transition: background-color 0.2s ease, color 0.2s ease, border-left-color 0.2s ease;
+    border-left: 4px solid transparent;
+    white-space: nowrap;
+    margin: 0 0 2px 0;
+    position: relative;
+    border-radius: 0
+    }
+.sidebar a.menu-item i {
+    margin-right: 15px;
+    width: 20px;
+    text-align: center;
+    transition: color 0.2s ease;
+    flex-shrink: 0;
+    font-size: 1.05em;
+    color: var(--sidebar-icon-color)
+    }
+.sidebar a.menu-item:hover {
+    background-color: var(--sidebar-hover-bg);
+    color: #fff;
+    border-left-color: transparent
+    }
+.sidebar a.menu-item:hover i {
+    color: var(--primary-color-light)
+    }
+.sidebar a.menu-item.active {
+    background-color: var(--sidebar-active-bg);
+    color: var(--sidebar-active-text);
+    border-left-color: var(--primary-color-light);
+    font-weight: 500
+    }
+.sidebar a.menu-item.active i {
+    color: var(--sidebar-active-text)
+    }
+#main {
+    transition: margin-left 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+    padding: 30px;
+    position: relative;
+    z-index: 1
+    }
+.openbtn {
+    font-size: 18px;
+    cursor: pointer;
+    background-color: var(--primary-color);
+    color: white;
+    padding: 10px 18px;
+    border: none;
+    border-radius: 8px;
+    margin-bottom: 30px;
+    transition: background-color 0.3s ease, box-shadow 0.3s ease;
+    box-shadow: 0 3px 8px rgba(102, 126, 234, 0.4);
+    display: inline-flex;
+    align-items: center
+    }
+.brsk {
+    padding: 8px 15px;
+    background-color: var(--primary-color);
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.3s ease
+    }
+.brsk:hover {
+    background-color: var(--primary-color-light)
+    }
+#content-container {
+    background-color: var(--card-bg);
+    padding: 30px;
+    border-radius: 10px;
+    box-shadow: 0 5px 15px var(--shadow-color);
+    min-height: 75vh;
+    border: 1px solid var(--border-color)
+    }
+/* Styles specific to pertemuan content area */
+.pertemuan-content-area {
+    /* Removed padding, background, etc. as it's now the main content */
+    line-height: 1.7
+    }
+.pertemuan-content-area h1, .pertemuan-content-area h2, .pertemuan-content-area h3 {
+    color: var(--heading-color);
+    margin-top: 1.5em;
+    margin-bottom: 0.8em;
+    padding-bottom: 5px;
+    border-bottom: 1px solid var(--border-color)
+    }
+.pertemuan-content-area h1 {
+    border-bottom: 2px solid var(--primary-color);
+    padding-bottom: 10px;
+    margin-bottom: 25px;
+    color: var(--primary-color);
+    margin-top: 0;
+    font-size: 1.8rem
+    }
+/* .pertemuan-content-area h1 {
+            margin-top: 0;
+            font-size: 1.8em;
+        } */
+.pertemuan-content-area h2 {
+    font-size: 1.5em
+    }
+.pertemuan-content-area h3 {
+    font-size: 1.25em;
+    border-bottom: none
+    }
+.pertemuan-content-area p {
+    margin-bottom: 1em;
+    text-align: justify
+    }
+.pertemuan-content-area ul, .pertemuan-content-area ol {
+    margin-left: 20px;
+    margin-bottom: 1em
+    }
+.pertemuan-content-area li {
+    margin-bottom: 0.5em
+    }
+.pertemuan-content-area strong {
+    color: var(--primary-color)
+    }
+.interactive-section {
+    margin-top: 30px;
+    margin-bottom: 30px;
+    padding: 20px;
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+    background-color: #f8f9fa
+    }
+.interactive-section h3 {
+    margin-top: 0;
+    border-bottom: 1px solid #ddd;
+    padding-bottom: 10px;
+    margin-bottom: 15px
+    }
+/* Pixel Grid Styles */
+#pixelCanvas {
+    border: 1px solid #ccc;
+    margin-top: 10px;
+    cursor: pointer;
+    image-rendering: pixelated;
+    max-width: 100%;
+    height: auto;
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+    touch-action: none;
+    /* Prevent default touch actions like scrolling */
+    }
+.controls {
+    margin-bottom: 15px
+    }
+.controls label, .controls button, .controls input, .controls select {
+    margin-right: 10px;
+    margin-bottom: 5px;
+    vertical-align: middle
+    }
+.color-picker-container {
+    display: inline-block;
+    vertical-align: middle
+    }
+.color-picker-container input[type="color"] {
+    width: 40px;
+    height: 25px;
+    border: 1px solid #ccc;
+    padding: 0;
+    vertical-align: middle;
+    cursor: pointer
+    }
+.info {
+    margin-top: 15px;
+    font-size: 0.9em;
+    color: #555
+    }
+@media screen and (max-width: 768px) {
+    #main {
+        padding: 20px;
+        margin-left: 0 !important
+        }
+    .openbtn {
+        margin-bottom: 20px;
+        padding: 8px 15px
+        }
+    #content-container {
+        padding: 20px
+        }
+    .sidebar {
+        padding-top: 60px;
+        padding-bottom: 10px;
+        box-shadow: 3px 0 12px rgba(0, 0, 0, 0.1)
+        }
+    .sidebar-header {
+        height: 60px;
+        padding: 0 15px
+        }
+    .sidebar-header h3 {
+        font-size: 1em
+        }
+    .sidebar-header h3 i {
+        margin-right: 8px;
+        font-size: 1.1em
+        }
+    .sidebar .closebtn {
+        right: 15px;
+        font-size: 22px
+        }
+    .sidebar a.menu-item {
+        font-size: 14px;
+        padding: 10px 15px
+        }
+    .sidebar a.menu-item i {
+        margin-right: 12px;
+        font-size: 1em
+        }
+    }
+@media screen and (max-height: 450px) {
+    .sidebar {
+        padding-top: 10px;
+        padding-bottom: 5px
+        }
+    .sidebar a.menu-item {
+        font-size: 14px;
+        padding: 8px 15px
+        }
+    .sidebar-header {
+        display: none
+        }
+    .sidebar .closebtn {
+        top: 15px;
+        right: 15px;
+        transform: none;
+        background-color: transparent
+        }
+    .sidebar .closebtn:hover {
+        transform: rotate(90deg);
+        background-color: var(--sidebar-hover-bg)
+        }
+    }
+/* --- End Embedded CSS --- */
+/* Styles for the interactive color converter component */
+.interactive-color-section {
+    margin-top: 30px;
+    margin-bottom: 30px;
+    padding: 20px;
+    border: 1px solid var(--border-color, #e2e8f0);
+    border-radius: 8px;
+    background-color: #f8f9fa
+    }
+.interactive-color-section h3 {
+    margin-top: 0;
+    border-bottom: 1px solid #ddd;
+    padding-bottom: 10px;
+    margin-bottom: 15px
+    }
+.converter-flex-container {
+    display: flex;
+    justify-content: space-around;
+    /* Distribute space */
+    align-items: flex-start;
+    gap: 20px;
+    /* Space between converters */
+    flex-wrap: wrap;
+    /* Allow wrapping on smaller screens */
+    margin-bottom: 20px;
+    /* Space before formulas */
+    }
+.converter-container {
+    border: 1px solid #ccc;
+    padding: 20px;
+    border-radius: 8px;
+    background-color: #fff;
+    /* Match content container background */
+    flex: 1;
+    /* Allow containers to grow */
+    min-width: 280px;
+    /* Minimum width before wrapping */
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05)
+    }
+.converter-container h4 {
+    margin-top: 0;
+    border-bottom: 1px solid #eee;
+    padding-bottom: 10px;
+    margin-bottom: 15px;
+    font-size: 1.1em;
+    color: var(--heading-color, #1a202c)
+    }
+.color-display {
+    width: 100%;
+    height: 80px;
+    /* Slightly smaller */
+    border: 1px solid #ccc;
+    margin-bottom: 15px;
+    border-radius: 4px
+    }
+.slider-group label {
+    display: block;
+    margin-bottom: 5px;
+    font-weight: bold;
+    font-size: 0.95em;
+    color: var(--text-color, #2d3748)
+    }
+.slider-group input[type="range"] {
+    width: 100%;
+    margin-bottom: 10px;
+    cursor: pointer
+    }
+.value-display {
+    font-family: monospace;
+    font-size: 1em;
+    /* Slightly smaller */
+    margin-left: 8px;
+    color: var(--primary-color, #667eea);
+    background-color: #f0f0f0;
+    padding: 2px 5px;
+    border-radius: 3px
+    }
+.output-group {
+    margin-top: 15px;
+    font-size: 0.95em
+    }
+.formulas {
+    margin-top: 20px;
+    background: #eef2ff;
+    /* Lighter blue background */
+    padding: 15px;
+    border: 1px solid #c3dafe;
+    border-radius: 4px;
+    font-size: 0.9em
+    }
+.formulas h4 {
+    margin-top: 0;
+    margin-bottom: 10px;
+    color: var(--heading-color, #1a202c);
+    border-bottom: 1px solid #c3dafe;
+    padding-bottom: 5px
+    }
+.formulas pre {
+    white-space: pre-wrap;
+    word-wrap: break-word;
+    background: #fff;
+    padding: 10px;
+    border-radius: 3px;
+    border: 1px solid #ddd;
+    font-family: monospace;
+    font-size: 1.1em;
+    line-height: 1.5
+    }
+.pertemuan-content-area h1 {
+    border-bottom: 2px solid var(--primary-color);
+    padding-bottom: 10px;
+    margin-bottom: 25px;
+    color: var(--primary-color)
+    }
+/* Additional styles for interactive components if needed */
+canvas#lineCanvas {
+    border: 1px solid #ccc;
+    margin-top: 10px;
+    cursor: crosshair;
+    max-width: 100%;
+    height: auto;
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+    touch-action: none;
+    /* Prevent default touch actions like scrolling */
+    }
+.pixel-table-container {
+    max-height: 200px;
+    overflow-y: auto;
+    margin-top: 10px;
+    border: 1px solid #eee
+    }
+.pixel-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.9em
+    }
+.pixel-table th, .pixel-table td {
+    border: 1px solid #ddd;
+    padding: 4px 8px;
+    text-align: center
+    }
+.pixel-table th {
+    background-color: #f2f2f2;
+    position: sticky;
+    top: 0
+    }
+/* Visual Enhancements for Pertemuan 3 */
+.pertemuan-content-area h2 {
+    margin-top: 30px;
+    border-bottom: 1px solid var(--border-color);
+    padding-bottom: 8px
+    }
+.pertemuan-content-area h3 {
+    margin-top: 25px;
+    color: var(--heading-color)
+    }
+.pertemuan-content-area h4 {
+    margin-top: 20px;
+    color: var(--primary-color-light);
+    font-weight: 500
+    }
+.pertemuan-content-area p, .pertemuan-content-area li {
+    margin-bottom: 12px;
+    line-height: 1.7
+    }
+.pertemuan-content-area ul, .pertemuan-content-area ol {
+    padding-left: 25px;
+    margin-bottom: 15px
+    }
+.pertemuan-content-area strong {
+    color: var(--heading-color);
+    font-weight: 600
+    }
+/* Interactive Section Enhancements */
+.interactive-section {
+    background-color: #f9f9fc;
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+    padding: 20px;
+    margin-top: 30px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05)
+    }
+.interactive-section h3 {
+    margin-top: 0;
+    color: var(--primary-color);
+    border-bottom: 1px solid #eee;
+    padding-bottom: 10px;
+    margin-bottom: 20px
+    }
+.controls {
+    background-color: #fff;
+    padding: 15px;
+    border-radius: 6px;
+    border: 1px solid #eee;
+    margin-bottom: 20px;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 10px
+    }
+.controls label {
+    font-weight: 500;
+    margin-right: 5px
+    }
+.controls input[type="number"] {
+    width: 60px;
+    padding: 5px 8px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    margin-right: 15px;
+    /* More space between inputs */
+    }
+.controls button {
+    padding: 8px 15px;
+    background-color: var(--primary-color);
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.3s ease
+    }
+.controls button:hover {
+    background-color: var(--primary-color-light)
+    }
+canvas#lineCanvas {
+    border: 1px solid #ddd;
+    /* Lighter border */
+    background-color: #fff;
+    /* White background for contrast */
+    border-radius: 4px
+    }
+.info {
+    background-color: #eef2f7;
+    padding: 15px;
+    border-radius: 6px;
+    border: 1px solid #dbe1e8
+    }
+.info p {
+    margin: 5px 0
+    }
+.pixel-table-container {
+    border: 1px solid #dbe1e8;
+    border-radius: 4px;
+    background-color: #fff
+    }
+.pixel-table th {
+    background-color: #e9ecef;
+    /* Lighter header */
+    color: #495057;
+    font-weight: 600
+    }
+.pixel-table td {
+    border-color: #e9ecef;
+    /* Match header border */
+    }
+.pixel-table tr:nth-child(even) {
+    background-color: #f8f9fa;
+    /* Subtle striping */
+    }
+canvas#circleCanvas {
+    border: 1px solid #ccc;
+    margin-top: 10px;
+    cursor: crosshair;
+    max-width: 100%;
+    height: auto;
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+    touch-action: none;
+    /* Prevent default touch actions like scrolling */
+    }
+/* Visual Enhancements (Copied from per3.html) */
+/* Interactive Section Enhancements (Copied from per3.html) */
+canvas#circleCanvas {
+    /* Adjusted ID */
+    border: 1px solid #ddd;
+    /* Lighter border */
+    background-color: #fff;
+    /* White background for contrast */
+    border-radius: 4px
+    }
+/* Styles copied from per4.html for consistency */
+canvas#bezierCanvas {
+    border: 1px solid #ccc;
+    margin-top: 10px;
+    cursor: crosshair;
+    max-width: 100%;
+    height: auto;
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+    touch-action: none;
+    /* Prevent default touch actions like scrolling */
+    }
+/* Visual Enhancements (Copied from per3.html/per4.html) */
+.pertemuan-content-area code {
+    background-color: #e9ecef;
+    padding: 2px 5px;
+    border-radius: 3px;
+    font-family: monospace
+    }
+.pertemuan-content-area pre {
+    background-color: #f8f9fa;
+    border: 1px solid #e9ecef;
+    padding: 10px;
+    border-radius: 4px;
+    overflow-x: auto;
+    font-family: monospace
+    }
+/* Interactive Section Enhancements (Copied from per3.html/per4.html) */
+canvas#bezierCanvas {
+    /* Adjusted ID */
+    border: 1px solid #ddd;
+    /* Lighter border */
+    background-color: #fff;
+    /* White background for contrast */
+    border-radius: 4px
+    }
+/* Additional styles for interactive section to match theme */
+.interactive-section {
+    margin-top: 30px;
+    margin-bottom: 30px;
+    padding: 25px;
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+    background-color: #f8f9fa;
+    /* Light background */
+    }
+.interactive-section h3 {
+    margin-top: 0;
+    border-bottom: 1px solid var(--border-color);
+    padding-bottom: 10px;
+    margin-bottom: 20px;
+    font-size: 1.25em
+    }
+.interactive-section .controls {
+    margin-bottom: 20px;
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    /* Allow wrapping on smaller screens */
+    gap: 15px;
+    /* Spacing between controls */
+    }
+.interactive-section .controls label {
+    font-weight: 500;
+    margin-right: 5px
+    }
+.interactive-section .controls input[type="color"] {
+    width: 40px;
+    height: 30px;
+    border: 1px solid #ccc;
+    padding: 0;
+    vertical-align: middle;
+    cursor: pointer;
+    border-radius: 4px
+    }
+.interactive-section .controls button {
+    font-size: 14px;
+    cursor: pointer;
+    background-color: var(--primary-color);
+    color: white;
+    padding: 8px 15px;
+    border: none;
+    border-radius: 6px;
+    transition: background-color 0.3s ease, box-shadow 0.3s ease;
+    box-shadow: 0 2px 5px rgba(102, 126, 234, 0.3)
+    }
+.interactive-section .controls button:hover {
+    background-color: var(--primary-color-light);
+    box-shadow: 0 4px 8px rgba(102, 126, 234, 0.4)
+    }
+.interactive-section canvas {
+    border: 1px solid var(--border-color);
+    cursor: crosshair;
+    display: block;
+    margin: 15px auto;
+    /* Center canvas */
+    max-width: 100%;
+    /* Ensure responsiveness */
+    background-color: #fff;
+    /* Explicit white background for canvas */
+    }
+.interactive-section .info {
+    margin-top: 15px;
+    font-size: 0.9em;
+    color: #555
+    }
+/* Styles for code blocks if needed */
+pre {
+    background-color: #f4f4f4;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    padding: 15px;
+    overflow-x: auto;
+    /* Enable horizontal scroll for long code lines */
+    font-family: monospace;
+    font-size: 0.9em;
+    line-height: 1.5
+    }
+/* Additional styles from per6 for consistency */
+.interactive-section .controls {
+    margin-bottom: 10px;
+    /* Adjusted margin */
+    display: flex;
+    flex-direction: column;
+    /* Stack controls vertically */
+    align-items: flex-start;
+    /* Align controls to the left */
+    gap: 5px;
+    /* Spacing between controls */
+    }
+.interactive-section .controls input[type="range"] {
+    vertical-align: middle
+    }
+.interactive-section canvas {
+    border: 1px solid var(--border-color);
+    background-color: #fff;
+    /* Explicit white background for canvas */
+    max-width: 100%;
+    /* Ensure responsiveness */
+    }
+/* Styles for code blocks/formulas */
+pre, code {
+    background-color: #f4f4f4;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    padding: 10px;
+    overflow-x: auto;
+    /* Enable horizontal scroll */
+    font-family: monospace;
+    font-size: 0.9em;
+    line-height: 1.5;
+    display: block;
+    /* Make pre take full width */
+    margin-bottom: 1em
+    }
+.formula {
+    font-family: "Times New Roman", Times, serif;
+    font-style: italic;
+    margin: 1em 0;
+    padding: 10px;
+    border-left: 3px solid var(--primary-color);
+    background-color: #f9f9f9
+    }
+/* Additional styles from previous files for consistency */
+.interactive-section .controls {
+    margin-bottom: 10px;
+    /* Adjusted margin */
+    /* Using grid for better alignment */
+    }
+.interactive-section .controls label {
+    font-weight: 500;
+    margin-right: 5px;
+    grid-column: 1/2
+    }
+.interactive-section .controls input[type="range"] {
+    vertical-align: middle;
+    width: 100%;
+    /* Make range slider take available space */
+    grid-column: 2/3
+    }
+.interactive-section .controls input[type="number"] {
+    width: 60px;
+    grid-column: 2/3;
+    justify-self: start;
+    /* Align number input to start */
+    }
+.interactive-section .controls span {
+    grid-column: 3/4;
+    min-width: 30px;
+    /* Ensure space for value */
+    text-align: right
+    }
+.example-box {
+    border: 1px dashed #ccc;
+    padding: 15px;
+    margin: 15px 0;
+    background-color: #fff;
+    border-radius: 5px
+    }
+.example-box h4 {
+    margin-top: 0;
+    color: var(--primary-color)
+    }
+/* --- Embedded Full CSS from per1.html --- */
+.pertemuan-content-area {
+    line-height: 1.7
+    }
+.pertemuan-content-area pre {
+    background-color: #f8f9fa;
+    border: 1px solid var(--border-color);
+    padding: 15px;
+    border-radius: 5px;
+    overflow-x: auto;
+    font-family: monospace;
+    margin: 1em 0
+    }
+.pertemuan-content-area code {
+    font-family: monospace
+    }
+/* Interactive Section Styles */
+.interactive-section {
+    margin-top: 30px;
+    margin-bottom: 30px;
+    padding: 25px;
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+    background-color: #f8f9fa;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05)
+    }
+.interactive-section h3 {
+    margin-top: 0;
+    border-bottom: 1px solid #ddd;
+    padding-bottom: 10px;
+    margin-bottom: 20px;
+    font-size: 1.3em
+    }
+.controls {
+    margin-bottom: 20px;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 15px;
+    align-items: center
+    }
+.controls label, .controls select, .controls input[type="range"], .controls span {
+    margin-right: 5px;
+    font-size: 0.95em
+    }
+.controls select {
+    padding: 5px 8px;
+    border: 1px solid #ccc;
+    border-radius: 4px
+    }
+.controls input[type="range"] {
+    cursor: pointer;
+    vertical-align: middle
+    }
+.control-group {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 5px 0
+    }
+#transformCanvas {
+    border: 1px solid #ccc;
+    margin-top: 15px;
+    background-color: #fff;
+    max-width: 100%;
+    height: auto;
+    display: block;
+    margin-left: auto;
+    margin-right: auto
+    }
+@media screen and (max-width: 768px) {
+    #main {
+        padding: 20px;
+        margin-left: 0 !important
+        }
+    .openbtn {
+        margin-bottom: 20px;
+        padding: 8px 15px
+        }
+    #content-container {
+        padding: 20px
+        }
+    .sidebar {
+        padding-top: 60px;
+        padding-bottom: 10px;
+        box-shadow: 3px 0 12px rgba(0, 0, 0, 0.1)
+        }
+    .sidebar-header {
+        height: 60px;
+        padding: 0 15px
+        }
+    .sidebar-header h3 {
+        font-size: 1em
+        }
+    .sidebar-header h3 i {
+        margin-right: 8px;
+        font-size: 1.1em
+        }
+    .sidebar .closebtn {
+        right: 15px;
+        font-size: 22px
+        }
+    .sidebar a.menu-item {
+        font-size: 14px;
+        padding: 10px 15px
+        }
+    .sidebar a.menu-item i {
+        margin-right: 12px;
+        font-size: 1em
+        }
+    .controls {
+        flex-direction: column;
+        align-items: flex-start
+        }
+    .control-group {
+        width: 100%
+        }
+    }
+/* --- Embedded Full CSS from per9_revised.html --- */
+.controls {
+    margin-bottom: 20px;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 15px;
+    align-items: center
+    }
+.controls label, .controls button, .controls input, .controls span {
+    margin-right: 5px;
+    font-size: 0.95em;
+    vertical-align: middle
+    }
+.controls input[type="number"] {
+    width: 60px;
+    padding: 4px;
+    border: 1px solid #ccc;
+    border-radius: 4px
+    }
+.controls button {
+    padding: 6px 12px;
+    background-color: var(--primary-color);
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.3s ease
+    }
+.control-group {
+    display: flex;
+    flex-direction: column;
+    /* Stack labels and inputs vertically */
+    gap: 8px;
+    padding: 5px 0
+    }
+.control-group > div {
+    /* Group label and inputs horizontally */
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    flex-wrap: wrap
+    }
+#clipCanvas {
+    border: 1px solid #ccc;
+    margin-top: 15px;
+    background-color: #fff;
+    max-width: 100%;
+    height: auto;
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+    cursor: crosshair;
+    /* Indicate drawing possibility */
+    }
+@media screen and (max-width: 768px) {
+    #main {
+        padding: 20px;
+        margin-left: 0 !important
+        }
+    .openbtn {
+        margin-bottom: 20px;
+        padding: 8px 15px
+        }
+    #content-container {
+        padding: 20px
+        }
+    .sidebar {
+        padding-top: 60px;
+        padding-bottom: 10px;
+        box-shadow: 3px 0 12px rgba(0, 0, 0, 0.1)
+        }
+    .sidebar-header {
+        height: 60px;
+        padding: 0 15px
+        }
+    .sidebar-header h3 {
+        font-size: 1em
+        }
+    .sidebar-header h3 i {
+        margin-right: 8px;
+        font-size: 1.1em
+        }
+    .sidebar .closebtn {
+        right: 15px;
+        font-size: 22px
+        }
+    .sidebar a.menu-item {
+        font-size: 14px;
+        padding: 10px 15px
+        }
+    .sidebar a.menu-item i {
+        margin-right: 12px;
+        font-size: 1em
+        }
+    .controls {
+        grid-template-columns: 1fr;
+        /* Single column on smaller screens */
+        }
+    }
+h1, h2, h3, h4 {
+    color: var(--heading-color);
+    font-weight: 600
+    }
+h1 {
+    margin-bottom: 20px
+    }
+h2 {
+    margin-top: 30px;
+    margin-bottom: 15px
+    }
+h3 {
+    margin-top: 25px;
+    margin-bottom: 10px
+    }
+h4 {
+    margin-top: 20px;
+    margin-bottom: 8px
+    }
+p {
+    margin-bottom: 15px
+    }
+ul, ol {
+    margin-bottom: 15px;
+    padding-left: 25px
+    }
+li {
+    margin-bottom: 8px
+    }
+.sidebar {
+    height: 100%;
+    width: 0;
+    /* Controlled by JS */
+    position: fixed;
+    z-index: 1001;
+    top: 0;
+    left: 0;
+    background-color: var(--sidebar-bg);
+    box-shadow: 4px 0 15px rgba(0, 0, 0, 0.15);
+    overflow-y: auto;
+    overflow-x: hidden;
+    transition: width 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+    padding-top: 75px;
+    padding-bottom: 15px;
+    box-sizing: border-box;
+    border-right: none
+    }
+/* Interactive Section Styling */
+.interactive-section {
+    margin-top: 30px;
+    padding-top: 20px;
+    border-top: 1px solid var(--border-color)
+    }
+.interactive-section h3 {
+    margin-bottom: 15px;
+    color: var(--primary-color);
+    display: flex;
+    align-items: center;
+    gap: 8px
+    }
+.interactive-section canvas {
+    display: block;
+    /* Ensure canvas takes block space */
+    margin-bottom: 10px;
+    background-color: #fff;
+    /* Ensure canvas background is white if needed */
+    }
+.controls {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px 15px;
+    /* Add horizontal gap */
+    align-items: center;
+    margin-bottom: 10px
+    }
+.controls label {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    font-size: 0.9em
+    }
+.controls button, .controls input[type="color"], .controls input[type="range"], .controls input[type="checkbox"] {
+    padding: 5px 10px;
+    border-radius: 4px;
+    border: 1px solid var(--border-color);
+    font-size: 0.9em;
+    vertical-align: middle;
+    /* Align controls better */
+    }
+.controls button {
+    background-color: var(--primary-color);
+    color: white;
+    cursor: pointer;
+    transition: background-color 0.2s;
+    border: none
+    }
+.controls button:disabled {
+    background-color: #ccc;
+    cursor: not-allowed
+    }
+.controls input[type="color"] {
+    padding: 2px;
+    height: 28px;
+    /* Adjust height */
+    width: 40px;
+    border: 1px solid #ccc;
+    cursor: pointer
+    }
+.controls input[type="range"] {
+    cursor: pointer;
+    padding: 0;
+    vertical-align: middle
+    }
+.controls input[type="checkbox"] {
+    cursor: pointer;
+    margin-right: 3px
+    }
+.controls span {
+    /* For line width value */
+    font-size: 0.9em;
+    min-width: 15px;
+    /* Ensure space for value */
+    display: inline-block;
+    text-align: right
+    }
+.info {
+    font-size: 0.9em;
+    color: #718096;
+    margin-top: 5px
+    }
+/* Antialiasing Magnifier Styles */
+#aaMagnifierContainer {
+    position: relative;
+    /* Needed for absolute positioning of magnifier */
+    margin-top: 15px;
+    display: flex;
+    justify-content: center;
+    gap: 10px
+    }
+.magnifier-canvas {
+    width: 150px;
+    /* Display size */
+    height: 100px;
+    border: 2px solid var(--primary-color);
+    background-color: #fff;
+    /* Hide initially */
+    /* display: none; */
+    /* Position will be handled by JS if needed, or keep static */
+    image-rendering: pixelated;
+    /* Crucial for showing pixels */
+    image-rendering: -moz-crisp-edges;
+    image-rendering: crisp-edges
+    }
+#aaMagnifierLabel {
+    text-align: center;
+    font-size: 0.9em;
+    color: #555;
+    margin-bottom: 5px;
+    display: block;
+    /* Initially hidden, shown on hover */
+    }
+.pertemuan-content-area h1 {
+    color: var(--primary-color);
+    margin-bottom: 20px;
+    font-size: 2rem;
+    border-bottom: 2px solid var(--border-color)
+    }
+@media screen and (max-width: 768px) {
+    #main {
+        padding: 20px;
+        margin-left: 0 !important
+        }
+    .openbtn {
+        margin-bottom: 20px;
+        padding: 8px 15px
+        }
+    #content-container {
+        padding: 20px
+        }
+    .sidebar {
+        padding-top: 60px;
+        padding-bottom: 10px;
+        box-shadow: 3px 0 12px rgba(0, 0, 0, 0.1)
+        }
+    .sidebar-header {
+        height: 60px;
+        padding: 0 15px
+        }
+    .sidebar-header h3 {
+        font-size: 1em
+        }
+    .sidebar-header h3 i {
+        margin-right: 8px;
+        font-size: 1.1em
+        }
+    .sidebar .closebtn {
+        right: 15px;
+        font-size: 22px
+        }
+    .sidebar a.menu-item {
+        font-size: 14px;
+        padding: 10px 15px
+        }
+    .sidebar a.menu-item i {
+        margin-right: 12px;
+        font-size: 1em
+        }
+    .controls {
+        gap: 8px 10px
+        }
+    }
+/* Additional styles specific to per12, updated for theme consistency */
+canvas#projectionCanvas {
+    border: 1px solid var(--border-color);
+    /* Use theme border color */
+    margin-top: 10px;
+    cursor: grab;
+    max-width: 100%;
+    height: auto;
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+    touch-action: none;
+    /* Prevent default touch actions like scrolling */
+    background-color: #f8f9fa;
+    /* Match interactive section background */
+    }
+/* Added margin like per1.html */
+.controls label, .controls button, .controls input, .controls select {
+    /* This rule might become redundant with .control-item styling, but keep for now */
+    margin-right: 10px;
+    margin-bottom: 5px;
+    /* Adjusted to match per1.html */
+    vertical-align: middle
+    }
+/* New styles for better layout */
+.control-item {
+    display: block;
+    /* Each control on a new line */
+    margin-bottom: 10px;
+    /* Space between control items */
+    }
+.control-item label {
+    display: inline-block;
+    width: 80px;
+    /* Align labels */
+    font-weight: 500;
+    /* Slightly bolder labels */
+    color: var(--text-color);
+    margin-right: 5px;
+    /* Add small space after label */
+    }
+.control-item select, .control-item input[type="range"] {
+    padding: 4px 8px;
+    border: 1px solid var(--border-color);
+    border-radius: 4px;
+    vertical-align: middle;
+    box-sizing: border-box;
+    /* Include padding/border in width */
+    }
+.control-item input[type="range"] {
+    width: calc(100% - 95px);
+    /* Adjust width to fill remaining space, considering label width and margins */
+    max-width: 200px;
+    /* Set a max width */
+    cursor: pointer;
+    padding: 0;
+    /* Remove padding for range inputs */
+    }
+.control-item select {
+    width: calc(100% - 95px);
+    /* Match range input width */
+    max-width: 200px;
+    /* Match range input width */
+    }
+/* Additional styles specific to per13, updated for theme consistency */
+canvas#projectionCanvas, /* Keep old ID for now, though not used */canvas#animationCanvas {
+    border: 1px solid var(--border-color);
+    margin-top: 15px;
+    /* Increased margin */
+    cursor: default;
+    /* Default cursor for animation */
+    max-width: 100%;
+    height: auto;
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+    touch-action: none;
+    background-color: #fff;
+    /* Cleaner background */
+    border-radius: 4px;
+    /* Match other elements */
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05)
+    }
+.controls {
+    margin-bottom: 15px;
+    padding: 15px;
+    background-color: #f8f9fa;
+    /* Light background for controls */
+    border-radius: 4px;
+    border: 1px solid var(--border-color);
+    display: flex;
+    /* Use flexbox for button layout */
+    gap: 10px;
+    /* Space between buttons */
+    flex-wrap: wrap;
+    /* Allow wrapping on smaller screens */
+    }
+.controls label, .controls button, .controls input, .controls select {
+    margin: 0;
+    /* Remove default margins, use gap */
+    vertical-align: middle
+    }
+/* Style buttons to match theme */
+.controls button {
+    background-color: var(--primary-color);
+    color: white;
+    border: none;
+    padding: 8px 15px;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    font-family: "Poppins", sans-serif;
+    font-size: 0.9em
+    }
+/* Remove old control-item styles as they are not used for animation controls */
+/* .control-item { ... } */
+/* .control-item label { ... } */
+/* .control-item select, .control-item input[type="range"] { ... } */
+/* .control-item input[type="range"] { ... } */
+/* .control-item select { ... } */
+/* Improve content area styling */
+.pertemuan-content-area h3 {
+    margin-top: 1.8em;
+    /* More space above subsections */
+    color: var(--primary-color)
+    }
+.pertemuan-content-area h4 {
+    margin-top: 1.5em;
+    font-weight: 500;
+    color: var(--heading-color)
+    }
+.pertemuan-content-area ul, .pertemuan-content-area ol {
+    padding-left: 25px;
+    /* Indent lists slightly more */
+    }
+.pertemuan-content-area li {
+    margin-bottom: 0.6em
+    }
+/* Style interactive section */
+.interactive-section {
+    margin-top: 40px;
+    padding: 25px;
+    background-color: #fff;
+    /* White background */
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+    box-shadow: 0 3px 10px rgba(0, 0, 0, 0.05)
+    }
+.interactive-section h3 {
+    margin-top: 0;
+    border-bottom: 1px solid var(--border-color);
+    padding-bottom: 10px;
+    margin-bottom: 20px;
+    color: var(--primary-color)
+    }
+.info {
+    margin-top: 15px;
+    font-size: 0.9em;
+    color: #555;
+    text-align: center
+    }
+/* Additional styles specific to per14 */
+canvas#visualizationCanvas {
+    border: 1px solid var(--border-color);
+    margin-top: 15px;
+    cursor: default;
+    max-width: 100%;
+    height: auto;
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+    touch-action: none;
+    background-color: #fff;
+    /* Cleaner background */
+    border-radius: 4px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05)
+    }
+.controls {
+    margin-bottom: 15px;
+    padding: 15px;
+    background-color: #f8f9fa;
+    border-radius: 4px;
+    border: 1px solid var(--border-color);
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap
+    }
+/* Improve content area styling (Copied from per13 improvements) */
+.pertemuan-content-area h2 {
+    margin-top: 2em;
+    padding-bottom: 10px
+    }
+.pertemuan-content-area h3 {
+    margin-top: 1.8em;
+    color: var(--primary-color)
+    }
+.pertemuan-content-area ul, .pertemuan-content-area ol {
+    padding-left: 25px
+    }
+/* Style placeholders (Copied from per13 improvements) */
+em[class*="placeholder"] {
+    color: #888;
+    background-color: #f0f0f0;
+    padding: 5px 8px;
+    border-radius: 3px;
+    font-style: normal;
+    font-size: 0.9em;
+    display: inline-block;
+    margin-top: 5px
+    }
+/* Style interactive section (Copied from per13 improvements) */
+.interactive-section {
+    margin-top: 40px;
+    padding: 25px;
+    background-color: #fff;
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+    box-shadow: 0 3px 10px rgba(0, 0, 0, 0.05)
+    }
+/* Style for code blocks */
+pre {
+    background-color: #f8f9fa;
+    border: 1px solid var(--border-color);
+    border-radius: 4px;
+    padding: 15px;
+    overflow-x: auto;
+    font-family: "Courier New", Courier, monospace;
+    font-size: 0.9em;
+    margin-top: 1em;
+    margin-bottom: 1em
+    }
+code.language-java {
+    color: #333
+    }
+
+/* --- Interactive Antialiasing Section Responsiveness --- */
+.interactive-section .canvas-group-wrapper {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px; /* Increased gap for better spacing */
+    margin-bottom: 20px;
+    justify-content: center; /* Center items by default */
+}
+
+.interactive-section .canvas-item,
+.interactive-section .magnifier-item {
+    display: flex;
+    flex-direction: column; /* Stack canvas and its label vertically */
+    align-items: center; /* Center content within the item */
+    text-align: center;
+    background-color: #f8f9fa; /* Light background for each item */
+    padding: 15px;
+    border-radius: 8px;
+    border: 1px solid #e9ecef;
+    flex: 1 1 300px; /* Allow items to grow and shrink, base width 300px */
+    max-width: 320px; /* Max width for larger canvases */
+}
+
+.interactive-section .magnifier-item {
+    max-width: 170px; /* Smaller max width for magnifiers */
+}
+
+.interactive-section canvas {
+    border: 1px solid #ccc;
+    cursor: crosshair;
+    background-color: #f0f0f0;
+    max-width: 100%; /* Ensure canvas is responsive within its container */
+    height: auto;   /* Maintain aspect ratio */
+    display: block; /* Remove extra space below canvas */
+    margin-bottom: 8px; /* Space between canvas and its label */
+}
+
+.interactive-section .magnifier-canvas {
+    border: 1px solid #777;
+}
+
+.interactive-section .canvas-item p,
+.interactive-section .magnifier-item p {
+    font-size: 0.9em;
+    margin-top: 5px;
+    margin-bottom: 0; /* Remove default bottom margin from p */
+    color: #495057;
+}
+
+.interactive-section #aaMagnifierLabel {
+    display: block;
+    margin-bottom: 8px;
+    font-weight: 500;
+    color: #343a40;
+}
+
+.interactive-section .controls {
+    margin-top: 20px;
+    padding: 15px;
+    background-color: #f8f9fa;
+    border-radius: 8px;
+    border: 1px solid #e9ecef;
+    display: flex;
+    flex-wrap: wrap; /* Allow controls to wrap */
+    gap: 15px; /* Gap between control elements */
+    justify-content: center; /* Center controls */
+    align-items: center;
+}
+
+.interactive-section .controls label {
+    margin-left: 0; /* Remove fixed margin-left */
+    margin-right: 5px;
+}
+
+.interactive-section .controls input[type="color"],
+.interactive-section .controls input[type="range"] {
+    vertical-align: middle;
+}
+
+.interactive-section .controls button {
+    padding: 8px 15px;
+    background-color: var(--primary-color);
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.interactive-section .controls button:hover {
+    background-color: var(--primary-color-light);
+}
+
+.interactive-section .info {
+    text-align: center;
+    margin-top: 15px;
+    font-size: 0.95em;
+    color: #6c757d;
+}
+
+/* Responsive adjustments for the interactive section */
+@media screen and (max-width: 768px) {
+    .interactive-section .canvas-group-wrapper {
+        flex-direction: column; /* Stack canvas groups vertically */
+        align-items: center; /* Center groups when stacked */
+        gap: 15px;
+    }
+
+    .interactive-section .canvas-item,
+    .interactive-section .magnifier-item {
+        flex-basis: 100%; /* Each item takes full width when stacked */
+        max-width: 95%; /* Slightly less than full width for padding */
+    }
+    
+    .interactive-section .controls {
+        flex-direction: column; /* Stack controls vertically */
+        align-items: stretch; /* Make controls take full width */
+    }
+
+    .interactive-section .controls label,
+    .interactive-section .controls input,
+    .interactive-section .controls button,
+    .interactive-section .controls span {
+        width: auto; /* Allow elements to size naturally or be controlled by flex */
+        margin-left: 0;
+        margin-right: 0;
+    }
+    .interactive-section .controls input[type="range"] {
+        width: 100%; /* Make range slider take full width */
+    }
+}
+
+
+
+/* --- Revised Interactive Antialiasing Section --- */
+.interactive-section {
+    background-color: #fdfdfd; /* Slightly off-white background for the whole section */
+    padding: 20px;
+    border-radius: 8px;
+    border: 1px solid #e0e0e0;
+    margin-bottom: 30px;
+}
+
+.interactive-section h3 {
+    text-align: center;
+    margin-bottom: 15px;
+    color: var(--heading-color);
+}
+
+.interactive-section > p:first-of-type {
+    text-align: center;
+    margin-bottom: 25px;
+    color: #555;
+}
+
+.canvas-group-wrapper {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+    margin-bottom: 25px;
+    justify-content: center; /* Center groups */
+    padding: 15px;
+    background-color: #f8f9fa;
+    border-radius: 6px;
+    border: 1px solid #e9ecef;
+}
+
+.main-canvas-group .canvas-item {
+    flex: 1 1 300px; /* Allow items to grow and shrink, base width 300px */
+    max-width: 320px; /* Max width for larger canvases */
+}
+
+.magnifier-canvas-group {
+    margin-top: 10px; /* Add some space above magnifier group */
+}
+
+.magnifier-canvas-group .magnifier-item {
+    flex: 1 1 150px;
+    max-width: 170px; /* Smaller max width for magnifiers */
+}
+
+.canvas-item,
+.magnifier-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+}
+
+.interactive-section canvas {
+    border: 1px solid #ccc;
+    cursor: crosshair;
+    background-color: #f0f0f0;
+    max-width: 100%;
+    height: auto;
+    display: block;
+    margin-bottom: 8px;
+}
+
+.interactive-section .magnifier-canvas {
+    border: 1px solid #777;
+}
+
+.canvas-item p,
+.magnifier-item p {
+    font-size: 0.9em;
+    margin-top: 5px;
+    margin-bottom: 0;
+    color: #495057;
+}
+
+#aaMagnifierLabel {
+    display: block;
+    margin-bottom: 8px;
+    font-weight: 500;
+    color: #343a40;
+    font-size: 0.95em;
+}
+
+
+/* --- Revised Interactive Antialiasing Section - Iteration 3 --- */
+.interactive-section {
+    background-color: #fdfdfd;
+    padding: 20px;
+    border-radius: 8px;
+    border: 1px solid #e0e0e0;
+    margin-bottom: 30px;
+}
+
+.interactive-section h3 {
+    text-align: center;
+    margin-bottom: 15px;
+    color: var(--heading-color);
+}
+
+.interactive-section > p:first-of-type {
+    text-align: center;
+    margin-bottom: 25px;
+    color: #555;
+}
+
+.canvas-group-wrapper {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+    margin-bottom: 25px;
+    justify-content: center;
+    padding: 15px;
+    background-color: #f8f9fa;
+    border-radius: 6px;
+    border: 1px solid #e9ecef;
+}
+
+.main-canvas-group .canvas-item {
+    flex: 1 1 300px;
+    max-width: 320px;
+}
+
+.magnifier-canvas-group {
+    margin-top: 10px;
+    align-items: flex-start; /* Align items to the top */
+}
+
+.magnifier-canvas-group .magnifier-item {
+    flex: 1 1 150px;
+    max-width: 180px; /* Slightly increased max-width for better text fit */
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+}
+
+.canvas-item,
+.magnifier-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+}
+
+.interactive-section canvas {
+    border: 1px solid #ccc;
+    cursor: crosshair;
+    background-color: #f0f0f0;
+    max-width: 100%;
+    height: auto;
+    display: block;
+    margin-bottom: 8px;
+}
+
+.interactive-section .magnifier-canvas {
+    border: 1px solid #777;
+}
+
+.canvas-item p,
+.magnifier-item p {
+    font-size: 0.9em;
+    margin-top: 5px;
+    margin-bottom: 0;
+    color: #495057;
+    line-height: 1.3; /* Improved line height for paragraph under magnifier */
+}
+
+#aaMagnifierLabel {
+    display: block;
+    margin-bottom: 10px; /* Increased margin */
+    font-weight: 500;
+    color: #343a40;
+    font-size: 0.95em;
+    width: 100%; /* Ensure it takes full width of its container */
+    text-align: center; /* Center the main label */
+}
+
+/* Ensure the placeholder span in magnifier also takes up space for alignment */
+.magnifier-item span[style*="visibility: hidden"] {
+    height: 1.14em; /* Approximate height of the #aaMagnifierLabel */
+    margin-bottom: 10px;
+}
+
+.controls-group {
+    margin-top: 20px;
+    padding: 20px;
+    background-color: #f8f9fa;
+    border-radius: 8px;
+    border: 1px solid #e9ecef;
+    display: flex;
+    flex-direction: column; 
+    gap: 18px; /* Increased gap */
+    align-items: center; 
+}
+
+.control-item {
+    display: flex;
+    flex-wrap: nowrap; /* Prevent wrapping for simple controls like color and width */
+    align-items: center;
+    justify-content: center; 
+    gap: 10px; 
+    width: 100%;
+    max-width: 450px; /* Adjusted max-width */
+}
+
+/* Specific styling for the line width control item */
+.control-item.line-width-control {
+    justify-content: space-between; /* Distribute space for better alignment */
+}
+
+.control-item label {
+    margin-right: 5px;
+    font-weight: 500;
+    color: #343a40;
+    flex-shrink: 0; 
+    white-space: nowrap; /* Prevent label text from wrapping */
+}
+
+.control-item input[type="color"] {
+    width: 50px; 
+    height: 30px;
+    padding: 2px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+}
+
+.control-item input[type="range"] {
+    flex-grow: 1; 
+    min-width: 120px; 
+    max-width: 220px; /* Adjusted max-width */
+    height: 8px;
+    -webkit-appearance: none;
+    appearance: none;
+    background: #ddd;
+    outline: none;
+    border-radius: 4px;
+    cursor: pointer;
+    margin: 0 5px; /* Add small horizontal margin */
+}
+
+.control-item input[type="range"]::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 18px;
+    height: 18px;
+    background: var(--primary-color);
+    cursor: pointer;
+    border-radius: 50%;
+    border: 2px solid white;
+    box-shadow: 0 0 2px rgba(0,0,0,0.3);
+}
+
+.control-item input[type="range"]::-moz-range-thumb {
+    width: 18px;
+    height: 18px;
+    background: var(--primary-color);
+    cursor: pointer;
+    border-radius: 50%;
+    border: 2px solid white;
+    box-shadow: 0 0 2px rgba(0,0,0,0.3);
+}
+
+.control-item #aaLineWidthValue {
+    margin-left: 5px;
+    font-weight: 500;
+    min-width: 30px; /* Increased min-width */
+    text-align: left;
+    white-space: nowrap; /* Prevent px from wrapping */
+}
+
+.controls-group button {
+    padding: 10px 20px;
+    background-color: var(--primary-color);
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    font-weight: 500;
+}
+
+.controls-group button:hover {
+    background-color: var(--primary-color-light);
+}
+
+.interactive-section .info {
+    text-align: center;
+    margin-top: 20px;
+    font-size: 0.95em;
+    color: #6c757d;
+    padding: 0 10px;
+}
+
+@media screen and (min-width: 700px) { /* Adjusted breakpoint for row layout of controls */
+    .controls-group {
+        flex-direction: row; 
+        justify-content: space-evenly; /* Evenly distribute space */
+        align-items: center;
+    }
+    .control-item {
+        width: auto; 
+        max-width: none;
+    }
+    .control-item.line-width-control {
+        min-width: 300px; /* Ensure enough space for line width control */
+    }
+}
+
+@media screen and (max-width: 768px) {
+    .main-canvas-group,
+    .magnifier-canvas-group {
+        flex-direction: column; 
+        align-items: center; 
+    }
+
+    .main-canvas-group .canvas-item,
+    .magnifier-canvas-group .magnifier-item {
+        flex-basis: 100%; 
+        max-width: 95%; 
+    }
+}
+
+@media screen and (max-width: 480px) {
+    .interactive-section {
+        padding: 15px;
+    }
+    .canvas-group-wrapper {
+        padding: 10px;
+        gap: 15px;
+    }
+    .controls-group {
+        padding: 15px;
+        gap: 15px; /* Consistent gap for smaller screens */
+    }
+    .control-item label {
+        font-size: 0.9em;
+    }
+    .controls-group button {
+        padding: 8px 15px;
+        font-size: 0.95em;
+        width: 100%; /* Make button full width on very small screens */
+        box-sizing: border-box;
+    }
+    .control-item input[type="range"] {
+        min-width: 100px; /* Further reduce min-width for slider */
+    }
+    .interactive-section .info {
+        font-size: 0.9em;
+    }
+    .control-item.line-width-control {
+        flex-wrap: wrap; /* Allow line width control to wrap if too narrow */
+        justify-content: center;
+    }
+     .control-item.line-width-control label {
+        width: 100%;
+        text-align: center;
+        margin-bottom: 5px;
+    }
+}
+
+
+
+/* --- Antialiasing Math Formula Styles --- */
+/* Math Formula Styles - Namespaced to avoid conflicts */
+.antialiasing-math .formula-table {
+    display: inline-table;
+    vertical-align: middle;
+    border-collapse: collapse;
+    margin: 10px auto;
+}
+
+.antialiasing-math .formula-table td {
+    padding: 2px 4px;
+    text-align: center;
+    vertical-align: middle;
+    white-space: nowrap;
+}
+
+.antialiasing-math .fraction-table {
+    display: inline-table;
+    vertical-align: middle;
+    text-align: center;
+    margin: 0 3px;
+    border-collapse: collapse;
+}
+
+.antialiasing-math .fraction-table .numerator {
+    border-bottom: 1px solid black;
+    padding: 0 5px;
+    text-align: center;
+}
+
+.antialiasing-math .fraction-table .denominator {
+    padding: 0 5px;
+    text-align: center;
+}
+
+.antialiasing-math .sum-table {
+    display: inline-table;
+    vertical-align: middle;
+    text-align: center;
+    margin: 0 3px;
+    border-collapse: collapse;
+}
+
+.antialiasing-math .sum-symbol {
+    font-size: 1.8em;
+    line-height: 0.8;
+    padding: 0;
+}
+
+.antialiasing-math .sum-upper {
+    font-size: 0.7em;
+    vertical-align: top;
+    text-align: center;
+    padding: 0;
+}
+
+.antialiasing-math .sum-lower {
+    font-size: 0.7em;
+    vertical-align: bottom;
+    text-align: center;
+    padding: 0;
+}
+
+.antialiasing-math .sum-cell {
+    padding: 0 2px !important;
+}
+
+.antialiasing-math .complex-fraction-table {
+    display: inline-table;
+    vertical-align: middle;
+    text-align: center;
+    margin: 0 3px;
+    border-collapse: collapse;
+}
+
+.antialiasing-math .complex-numerator {
+    border-bottom: 1px solid black;
+    padding: 5px;
+    text-align: center;
+}
+
+.antialiasing-math .complex-denominator {
+    padding: 5px;
+    text-align: center;
+}
+
+.antialiasing-math .nested-sum-table {
+    display: inline-table;
+    border-collapse: collapse;
+    margin: 0;
+}
+
+.antialiasing-math .nested-sum-table td {
+    padding: 0 2px;
+    vertical-align: middle;
+}
+
+/* Styles for the formal formulas section */
+.formula-section {
+    margin-top: 30px;
+    background: #f0f4f8;
+    padding: 25px;
+    border: 1px solid #d0e1f9;
+    border-radius: 8px;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+}
+
+.formula-section h3 {
+    color: #2c3e50;
+    margin-top: 0;
+    margin-bottom: 20px;
+    border-bottom: 2px solid #d0e1f9;
+    padding-bottom: 10px;
+}
+
+.antialiasing-math .formula-box {
+    background: #ffffff;
+    border: 1px solid #d0e1f9;
+    border-radius: 6px;
+    padding: 20px;
+    margin: 20px 0;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.03);
+}
+
+.antialiasing-math .formula-box h4 {
+    color: #3498db;
+    margin-top: 0;
+    margin-bottom: 15px;
+    font-size: 1.1em;
+}
+
+.antialiasing-math .formula-content {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.antialiasing-math .formula-display, 
+.antialiasing-math .formula-explanation {
+    background: #f8fafc;
+    padding: 15px;
+    border-radius: 4px;
+    border-left: 4px solid #3498db;
+}
+
+.antialiasing-math .math-formula {
+    font-family: 'Times New Roman', serif;
+    font-size: 1.1em;
+    text-align: center;
+    padding: 15px 10px;
+    margin: 15px 0;
+    background: #ffffff;
+    border: 1px solid #e0e0e0;
+    border-radius: 4px;
+    overflow-x: auto;
+}
+
+.antialiasing-math ul {
+    padding-left: 20px;
+    margin: 10px 0;
+}
+
+.antialiasing-math ul li {
+    margin-bottom: 5px;
+}
+
+.antialiasing-math .note {
+    font-size: 0.9em;
+    color: #7f8c8d;
+    font-style: italic;
+    margin-top: 20px;
+    border-top: 1px dashed #d0e1f9;
+    padding-top: 15px;
+}
+
+/* Responsive adjustments */
+@media screen and (min-width: 768px) {
+    .antialiasing-math .formula-content {
+        flex-direction: row;
+    }
+    
+    .antialiasing-math .formula-display, 
+    .antialiasing-math .formula-explanation {
+        flex: 1;
+    }
+}
+
+@media screen and (max-width: 768px) {
+    .formula-section {
+        padding: 20px;
+    }
+    
+    .antialiasing-math .formula-box {
+        padding: 15px;
+    }
+    
+    .antialiasing-math .math-formula {
+        font-size: 1em;
+        padding: 10px 5px;
+        overflow-x: auto;
+    }
+    
+    .antialiasing-math .sum-symbol {
+        font-size: 1.5em;
+    }
+}
+
+@media screen and (max-width: 480px) {
+    .formula-section {
+        padding: 15px;
+    }
+    
+    .antialiasing-math .formula-box {
+        padding: 12px;
+        margin: 15px 0;
+    }
+    
+    .antialiasing-math .formula-display, 
+    .antialiasing-math .formula-explanation {
+        padding: 12px;
+    }
+    
+    .antialiasing-math .math-formula {
+        font-size: 0.9em;
+        padding: 8px 4px;
+    }
+}

@@ -1,0 +1,743 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Materi Pertemuan 4 - Algoritma Lingkaran dan Elips</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        /* Improved styling for material content */
+        body {
+            font-family: 'Poppins', sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background-color: #f8f9fa;
+        }
+        
+        .pertemuan-content-area {
+            padding: 25px;
+            background-color: #fff;
+            border-radius: 10px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+        }
+        
+        h1, h2, h3, h4 {
+            color: #2c3e50;
+            margin-top: 1.5em;
+            margin-bottom: 0.8em;
+            font-weight: 600;
+        }
+        
+        h1 {
+            font-size: 2.2em;
+            border-bottom: 2px solid #3498db;
+            padding-bottom: 10px;
+            margin-bottom: 25px;
+            color: #2980b9;
+        }
+        
+        h2 {
+            font-size: 1.8em;
+            border-left: 4px solid #3498db;
+            padding-left: 15px;
+        }
+        
+        h3 {
+            font-size: 1.5em;
+            color: #2980b9;
+        }
+        
+        h4 {
+            font-size: 1.2em;
+            color: #3498db;
+        }
+        
+        p {
+            margin-bottom: 1.2em;
+            font-size: 1.05em;
+        }
+        
+        ul {
+            margin-bottom: 1.5em;
+            padding-left: 1.5em;
+        }
+        
+        li {
+            margin-bottom: 0.5em;
+        }
+        
+        /* Enhanced interactive sections */
+        .interactive-section {
+            margin: 30px 0;
+            padding: 25px;
+            border-radius: 10px;
+            background-color: #f9f9f9;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+            border-left: 5px solid #3498db;
+            transition: all 0.3s ease;
+        }
+        
+        /* .interactive-section:hover {
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            transform: translateY(-2px);
+        } */
+        
+        .interactive-section h4 {
+            color: #2980b9;
+            margin-top: 0;
+            font-size: 1.3em;
+            display: flex;
+            align-items: center;
+        }
+        
+        .interactive-section h4:before {
+            content: "\f1c0";
+            font-family: "Font Awesome 6 Free";
+            font-weight: 900;
+            margin-right: 10px;
+            color: #3498db;
+        }
+        
+        /* Enhanced formula blocks */
+        .formula-block {
+            margin: 30px 0;
+            padding: 25px;
+            border-radius: 10px;
+            background-color: #eef7ff;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+            border-left: 5px solid #2980b9;
+        }
+        
+        .formula-block h4 {
+            color: #2980b9;
+            margin-top: 0;
+            font-size: 1.3em;
+            display: flex;
+            align-items: center;
+        }
+        
+        .formula-block h4:before {
+            content: "\f12b";
+            font-family: "Font Awesome 6 Free";
+            font-weight: 900;
+            margin-right: 10px;
+            color: #2980b9;
+        }
+        
+        /* Enhanced explanation blocks */
+        .penjelasan-bawah {
+            margin: 30px 0;
+            padding: 25px;
+            border-radius: 10px;
+            background-color: #f0fff0;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+            border-left: 5px solid #27ae60;
+        }
+        
+        .penjelasan-bawah h4 {
+            color: #27ae60;
+            margin-top: 0;
+            font-size: 1.3em;
+            display: flex;
+            align-items: center;
+        }
+        
+        .penjelasan-bawah h4:before {
+            content: "\f05a";
+            font-family: "Font Awesome 6 Free";
+            font-weight: 900;
+            margin-right: 10px;
+            color: #27ae60;
+        }
+        
+        /* Improved controls */
+        .controls {
+            background-color: #f8f9fa;
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .controls label {
+            display: flex;
+            align-items: center;
+            margin: 5px 10px 5px 0;
+            font-weight: 500;
+        }
+        
+        .controls input {
+            width: 60px;
+            padding: 8px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            margin: 0 5px;
+            transition: border-color 0.3s;
+        }
+        
+        .controls input:focus {
+            border-color: #3498db;
+            outline: none;
+            box-shadow: 0 0 0 2px rgba(52, 152, 219, 0.2);
+        }
+        
+        .controls button {
+            background-color: #3498db;
+            color: white;
+            border: none;
+            padding: 10px 15px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: 500;
+            transition: background-color 0.3s;
+        }
+        
+        .controls button:hover {
+            background-color: #2980b9;
+        }
+        
+        /* Enhanced canvas */
+        canvas {
+            border: 1px solid #ddd;
+            margin-top: 15px;
+            background-color: #fff;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+            max-width: 100%;
+        }
+        
+        /* Improved output tables */
+        .output {
+            margin-top: 20px;
+            background-color: #fff;
+            padding: 15px;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+        }
+        
+        .output strong {
+            color: #2980b9;
+        }
+        
+        .output table {
+            width: 100%;
+            margin-top: 15px;
+            border-collapse: collapse;
+            font-size: 0.95em;
+        }
+        
+        .output th {
+            background-color: #3498db;
+            color: white;
+            padding: 10px;
+            text-align: left;
+            border: 1px solid #ddd;
+        }
+        
+        .output td {
+            border: 1px solid #ddd;
+            padding: 10px;
+            text-align: left;
+        }
+        
+        .output tr:nth-child(even) {
+            background-color: #f9f9f9;
+        }
+        
+        .output tr:hover {
+            background-color: #f1f1f1;
+        }
+        
+        /* Enhanced code styling */
+        code {
+            background-color: #f8f9fa;
+            padding: 3px 6px;
+            border-radius: 4px;
+            font-family: 'Consolas', 'Monaco', monospace;
+            color: #e74c3c;
+            font-size: 0.95em;
+            border: 1px solid #eee;
+        }
+        
+        pre {
+            background-color: #f8f9fa;
+            padding: 15px;
+            border-radius: 8px;
+            overflow-x: auto;
+            border: 1px solid #eee;
+            margin: 15px 0;
+        }
+        
+        /* Section dividers */
+        .section-divider {
+            height: 3px;
+            background: linear-gradient(to right, #3498db, transparent);
+            margin: 40px 0;
+            border-radius: 2px;
+        }
+        
+        /* Highlight important concepts */
+        .highlight {
+            background-color: #fffde7;
+            border-left: 3px solid #ffc107;
+            padding: 10px 15px;
+            margin: 15px 0;
+            border-radius: 0 5px 5px 0;
+        }
+        
+        /* Responsive adjustments */
+        @media (max-width: 768px) {
+            .controls {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+            
+            .controls label {
+                margin-bottom: 10px;
+            }
+            
+            canvas {
+                width: 100%;
+                height: auto;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Sidebar Structure (unchanged as requested) -->
+    <div id="sidebar" class="sidebar">
+        <div class="sidebar-header">
+            <h3><i class="fas fa-graduation-cap"></i> Menu</h3>
+            <a href="javascript:void(0)" class="closebtn" onclick="closeNav()">&times;</a>
+        </div>
+        <a href="index.html" class="menu-item"><i class="fas fa-chart-pie"></i> DASHBOARD</a>
+        <a href="per1.html" class="menu-item"><i class="fas fa-book"></i> Pertemuan 1</a>
+        <a href="per2.html" class="menu-item"><i class="fas fa-book"></i> Pertemuan 2</a>
+        <a href="per3.html" class="menu-item"><i class="fas fa-book"></i> Pertemuan 3</a>
+        <a href="per4.html" class="menu-item active"><i class="fas fa-book"></i> Pertemuan 4</a>
+        <a href="per5.html" class="menu-item"><i class="fas fa-book"></i> Pertemuan 5</a>
+        <a href="per6.html" class="menu-item"><i class="fas fa-book"></i> Pertemuan 6</a>
+        <a href="per7.html" class="menu-item"><i class="fas fa-book"></i> Pertemuan 7</a>
+        <a href="per8.html" class="menu-item"><i class="fas fa-book"></i> Pertemuan 8</a>
+        <a href="per9.html" class="menu-item"><i class="fas fa-book"></i> Pertemuan 9</a>
+        <a href="per10.html" class="menu-item"><i class="fas fa-book"></i> Pertemuan 10</a>
+        <a href="per11.html" class="menu-item"><i class="fas fa-book"></i> Pertemuan 11</a>
+        <a href="per12.html" class="menu-item"><i class="fas fa-book"></i> Pertemuan 12</a>
+        <a href="per13.html" class="menu-item"><i class="fas fa-book"></i> Pertemuan 13</a>
+        <a href="per14.html" class="menu-item"><i class="fas fa-book"></i> Pertemuan 14</a>
+    </div>
+
+    <!-- Main Content Structure (improved design) -->
+    <div id="main">
+        <button class="openbtn" onclick="openNav()"><i class="fas fa-bars"></i> Menu</button>
+        <div id="content-container">
+            <!-- Pertemuan 4 Content Area - IMPROVED CONTENT STARTS HERE -->
+            <div class="pertemuan-content-area">
+                <h1><i class="fas fa-circle"></i> Pertemuan 4: Algoritma Lingkaran dan Elips</h1>
+
+                <div class="highlight">
+                    <h2>A. Tujuan Pembelajaran</h2>
+                    <p>Setelah menyelesaikan materi pada pertemuan ini, mahasiswa mampu menerapkan algoritma lingkaran dan elips dalam pemrograman grafis komputer.</p>
+                    <p>Pada pertemuan ini akan dijelaskan mengenai:</p>
+                    <ul>
+                        <li><i class="fas fa-circle"></i> Algoritma Pembuatan Lingkaran</li>
+                        <li><i class="fas fa-circle-notch"></i> Algoritma Elips</li>
+                    </ul>
+                </div>
+
+                <div class="section-divider"></div>
+
+                <h2>B. Uraian Materi</h2>
+
+                <!-- Lingkaran Section -->
+                <h3><i class="fas fa-circle"></i> 1. Algoritma Pembuatan Lingkaran</h3>
+                <p>Algoritma Midpoint adalah salah satu metode efisien untuk menggambar lingkaran pada layar komputer. Algoritma ini menggunakan pendekatan inkremental untuk menentukan piksel mana yang harus diaktifkan agar membentuk lingkaran.</p>
+
+                <!-- Visual Interaktif Lingkaran -->
+                <div class="interactive-section">
+                    <h4>Visual Interaktif: Algoritma Midpoint Lingkaran</h4>
+                    <div class="controls">
+                        <label><i class="fas fa-crosshairs"></i> Titik Pusat (xp, yp): <input type="number" id="circleXp" value="25"> <input type="number" id="circleYp" value="20"></label>
+                        <label><i class="fas fa-arrows-alt-h"></i> Jari-jari (r): <input type="number" id="circleR" value="15"></label>
+                        <button onclick="runMidpointCircle()"><i class="fas fa-play"></i> Hitung & Gambar Lingkaran</button>
+                    </div>
+                    <canvas id="circleCanvas" width="500" height="400"></canvas>
+                    <div class="output">
+                        <strong><i class="fas fa-calculator"></i> Parameter Awal (p0): </strong><span id="circleP0Val"></span><br>
+                        <strong><i class="fas fa-map-marker-alt"></i> Titik Awal (x0, y0) di oktan pertama (relatif thd pusat 0,0): </strong>(<span id="circleX0Val"></span>, <span id="circleY0Val"></span>)
+                        <table id="circleTable">
+                            <thead>
+                                <tr><th>k</th><th>pk</th><th>(x_k+1, y_k+1)</th><th>Plot (xp+x, yp+y), dll.</th></tr>
+                            </thead>
+                            <tbody></tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- Blok Rumus Lingkaran -->
+                <div class="formula-block">
+                    <h4>Rumus Algoritma Midpoint Lingkaran</h4>
+                    <p>Untuk lingkaran dengan pusat di (0,0) dan jari-jari r.</p>
+                    <p><strong>Persamaan Lingkaran:</strong> <code>x² + y² - r² = 0</code></p>
+                    <p><strong>Parameter Keputusan Awal</strong> (untuk titik awal (0,r)):</p>
+                    <p><code>p0 = 1 - r</code> (untuk r integer)</p>
+                    <p><strong>Iterasi untuk oktan pertama</strong> (x0=0, y0=r, berhenti saat x ≥ y):</p>
+                    <p>Pada setiap langkah, x akan bertambah 1 (x_k+1 = x_k + 1).</p>
+                    <ul>
+                        <li>Jika pk < 0: Titik berikutnya adalah (x_k+1, y_k). <br><code>pk+1 = pk + 2*x_k+1 + 1</code></li>
+                        <li>Jika pk ≥ 0: Titik berikutnya adalah (x_k+1, y_k-1). <br><code>pk+1 = pk + 2*x_k+1 + 1 - 2*y_{k+1}</code> (dimana y_{k+1} adalah y_k-1)</li>
+                    </ul>
+                    <p>Setelah mendapatkan titik (x,y) di oktan pertama, 7 titik simetris lainnya diplot: (±x, ±y), (±y, ±x). Semua titik kemudian ditranslasikan dengan menambahkan titik pusat (xp, yp).</p>
+                </div>
+
+                <!-- Penjelasan Hasil Visual Lingkaran -->
+                <div class="penjelasan-bawah">
+                    <h4>Penjelasan Hasil Visual Lingkaran</h4>
+                    <p>Visualisasi di atas mendemonstrasikan Algoritma Midpoint untuk menggambar lingkaran. Anda dapat mengubah koordinat titik pusat (xp, yp) dan jari-jari (r) pada input di atas, lalu klik "Hitung & Gambar Lingkaran" untuk melihat hasilnya. Titik pusat dan jari-jari yang dimasukkan dianggap sebagai unit pada grid, dimana setiap unit grid akan diskalakan pada canvas (misal, 10 piksel per unit).</p>
+                    <p>Algoritma dimulai dengan menghitung piksel untuk oktan pertama (dari y-axis ke garis y=x). Tabel di bawah canvas menunjukkan langkah-langkah perhitungan: nilai k (iterasi), parameter keputusan (pk), dan koordinat piksel berikutnya (x_k+1, y_k+1) yang dipilih di oktan tersebut (relatif terhadap pusat (0,0)). Kolom "Plot" mengindikasikan bahwa titik ini, beserta 7 titik simetrisnya, akan digambar setelah ditranslasikan ke pusat (xp, yp) yang sebenarnya.</p>
+                    
+                    <div class="highlight">
+                        <p><strong>Contoh Perhitungan (sesuai PDF, pusat (0,0) untuk kalkulasi awal, r=8):</strong></p>
+                        <p>Titik awal (x0, y0) = (0, 8). Parameter awal p0 = 1 - r = 1 - 8 = -7.</p>
+                        <p><b>Iterasi k=0:</b></p>
+                        <p>p0 = -7 (< 0). Titik berikutnya (x1, y1) = (0+1, 8) = (1, 8).</p>
+                        <p>p1 = p0 + 2*x1 + 1 = -7 + 2*(1) + 1 = -4.</p>
+                        <p>Jika pusat sebenarnya (4,6), maka titik yang diplot antara lain: (4+1, 6+8)=(5,14), (4-1, 6+8)=(3,14), (4+8, 6+1)=(12,7), dst.</p>
+                    </div>
+                </div>
+
+                <div class="section-divider"></div>
+
+                <!-- Elips Section -->
+                <h3><i class="fas fa-circle-notch"></i> 2. Algoritma Pembentukan Elips</h3>
+                <p>Algoritma Midpoint untuk elips adalah perluasan dari algoritma lingkaran, namun dengan mempertimbangkan dua jari-jari yang berbeda untuk sumbu x dan y. Algoritma ini juga menggunakan pendekatan inkremental untuk menentukan piksel yang membentuk elips.</p>
+                
+                <!-- Visual Interaktif Elips -->
+                <div class="interactive-section">
+                    <h4>Visual Interaktif: Algoritma Midpoint Elips</h4>
+                    <div class="controls">
+                        <label><i class="fas fa-crosshairs"></i> Pusat (xc, yc): <input type="number" id="ellipseXc" value="25"> <input type="number" id="ellipseYc" value="20"></label>
+                        <label><i class="fas fa-arrows-alt-h"></i> Radius rx: <input type="number" id="ellipseRx" value="20"></label>
+                        <label><i class="fas fa-arrows-alt-v"></i> Radius ry: <input type="number" id="ellipseRy" value="12"></label>
+                        <button onclick="runMidpointEllipse()"><i class="fas fa-play"></i> Hitung & Gambar Elips</button>
+                    </div>
+                    <canvas id="ellipseCanvas" width="500" height="400"></canvas>
+                    <div class="output">
+                        <strong><i class="fas fa-calculator"></i> Region 1 (p1_0): </strong><span id="ellipseP1_0Val"></span><br>
+                        <strong><i class="fas fa-calculator"></i> Region 2 (p2_0 dari (x,y) akhir Reg1): </strong><span id="ellipseP2_0Val"></span>
+                        <p><b><i class="fas fa-chart-area"></i> Region 1 (Slope |m| < 1):</b></p>
+                        <table id="ellipseTableRegion1">
+                            <thead><tr><th>k</th><th>p1k</th><th>(x_k+1, y_k+1)</th><th>Plot (xc±x, yc±y)</th></tr></thead>
+                            <tbody></tbody>
+                        </table>
+                        <p><b><i class="fas fa-chart-area"></i> Region 2 (Slope |m| ≥ 1):</b></p>
+                        <table id="ellipseTableRegion2">
+                            <thead><tr><th>k</th><th>p2k</th><th>(x_k+1, y_k+1)</th><th>Plot (xc±x, yc±y)</th></tr></thead>
+                            <tbody></tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- Blok Rumus Elips -->
+                <div class="formula-block">
+                    <h4>Rumus Algoritma Midpoint Elips</h4>
+                    <p>Untuk elips dengan pusat di (0,0), radius sumbu x (rx), dan radius sumbu y (ry).</p>
+                    <p><strong>Persamaan Elips:</strong> <code>ry²x² + rx²y² - rx²ry² = 0</code></p>
+                    
+                    <div class="highlight">
+                        <p><strong><i class="fas fa-chart-area"></i> Region 1:</strong> Mulai dari (0, ry), langkah di sumbu x hingga titik dimana kemiringan kurva <code>dy/dx = -1</code> (yaitu, <code>2ry²x >= 2rx²y</code>).</p>
+                        <ul>
+                            <li>Parameter Keputusan Awal: <code>p1_0 = ry² - rx²ry + 0.25rx²</code></li>
+                            <li>Iterasi (x_k+1 = x_k + 1):</li>
+                            <li>Jika p1k < 0: Titik berikutnya (x_k+1, y_k). <br><code>p1_{k+1} = p1k + 2ry²(x_k+1) + ry²</code></li>
+                            <li>Jika p1k ≥ 0: Titik berikutnya (x_k+1, y_k-1). <br><code>p1_{k+1} = p1k + 2ry²(x_k+1) + ry² - 2rx²(y_k+1)</code> (dimana y_{k+1} adalah y_k-1)</li>
+                        </ul>
+                    </div>
+                    
+                    <div class="highlight">
+                        <p><strong><i class="fas fa-chart-area"></i> Region 2:</strong> Mulai dari titik (x,y) terakhir di Region 1, langkah di sumbu y hingga y = 0.</p>
+                        <ul>
+                            <li>Parameter Keputusan Awal (dari (x,y) akhir Region 1, sebut saja (x_r1_end, y_r1_end)): <br><code>p2_0 = ry²(x_r1_end + 0.5)² + rx²(y_r1_end-1)² - rx²ry²</code></li>
+                            <li>Iterasi (y_k+1 = y_k - 1):</li>
+                            <li>Jika p2k > 0: Titik berikutnya (x_k, y_k-1). <br><code>p2_{k+1} = p2k - 2rx²(y_k+1) + rx²</code></li>
+                            <li>Jika p2k ≤ 0: Titik berikutnya (x_k+1, y_k-1). <br><code>p2_{k+1} = p2k + 2ry²(x_k+1) - 2rx²(y_k+1) + rx²</code> (dimana x_{k+1} adalah x_k+1)</li>
+                        </ul>
+                    </div>
+                    
+                    <p>Setelah mendapatkan titik (x,y) di kuadran pertama, 3 titik simetris lainnya diplot: (±x, ±y). Semua titik kemudian ditranslasikan dengan menambahkan titik pusat (xc, yc).</p>
+                </div>
+
+                <!-- Penjelasan Hasil Visual Elips -->
+                <div class="penjelasan-bawah">
+                    <h4>Penjelasan Hasil Visual Elips</h4>
+                    <p>Visualisasi di atas menunjukkan Algoritma Midpoint untuk menggambar elips. Anda dapat mengubah koordinat titik pusat (xc, yc) serta jari-jari sumbu x (rx) dan sumbu y (ry), lalu klik "Hitung & Gambar Elips".</p>
+                    <p>Algoritma ini membagi penggambaran elips di kuadran pertama menjadi dua region, berdasarkan gradien kurva. Region 1 dimulai dari titik (0, ry) dan bergerak sepanjang sumbu x hingga gradien menjadi -1 (atau lebih tepatnya, hingga <code>2*ry*ry*x >= 2*rx*rx*y</code>). Region 2 melanjutkan dari titik tersebut, bergerak sepanjang sumbu y hingga mencapai sumbu x (y=0).</p>
+                    <p>Tabel di bawah canvas akan menampilkan langkah-langkah perhitungan untuk kedua region, termasuk parameter keputusan (p1k atau p2k) dan koordinat piksel berikutnya yang dipilih. Setiap titik (x,y) yang dihitung di kuadran pertama kemudian digunakan untuk menggambar 4 titik simetris setelah ditranslasikan ke pusat elips (xc, yc).</p>
+                    
+                    <div class="highlight">
+                        <p><strong>Contoh Perhitungan Detail (misalnya rx=8, ry=6, pusat (0,0) untuk kalkulasi awal):</strong></p>
+                        <p><b>Region 1:</b></p>
+                        <p>Titik awal (x0, y0) = (0, ry) = (0, 6).</p>
+                        <p>Parameter awal p1_0 = ry² - rx²ry + 0.25rx² = 6² - 8²*6 + 0.25*8² = 36 - 384 + 16 = -332.</p>
+                        <p><i>Iterasi k=0 (x0=0, y0=6):</i></p>
+                        <p>p1_0 = -332 (< 0). Pilih y_k+1 = y_k. Titik berikutnya (x1, y1) = (0+1, 6) = (1, 6).</p>
+                        <p>p1_1 = p1_0 + 2ry²(x0+1) + ry² = -332 + 2*6²*(1) + 6² = -332 + 72 + 36 = -224.</p>
+                    </div>
+                </div>
+
+            </div>
+            <!-- IMPROVED CONTENT ENDS HERE -->
+        </div>
+    </div>
+
+    <script src="script.js"></script> <!-- User's original script.js -->
+    <script>
+        // --- Utility function to draw grid and points ---
+        function drawGridAndPoint(ctx, canvasWidth, canvasHeight, gridSize, transX, transY, x, y, color = 'black') {
+            // Clear and draw grid (optional, can be done once)
+            // For simplicity, assume grid is drawn once initially or handled by main draw functions
+            const finalX = transX + x * gridSize;
+            const finalY = transY - y * gridSize; // Canvas Y is inverted from typical math coords
+            ctx.fillStyle = color;
+            ctx.fillRect(finalX - gridSize/2, finalY - gridSize/2, gridSize, gridSize);
+        }
+
+        function plot8WaySymmetry(ctx, canvasWidth, canvasHeight, gridSize, xc_abs, yc_abs, x, y, color = 'blue') {
+            const points = [
+                { dx: x, dy: y }, { dx: -x, dy: y }, { dx: x, dy: -y }, { dx: -x, dy: -y },
+                { dx: y, dy: x }, { dx: -y, dy: x }, { dx: y, dy: -x }, { dx: -y, dy: -x }
+            ];
+            points.forEach(pt => {
+                ctx.fillRect(xc_abs + pt.dx * gridSize - gridSize/2, yc_abs - pt.dy * gridSize - gridSize/2, gridSize, gridSize);
+            });
+        }
+        
+        function plot4WaySymmetry(ctx, canvasWidth, canvasHeight, gridSize, xc_abs, yc_abs, x, y, color = 'green'){
+            const points = [
+                { dx: x, dy: y }, { dx: -x, dy: y }, { dx: x, dy: -y }, { dx: -x, dy: -y }
+            ];
+            points.forEach(pt => {
+                ctx.fillRect(xc_abs + pt.dx * gridSize - gridSize/2, yc_abs - pt.dy * gridSize - gridSize/2, gridSize, gridSize);
+            });
+        }
+
+        // --- Midpoint Circle Algorithm ---
+        function runMidpointCircle() {
+            const canvas = document.getElementById('circleCanvas');
+            const ctx = canvas.getContext('2d');
+            const gridSize = 10; // pixels per unit
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+            // Draw a simple grid
+            ctx.strokeStyle = '#eee';
+            for (let i = 0; i < canvas.width; i += gridSize) { ctx.beginPath(); ctx.moveTo(i, 0); ctx.lineTo(i, canvas.height); ctx.stroke(); }
+            for (let i = 0; i < canvas.height; i += gridSize) { ctx.beginPath(); ctx.moveTo(0, i); ctx.lineTo(canvas.width, i); ctx.stroke(); }
+
+            const xp_unit = parseInt(document.getElementById('circleXp').value);
+            const yp_unit = parseInt(document.getElementById('circleYp').value);
+            const r_unit = parseInt(document.getElementById('circleR').value);
+
+            const xc_abs = xp_unit * gridSize; // Absolute center x in pixels
+            const yc_abs = yp_unit * gridSize; // Absolute center y in pixels
+
+            let x = 0;
+            let y = r_unit;
+            let p = 1 - r_unit;
+
+            document.getElementById('circleP0Val').textContent = p;
+            document.getElementById('circleX0Val').textContent = x;
+            document.getElementById('circleY0Val').textContent = y;
+
+            const tableBody = document.querySelector('#circleTable tbody');
+            tableBody.innerHTML = '';
+            let k = 0;
+
+            function addCircleRow(iter, pk_val, current_x, current_y) {
+                const row = tableBody.insertRow();
+                row.insertCell().textContent = iter;
+                row.insertCell().textContent = pk_val;
+                row.insertCell().textContent = `(${current_x}, ${current_y})`;
+                row.insertCell().textContent = `(xc±${current_x}, yc±${current_y}), (xc±${current_y}, yc±${current_x})`;
+            }
+            
+            // Draw circle outline for reference
+            ctx.beginPath();
+            ctx.arc(xc_abs, yc_abs, r_unit * gridSize, 0, 2 * Math.PI);
+            ctx.strokeStyle = 'rgba(52, 152, 219, 0.3)';
+            ctx.lineWidth = 1;
+            ctx.stroke();
+            
+            // Draw axes
+            ctx.beginPath();
+            ctx.moveTo(0, yc_abs);
+            ctx.lineTo(canvas.width, yc_abs);
+            ctx.strokeStyle = 'rgba(0, 0, 0, 0.2)';
+            ctx.stroke();
+            
+            ctx.beginPath();
+            ctx.moveTo(xc_abs, 0);
+            ctx.lineTo(xc_abs, canvas.height);
+            ctx.strokeStyle = 'rgba(0, 0, 0, 0.2)';
+            ctx.stroke();
+            
+            // Draw center point
+            ctx.fillStyle = 'red';
+            ctx.beginPath();
+            ctx.arc(xc_abs, yc_abs, 3, 0, 2 * Math.PI);
+            ctx.fill();
+            
+            ctx.fillStyle = 'blue';
+            plot8WaySymmetry(ctx, canvas.width, canvas.height, gridSize, xc_abs, yc_abs, x, y);
+            addCircleRow(k, p, x, y);
+
+            while (x < y) {
+                k++;
+                x++;
+                if (p < 0) {
+                    p += 2 * x + 1;
+                } else {
+                    y--;
+                    p += 2 * x + 1 - 2 * y;
+                }
+                plot8WaySymmetry(ctx, canvas.width, canvas.height, gridSize, xc_abs, yc_abs, x, y);
+                addCircleRow(k, p, x, y);
+            }
+        }
+
+        // --- Midpoint Ellipse Algorithm ---
+        function runMidpointEllipse() {
+            const canvas = document.getElementById('ellipseCanvas');
+            const ctx = canvas.getContext('2d');
+            const gridSize = 10; // pixels per unit
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+            // Draw a simple grid
+            ctx.strokeStyle = '#eee';
+            for (let i = 0; i < canvas.width; i += gridSize) { ctx.beginPath(); ctx.moveTo(i, 0); ctx.lineTo(i, canvas.height); ctx.stroke(); }
+            for (let i = 0; i < canvas.height; i += gridSize) { ctx.beginPath(); ctx.moveTo(0, i); ctx.lineTo(canvas.width, i); ctx.stroke(); }
+
+            const xc_unit = parseInt(document.getElementById('ellipseXc').value);
+            const yc_unit = parseInt(document.getElementById('ellipseYc').value);
+            const rx_unit = parseInt(document.getElementById('ellipseRx').value);
+            const ry_unit = parseInt(document.getElementById('ellipseRy').value);
+
+            const xc_abs = xc_unit * gridSize;
+            const yc_abs = yc_unit * gridSize;
+
+            const tableBody1 = document.querySelector('#ellipseTableRegion1 tbody');
+            tableBody1.innerHTML = '';
+            const tableBody2 = document.querySelector('#ellipseTableRegion2 tbody');
+            tableBody2.innerHTML = '';
+            let k = 0;
+
+            function addEllipseRow(table, iter, pk_val, current_x, current_y) {
+                const row = table.insertRow();
+                row.insertCell().textContent = iter;
+                row.insertCell().textContent = pk_val.toFixed(2); // p can be float
+                row.insertCell().textContent = `(${current_x}, ${current_y})`;
+                row.insertCell().textContent = `(xc±${current_x}, yc±${current_y})`;
+            }
+            
+            // Draw ellipse outline for reference
+            ctx.beginPath();
+            ctx.ellipse(xc_abs, yc_abs, rx_unit * gridSize, ry_unit * gridSize, 0, 0, 2 * Math.PI);
+            ctx.strokeStyle = 'rgba(39, 174, 96, 0.3)';
+            ctx.lineWidth = 1;
+            ctx.stroke();
+            
+            // Draw axes
+            ctx.beginPath();
+            ctx.moveTo(0, yc_abs);
+            ctx.lineTo(canvas.width, yc_abs);
+            ctx.strokeStyle = 'rgba(0, 0, 0, 0.2)';
+            ctx.stroke();
+            
+            ctx.beginPath();
+            ctx.moveTo(xc_abs, 0);
+            ctx.lineTo(xc_abs, canvas.height);
+            ctx.strokeStyle = 'rgba(0, 0, 0, 0.2)';
+            ctx.stroke();
+            
+            // Draw center point
+            ctx.fillStyle = 'red';
+            ctx.beginPath();
+            ctx.arc(xc_abs, yc_abs, 3, 0, 2 * Math.PI);
+            ctx.fill();
+            
+            ctx.fillStyle = 'green';
+
+            // Region 1
+            let x = 0;
+            let y = ry_unit;
+            let p1 = ry_unit * ry_unit - rx_unit * rx_unit * ry_unit + 0.25 * rx_unit * rx_unit;
+            document.getElementById('ellipseP1_0Val').textContent = p1.toFixed(2);
+            
+            plot4WaySymmetry(ctx, canvas.width, canvas.height, gridSize, xc_abs, yc_abs, x, y);
+            addEllipseRow(tableBody1, k, p1, x, y);
+            
+            let rx2 = rx_unit * rx_unit;
+            let ry2 = ry_unit * ry_unit;
+            let twoRy2X = 0;
+            let twoRx2Y = 2 * rx2 * y;
+
+            while (twoRy2X < twoRx2Y) { // Loop while slope magnitude < 1
+                k++;
+                x++;
+                twoRy2X = 2 * ry2 * x;
+                if (p1 < 0) {
+                    p1 += twoRy2X + ry2;
+                } else {
+                    y--;
+                    twoRx2Y = 2 * rx2 * y;
+                    p1 += twoRy2X + ry2 - twoRx2Y;
+                }
+                plot4WaySymmetry(ctx, canvas.width, canvas.height, gridSize, xc_abs, yc_abs, x, y);
+                addEllipseRow(tableBody1, k, p1, x, y);
+            }
+
+            // Region 2
+            let p2 = ry2 * (x + 0.5) * (x + 0.5) + 
+                       rx2 * (y - 1) * (y - 1) - 
+                       rx2 * ry2;
+            document.getElementById('ellipseP2_0Val').textContent = p2.toFixed(2);
+            let k_reg2 = 0;
+            // The last point from Region 1 is the first for Region 2's logic but not re-plotted unless y changes.
+            // Table row for Region 2 should start with the state for the *next* decision.
+            // addEllipseRow(tableBody2, k_reg2, p2, x, y); // Initial state for p2
+
+            while (y >= 0) {
+                k_reg2++;
+                y--;
+                twoRx2Y = 2 * rx2 * y;
+                if (p2 > 0) {
+                    p2 += rx2 - twoRx2Y;
+                } else {
+                    x++;
+                    twoRy2X = 2 * ry2 * x;
+                    p2 += rx2 - twoRx2Y + twoRy2X;
+                }
+                // Only plot if y is still valid for this iteration
+                // The point (x,y) is the result of the decision based on p2
+                if (y >=0) { // Ensure we don't plot for y = -1 if loop condition was y > 0
+                   plot4WaySymmetry(ctx, canvas.width, canvas.height, gridSize, xc_abs, yc_abs, x, y);
+                   addEllipseRow(tableBody2, k_reg2, p2, x, y);
+                }
+            }
+        }
+        
+        // Auto-run on load for default display
+        window.onload = function() {
+            runMidpointCircle();
+            runMidpointEllipse();
+        };
+
+    </script>
+</body>
+</html>

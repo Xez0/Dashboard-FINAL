@@ -1,0 +1,601 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <link rel="stylesheet" href="style.css">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Materi Pertemuan 9 - Dilatasi dan Shear (Interaktif)</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+    <style>
+        /* Global Styles */
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            margin: 0;
+            padding: 0;
+            background-color: #f5f5f5;
+            color: #333;
+        }
+        
+        /* Main Content Styles - Enhanced */
+        #main {
+            transition: margin-left .5s;
+            padding: 16px;
+        }
+        
+        #content-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background-color: white;
+            padding: 25px;
+            border-radius: 10px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        }
+        
+        /* Section Styles */
+        .section {
+            margin-bottom: 40px;
+            padding: 20px;
+            border-radius: 8px;
+            transition: all 0.3s ease;
+        }
+        
+        
+        .visual-section {
+            background-color: #f9f9ff;
+            border-left: 5px solid #6a6aff;
+        }
+        
+        .formula-section {
+            background-color: #f0f8ff;
+            border-left: 5px solid #4a90e2;
+        }
+        
+        .example-section {
+            background-color: #f0fff0;
+            border-left: 5px solid #4caf50;
+        }
+        
+        /* Heading Styles */
+        h1 {
+            color: #2c3e50;
+            text-align: center;
+            margin-bottom: 30px;
+            font-size: 2.5em;
+            border-bottom: 2px solid #eee;
+            padding-bottom: 15px;
+        }
+        
+        h2 {
+            color: #3498db;
+            margin-top: 30px;
+            font-size: 1.8em;
+            border-bottom: 1px solid #eee;
+            padding-bottom: 10px;
+        }
+        
+        h3 {
+            color: #2980b9;
+            margin-top: 25px;
+            font-size: 1.5em;
+        }
+        
+        h4 {
+            color: #16a085;
+            margin-top: 20px;
+            font-size: 1.2em;
+        }
+        
+        /* Canvas and Controls */
+        canvas {
+            border: 1px solid #ddd;
+            display: block;
+            margin: 20px auto;
+            background-color: white;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            border-radius: 5px;
+        }
+        
+        .controls {
+            margin: 20px 0;
+            text-align: center;
+            background-color: #f8f9fa;
+            padding: 15px;
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+        }
+        
+        select, label {
+            margin: 10px 5px;
+            padding: 8px 12px;
+            border-radius: 4px;
+            border: 1px solid #ddd;
+            font-size: 16px;
+        }
+        
+        select {
+            background-color: white;
+            cursor: pointer;
+        }
+        
+        input[type="range"] {
+            width: 200px;
+            margin: 0 10px;
+            vertical-align: middle;
+        }
+        
+        /* Matrix and Code Styles */
+        .matrix {
+            font-family: 'Courier New', monospace;
+            white-space: pre;
+            margin: 15px 0;
+            padding: 15px;
+            background-color: #f8f8f8;
+            border-radius: 5px;
+            border-left: 3px solid #3498db;
+            display: inline-block;
+            font-size: 1.1em;
+        }
+        
+        pre {
+            background-color: #f8f8f8;
+            padding: 15px;
+            border-radius: 5px;
+            overflow-x: auto;
+            border-left: 3px solid #3498db;
+        }
+        
+        code {
+            font-family: 'Courier New', monospace;
+            color: #e74c3c;
+        }
+        
+        /* Color Highlights */
+        .blue {
+            color: #3498db;
+            font-weight: bold;
+        }
+        
+        .red {
+            color: #e74c3c;
+            font-weight: bold;
+        }
+        
+        /* Responsive Design */
+        
+        @media screen and (max-width: 768px) {
+            #content-container {
+                padding: 15px;
+            }
+            
+            .section {
+                padding: 15px;
+            }
+            
+            canvas {
+                width: 100%;
+                height: auto;
+            }
+        }
+        
+        /* Pertemuan Content Area */
+        .pertemuan-content-area {
+            padding: 20px;
+        }
+        
+        /* Menu Items */
+        .menu-item {
+            display: block;
+            padding: 10px 15px;
+            margin: 5px 0;
+            border-radius: 5px;
+            transition: all 0.3s ease;
+        }
+        
+        .menu-item:hover {
+            background-color: #333;
+        }
+        
+        .menu-item.active {
+            background-color: #4CAF50;
+            color: white;
+        }
+        
+        /* Dashboard Button */
+        .dashboard-btn {
+            background-color: #3498db;
+            color: white;
+            padding: 10px 15px;
+            border-radius: 5px;
+            margin: 10px 0;
+            display: inline-block;
+            text-decoration: none;
+            transition: all 0.3s ease;
+        }
+        
+        .dashboard-btn:hover {
+            background-color: #2980b9;
+        }
+    </style>
+</head>
+<body>
+    <!-- Sidebar -->
+    <div id="sidebar" class="sidebar">
+        <div class="sidebar-header">
+            <h3><i class="fas fa-graduation-cap"></i> Menu</h3>
+            <a href="javascript:void(0)" class="closebtn" onclick="closeNav()">&times;</a>
+        </div>
+        <!-- Assuming files are in the same directory -->
+        <a href="index.html" class="menu-item"><i class="fas fa-chart-pie"></i> DASHBOARD</a>
+        <a href="per1.html" class="menu-item"><i class="fas fa-book"></i> Pertemuan 1</a>
+        <a href="per2.html" class="menu-item"><i class="fas fa-book"></i> Pertemuan 2</a>
+        <a href="per3.html" class="menu-item"><i class="fas fa-book"></i> Pertemuan 3</a>
+        <a href="per4.html" class="menu-item"><i class="fas fa-book"></i> Pertemuan 4</a>
+        <a href="per5.html" class="menu-item"><i class="fas fa-book"></i> Pertemuan 5</a>
+        <a href="per6.html" class="menu-item"><i class="fas fa-book"></i> Pertemuan 6</a>
+        <a href="per7.html" class="menu-item"><i class="fas fa-book"></i> Pertemuan 7</a>
+        <a href="per8.html" class="menu-item"><i class="fas fa-book"></i> Pertemuan 8</a> <!-- Active link -->
+        <a href="per9.html" class="menu-item active"><i class="fas fa-book"></i> Pertemuan 9</a>
+        <a href="per10.html" class="menu-item"><i class="fas fa-book"></i> Pertemuan 10</a>
+        <a href="per11.html" class="menu-item"><i class="fas fa-book"></i> Pertemuan 11</a>
+        <a href="per12.html" class="menu-item"><i class="fas fa-book"></i> Pertemuan 12</a>
+        <a href="per13.html" class="menu-item"><i class="fas fa-book"></i> Pertemuan 13</a>
+        <a href="per14.html" class="menu-item"><i class="fas fa-book"></i> Pertemuan 14</a>
+    </div>
+
+    <!-- Main Content -->
+    <div id="main">
+        <button class="openbtn" onclick="openNav()"><i class="fas fa-bars"></i> Menu</button>
+        <div id="content-container">
+            <div class="pertemuan-content-area">
+                <h1>Pertemuan 9: Dilatasi dan Shear</h1>
+
+                <!-- BAGIAN 1: VISUAL INTERAKTIF -->
+                <div class="section visual-section">
+                    <h2><i class="fas fa-eye"></i> Visualisasi Interaktif Dilatasi & Shear</h2>
+                    
+                    <div class="controls">
+                        <label for="transformType"><i class="fas fa-sliders-h"></i> Jenis Transformasi:</label>
+                        <select id="transformType">
+                            <option value="none">Tidak Ada</option>
+                            <option value="reflection">Refleksi (Dilatasi)</option>
+                            <option value="shearX">Shear X</option>
+                            <option value="shearY">Shear Y</option>
+                        </select>
+                        
+                        <div id="reflectionControls" style="display:none;">
+                            <label for="reflectionAxis"><i class="fas fa-arrows-alt"></i> Sumbu Refleksi:</label>
+                            <select id="reflectionAxis">
+                                <option value="x">Sumbu X</option>
+                                <option value="y">Sumbu Y</option>
+                                <option value="origin">Titik Pusat</option>
+                            </select>
+                        </div>
+                        
+                        <div id="shearXControls" style="display:none;">
+                            <label for="shearXFactor"><i class="fas fa-arrows-alt-h"></i> Faktor Shear X (shx):</label>
+                            <input type="range" id="shearXFactor" min="-2" max="2" step="0.1" value="0">
+                            <span id="shearXValue">0</span>
+                        </div>
+                        
+                        <div id="shearYControls" style="display:none;">
+                            <label for="shearYFactor"><i class="fas fa-arrows-alt-v"></i> Faktor Shear Y (shy):</label>
+                            <input type="range" id="shearYFactor" min="-2" max="2" step="0.1" value="0">
+                            <span id="shearYValue">0</span>
+                        </div>
+                    </div>
+                    
+                    <canvas id="transformCanvas" width="500" height="500"></canvas>
+                    <p class="text-center">Bentuk <span class="blue">biru</span> adalah objek asli. Bentuk <span class="red">merah</span> adalah objek setelah transformasi.</p>
+                </div>
+
+                <!-- BAGIAN 2: RUMUS -->
+                <div class="section formula-section">
+                    <h2><i class="fas fa-calculator"></i> Rumus Transformasi</h2>
+                    
+                    <h3>1. Dilatasi (Refleksi)</h3>
+                    <p>Dilatasi, sebagaimana dijelaskan dalam materi, merujuk pada transformasi refleksi atau pencerminan yang membuat citra cermin dari suatu objek.</p>
+                    
+                    <h4>a. Refleksi terhadap sumbu x (garis y=0):</h4>
+                    <p>Transformasi membuat nilai x sama tetapi membalikkan nilai y berlawanan dengan posisi koordinat. Matriks transformasinya adalah:</p>
+                    <div class="matrix">
+[ 1  0 ]
+[ 0 -1 ]
+                    </div>
+                    
+                    <h4>b. Refleksi terhadap sumbu y (garis x=0):</h4>
+                    <p>Refleksi terhadap sumbu y membalikkan koordinat dengan nilai y tetap. Matriks transformasinya adalah:</p>
+                    <div class="matrix">
+[ -1 0 ]
+[  0 1 ]
+                    </div>
+                    
+                    <h4>c. Refleksi terhadap titik pusat (Origin):</h4>
+                    <p>Menurut materi, ini adalah "Dilatasi terhadap sumbu x dan y sekaligus" dan "sama dengan rotasi 180° pada bidang xy". Matriks transformasinya adalah:</p>
+                    <div class="matrix">
+[ -1  0 ]
+[  0 -1 ]
+                    </div>
+                    
+                    <h3>2. Shear (Geseran)</h3>
+                    <p>Shear adalah transformasi yang menyebabkan distorsi pada bentuk suatu objek, seolah-olah terjadi pergeseran antar sisinya.</p>
+                    
+                    <h4>a. Shear Terhadap Sumbu X (X-Shear):</h4>
+                    <p>X-Shear menggeser titik-titik secara horizontal sebanding dengan jarak vertikalnya dari sumbu x. Koordinat y tetap, sedangkan koordinat x berubah. Transformasi ini dinyatakan dengan matriks:</p>
+                    <div class="matrix">
+[ 1  shx ]
+[ 0   1  ]
+                    </div>
+                    <p>Dengan koordinat transformasi:</p>
+                    <p>x' = x + shx * y</p>
+                    <p>y' = y</p>
+                    <p>Parameter <code>shx</code> adalah faktor shear pada arah x.</p>
+                    
+                    <h4>b. Shear Terhadap Sumbu Y (Y-Shear):</h4>
+                    <p>Y-Shear menggeser titik-titik secara vertikal sebanding dengan jarak horizontalnya dari sumbu y. Koordinat x tetap, sedangkan koordinat y berubah. Transformasi ini dinyatakan dengan matriks:</p>
+                    <div class="matrix">
+[ 1   0  ]
+[ shy  1  ]
+                    </div>
+                    <p>Dengan koordinat transformasi:</p>
+                    <p>x' = x</p>
+                    <p>y' = y + shy * x</p>
+                    <p>Parameter <code>shy</code> adalah faktor shear pada arah y.</p>
+                </div>
+
+                <!-- BAGIAN 3: PENJELASAN CONTOH PERHITUNGAN -->
+                <div class="section example-section">
+                    <h2><i class="fas fa-lightbulb"></i> Penjelasan Hasil Visual Interaktif</h2>
+                    
+                    <h3>1. Memahami Dilatasi (Refleksi) melalui Visualisasi</h3>
+                    <p>Ketika Anda memilih opsi "Refleksi (Dilatasi)" pada menu "Jenis Transformasi", visualisasi akan menunjukkan bagaimana objek asli dicerminkan terhadap sumbu yang Anda pilih.</p>
+                    
+                    <ul>
+                        <li><strong>Refleksi terhadap Sumbu X:</strong> Jika Anda memilih "Sumbu X" sebagai sumbu refleksi, Anda akan melihat bahwa setiap titik pada objek asli (misalnya (x, y)) akan dipetakan ke titik baru (x, -y). Nilai koordinat x tetap, sementara nilai koordinat y menjadi negatifnya. Objek merah akan menjadi cerminan objek biru terhadap sumbu horizontal (sumbu X).</li>
+                        <li><strong>Refleksi terhadap Sumbu Y:</strong> Jika Anda memilih "Sumbu Y", setiap titik (x, y) akan dipetakan ke (-x, y). Nilai koordinat y tetap, sementara nilai koordinat x menjadi negatifnya. Objek merah akan menjadi cerminan objek biru terhadap sumbu vertikal (sumbu Y).</li>
+                        <li><strong>Refleksi terhadap Titik Pusat (Origin):</strong> Jika Anda memilih "Titik Pusat", setiap titik (x, y) akan dipetakan ke (-x, -y). Kedua koordinat, x dan y, akan menjadi negatifnya. Ini setara dengan rotasi 180 derajat mengelilingi titik pusat.</li>
+                    </ul>
+                    
+                    <h3>2. Memahami Shear (Geseran) melalui Visualisasi</h3>
+                    <p>Ketika Anda memilih opsi "Shear X" atau "Shear Y", visualisasi akan mendemonstrasikan bagaimana transformasi shear mendistorsi bentuk objek.</p>
+                    
+                    <ul>
+                        <li><strong>Shear X (Geseran Sejajar Sumbu X):</strong> Saat Anda memilih "Shear X" dan mengatur "Faktor Shear X (shx)", Anda akan melihat objek terdistorsi secara horizontal. Setiap titik (x, y) pada objek asli akan diubah menjadi (x + shx * y, y). Pergeseran horizontal setiap titik bergantung pada nilai y-nya dan faktor shear shx. Semakin besar nilai absolut shx, semakin besar distorsinya.</li>
+                        <li><strong>Shear Y (Geseran Sejajar Sumbu Y):</strong> Saat Anda memilih "Shear Y" dan mengatur "Faktor Shear Y (shy)", objek akan terdistorsi secara vertikal. Setiap titik (x, y) pada objek asli akan diubah menjadi (x, y + shy * x). Pergeseran vertikal setiap titik bergantung pada nilai x-nya dan faktor shear shy.</li>
+                    </ul>
+                    
+                    <p>Perhatikan bagaimana bentuk persegi asli dapat berubah menjadi jajaran genjang akibat transformasi shear. Eksplorasi dengan nilai faktor shear yang berbeda (positif dan negatif) akan memberikan pemahaman yang lebih mendalam tentang efek geseran ini.</p>
+                    
+                    <h3>Contoh Perhitungan</h3>
+                    <div class="calculation-example">
+                        <p>Misalkan kita memiliki titik (3, 2) dan ingin melakukan transformasi:</p>
+                        
+                        <h4>Contoh 1: Refleksi terhadap sumbu X</h4>
+                        <p>Menggunakan matriks [ 1 0; 0 -1 ]:</p>
+                        <p>x' = 1 × 3 + 0 × 2 = 3</p>
+                        <p>y' = 0 × 3 + (-1) × 2 = -2</p>
+                        <p>Hasil: titik (3, 2) menjadi (3, -2)</p>
+                        
+                        <h4>Contoh 2: Shear-Y dengan faktor shy = 0.5</h4>
+                        <p>Menggunakan matriks [ 1 0; 0.5 1 ]:</p>
+                        <p>x' = 1 × 3 + 0 × 2 = 3</p>
+                        <p>y' = 0.5 × 3 + 1 × 2 = 3.5</p>
+                        <p>Hasil: titik (3, 2) menjadi (3, 3.5)</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+<script src="script.js"></script>
+    <script>
+        // Sidebar Functions
+        function openNav() {
+            document.getElementById("sidebar").style.width = "250px";
+            document.getElementById("main").style.marginLeft = "250px";
+        }
+        
+        function closeNav() {
+            document.getElementById("sidebar").style.width = "0";
+            document.getElementById("main").style.marginLeft = "0";
+        }
+        
+        // Kode JavaScript untuk visualisasi interaktif
+        document.addEventListener('DOMContentLoaded', function() {
+            const canvas = document.getElementById('transformCanvas');
+            const ctx = canvas.getContext('2d');
+            const transformType = document.getElementById('transformType');
+            const reflectionControls = document.getElementById('reflectionControls');
+            const reflectionAxis = document.getElementById('reflectionAxis');
+            const shearXControls = document.getElementById('shearXControls');
+            const shearXFactor = document.getElementById('shearXFactor');
+            const shearXValue = document.getElementById('shearXValue');
+            const shearYControls = document.getElementById('shearYControls');
+            const shearYFactor = document.getElementById('shearYFactor');
+            const shearYValue = document.getElementById('shearYValue');
+            
+            // Ukuran canvas dan skala
+            const width = canvas.width;
+            const height = canvas.height;
+            const scale = 40; // Skala untuk konversi koordinat matematika ke piksel
+            const offsetX = width / 2;
+            const offsetY = height / 2;
+            
+            // Objek asli (persegi)
+            const originalObject = [
+                {x: 1, y: 1},
+                {x: 3, y: 1},
+                {x: 3, y: 3},
+                {x: 1, y: 3}
+            ];
+            
+            // Fungsi untuk menggambar sumbu koordinat
+            function drawAxes() {
+                ctx.clearRect(0, 0, width, height);
+                
+                // Garis sumbu
+                ctx.beginPath();
+                ctx.strokeStyle = '#888';
+                ctx.lineWidth = 1;
+                
+                // Sumbu X
+                ctx.moveTo(0, offsetY);
+                ctx.lineTo(width, offsetY);
+                
+                // Sumbu Y
+                ctx.moveTo(offsetX, 0);
+                ctx.lineTo(offsetX, height);
+                
+                ctx.stroke();
+                
+                // Label sumbu
+                ctx.fillStyle = '#888';
+                ctx.font = '12px Arial';
+                ctx.fillText('X', width - 15, offsetY - 5);
+                ctx.fillText('Y', offsetX + 5, 15);
+                ctx.fillText('O', offsetX - 15, offsetY + 15);
+                
+                // Grid lines (optional)
+                ctx.beginPath();
+                ctx.strokeStyle = '#eee';
+                ctx.lineWidth = 0.5;
+                
+                // Vertical grid lines
+                for (let x = offsetX % scale; x < width; x += scale) {
+                    ctx.moveTo(x, 0);
+                    ctx.lineTo(x, height);
+                }
+                
+                // Horizontal grid lines
+                for (let y = offsetY % scale; y < height; y += scale) {
+                    ctx.moveTo(0, y);
+                    ctx.lineTo(width, y);
+                }
+                
+                ctx.stroke();
+            }
+            
+            // Fungsi untuk mengkonversi koordinat matematika ke koordinat canvas
+            function toCanvasCoords(x, y) {
+                return {
+                    x: offsetX + x * scale,
+                    y: offsetY - y * scale
+                };
+            }
+            
+            // Fungsi untuk menggambar objek
+            function drawObject(points, color) {
+                ctx.beginPath();
+                ctx.strokeStyle = color;
+                ctx.lineWidth = 2;
+                
+                const start = toCanvasCoords(points[0].x, points[0].y);
+                ctx.moveTo(start.x, start.y);
+                
+                for (let i = 1; i < points.length; i++) {
+                    const point = toCanvasCoords(points[i].x, points[i].y);
+                    ctx.lineTo(point.x, point.y);
+                }
+                
+                ctx.closePath();
+                ctx.stroke();
+                ctx.fillStyle = color + '33'; // Menambahkan transparansi
+                ctx.fill();
+            }
+            
+            // Fungsi untuk melakukan transformasi refleksi
+            function applyReflection(point, axis) {
+                let x = point.x;
+                let y = point.y;
+                
+                switch (axis) {
+                    case 'x':
+                        return {x: x, y: -y}; // Refleksi terhadap sumbu X
+                    case 'y':
+                        return {x: -x, y: y}; // Refleksi terhadap sumbu Y
+                    case 'origin':
+                        return {x: -x, y: -y}; // Refleksi terhadap titik pusat
+                    default:
+                        return point;
+                }
+            }
+            
+            // Fungsi untuk melakukan transformasi shear-X
+            function applyShearX(point, factor) {
+                return {
+                    x: point.x + factor * point.y,
+                    y: point.y
+                };
+            }
+            
+            // Fungsi untuk melakukan transformasi shear-Y
+            function applyShearY(point, factor) {
+                return {
+                    x: point.x,
+                    y: point.y + factor * point.x
+                };
+            }
+            
+            // Fungsi untuk memperbarui visualisasi
+            function updateVisualization() {
+                drawAxes();
+                
+                // Gambar objek asli
+                drawObject(originalObject, '#3498db');
+                
+                // Terapkan transformasi dan gambar objek hasil
+                let transformedObject = [];
+                
+                switch (transformType.value) {
+                    case 'reflection':
+                        transformedObject = originalObject.map(point => 
+                            applyReflection(point, reflectionAxis.value)
+                        );
+                        break;
+                    case 'shearX':
+                        const shxFactor = parseFloat(shearXFactor.value);
+                        transformedObject = originalObject.map(point => 
+                            applyShearX(point, shxFactor)
+                        );
+                        break;
+                    case 'shearY':
+                        const shyFactor = parseFloat(shearYFactor.value);
+                        transformedObject = originalObject.map(point => 
+                            applyShearY(point, shyFactor)
+                        );
+                        break;
+                    default:
+                        transformedObject = [...originalObject];
+                }
+                
+                // Gambar objek hasil transformasi jika ada transformasi yang dipilih
+                if (transformType.value !== 'none') {
+                    drawObject(transformedObject, '#e74c3c');
+                }
+            }
+            
+            // Event listeners untuk kontrol
+            transformType.addEventListener('change', function() {
+                reflectionControls.style.display = this.value === 'reflection' ? 'inline' : 'none';
+                shearXControls.style.display = this.value === 'shearX' ? 'inline' : 'none';
+                shearYControls.style.display = this.value === 'shearY' ? 'inline' : 'none';
+                updateVisualization();
+            });
+            
+            reflectionAxis.addEventListener('change', updateVisualization);
+            
+            shearXFactor.addEventListener('input', function() {
+                shearXValue.textContent = this.value;
+                updateVisualization();
+            });
+            
+            shearYFactor.addEventListener('input', function() {
+                shearYValue.textContent = this.value;
+                updateVisualization();
+            });
+            
+            // Inisialisasi visualisasi
+            updateVisualization();
+        });
+    </script>
+</body>
+</html>

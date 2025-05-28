@@ -1,0 +1,1156 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <link rel="stylesheet" href="style.css">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Materi Pertemuan 11 - Antialiasing</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+    /* Improved Styles for Antialiasing Material */
+
+    /* Base Styles and Typography Improvements */
+    :root {
+      --primary-color: #3498db;
+      --secondary-color: #2c3e50;
+      --accent-color: #e74c3c;
+      --light-bg: #f8f9fa;
+      --dark-bg: #343a40;
+      --text-color: #333;
+      --text-light: #6c757d;
+      --border-radius: 8px;
+      --box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+      --transition: all 0.3s ease;
+      --math-color: #2c3e50;
+      --formula-bg: #f8f9fa;
+      --formula-border: #e9ecef;
+    }
+
+    /* Explicitly reset background colors */
+    html, body {
+      background-color: #fff !important;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+      line-height: 1.6;
+      color: var(--text-color);
+    }
+
+    /* Main container background fix */
+    #main {
+      background-color: #fff !important;
+      transition: margin-left .5s;
+      padding: 16px;
+    }
+
+    /* Content Container Improvements */
+    #content-container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 20px;
+      background-color: #fff;
+    }
+
+    .pertemuan-content-area {
+      background-color: white;
+      border-radius: var(--border-radius);
+      box-shadow: var(--box-shadow);
+      padding: 25px;
+      margin-bottom: 30px;
+    }
+
+    .pertemuan-content-area h1 {
+      /* color: var(--secondary-color); */
+      border-bottom: 2px solid var(--primary-color);
+      padding-bottom: 10px;
+      margin-bottom: 25px;
+      font-weight: 600;
+    }
+
+    .pertemuan-content-area h3 {
+      color: var(--secondary-color);
+      margin-top: 30px;
+      margin-bottom: 15px;
+      font-weight: 500;
+      display: flex;
+      align-items: center;
+    }
+
+    .pertemuan-content-area h3 i {
+      margin-right: 10px;
+      color: var(--primary-color);
+    }
+
+    .pertemuan-content-area h4 {
+      color: var(--secondary-color);
+      margin-top: 20px;
+      margin-bottom: 10px;
+      font-weight: 500;
+      border-left: 3px solid var(--primary-color);
+      padding-left: 10px;
+    }
+
+    .pertemuan-content-area p {
+      margin-bottom: 15px;
+      text-align: justify;
+      line-height: 1.7;
+    }
+
+    /* Section Styling */
+    .interactive-section, .output, .formula-section {
+      background-color: white;
+      border-radius: var(--border-radius);
+      box-shadow: var(--box-shadow);
+      padding: 20px;
+      margin-bottom: 30px;
+      border: 1px solid #e9ecef;
+      transition: var(--transition);
+    }
+
+    /* .interactive-section:hover, .output:hover, .formula-section:hover {
+      box-shadow: 0 10px 15px rgba(0, 0, 0, 0.1);
+    } */
+
+    /* Canvas and Controls Styling */
+    .canvas-group-wrapper {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 20px;
+      justify-content: center;
+      margin: 20px 0;
+    }
+
+    .canvas-item, .magnifier-item {
+      text-align: center;
+      background-color: var(--light-bg);
+      padding: 15px;
+      border-radius: var(--border-radius);
+      box-shadow: var(--box-shadow);
+      flex: 1;
+      min-width: 250px;
+    }
+
+    .canvas-item p, .magnifier-item p {
+      margin-top: 10px;
+      font-weight: 500;
+      color: var(--secondary-color);
+    }
+
+    canvas {
+      border: 1px solid #ddd;
+      border-radius: 4px;
+      background-color: white;
+    }
+
+    .controls-group {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 15px;
+      margin: 20px 0;
+      justify-content: center;
+    }
+
+    .control-item {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    button {
+      background-color: var(--primary-color);
+      color: white;
+      border: none;
+      padding: 8px 15px;
+      border-radius: 4px;
+      cursor: pointer;
+      transition: var(--transition);
+    }
+
+    button:hover {
+      background-color: #2980b9;
+    }
+
+    input[type="range"] {
+      width: 100px;
+    }
+
+    /* Custom Pixel Grid Styling */
+    .pixel-grid {
+      display: grid;
+      grid-template-columns: repeat(10, 1fr);
+      grid-template-rows: repeat(10, 1fr);
+      width: 150px;
+      height: 150px;
+      margin: 0 auto;
+      border: 1px solid #ddd;
+      background-color: white;
+    }
+
+    .pixel {
+      border: 1px solid rgba(200, 200, 200, 0.3);
+      box-sizing: border-box;
+    }
+
+    /* Enhanced LaTeX-Style Math Formula Styling */
+    .formula-section {
+      background: linear-gradient(to bottom, #ffffff, #f8f9fa);
+      border: none;
+      box-shadow: 0 8px 30px rgba(0, 0, 0, 0.08);
+    }
+
+    .formula-box {
+      background-color: white;
+      border-radius: 12px;
+      padding: 25px;
+      margin: 25px 0;
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+      border-left: 4px solid var(--primary-color);
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+
+    /* .formula-box:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+    } */
+
+    .formula-box h4 {
+      color: var(--primary-color);
+      font-size: 1.2em;
+      margin-bottom: 20px;
+      padding-bottom: 10px;
+      border-bottom: 1px solid #eee;
+      border-left: none;
+    }
+
+    .formula-content {
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+    }
+
+    .formula-display {
+      margin-bottom: 20px;
+      padding: 0 10px;
+    }
+
+    .math-formula {
+      font-family: 'Times New Roman', Times, serif;
+      padding: 15px;
+      margin: 20px 0;
+      display: flex;
+      justify-content: center;
+      color: var(--math-color);
+      font-size: 1.2em;
+      background-color: rgba(52, 152, 219, 0.05);
+      border-radius: 8px;
+    }
+
+    /* Basic LaTeX-style formula tables */
+    .formula-table {
+      border-collapse: separate;
+      border-spacing: 5px;
+      margin: 0 auto;
+    }
+
+    .formula-table td {
+      padding: 2px 5px;
+      text-align: center;
+      vertical-align: middle;
+    }
+
+    /* Fraction styling */
+    .fraction-table {
+      display: inline-table;
+      text-align: center;
+      vertical-align: middle;
+      margin: 0 3px;
+    }
+
+    .numerator {
+      border-bottom: 1px solid black;
+      padding: 0 5px;
+    }
+
+    .denominator {
+      padding: 0 5px;
+    }
+
+    /* Complex fraction styling */
+    .complex-fraction-table {
+      display: inline-table;
+      text-align: center;
+      vertical-align: middle;
+      margin: 0 3px;
+    }
+
+    .complex-numerator {
+      border-bottom: 1px solid black;
+      padding: 3px 5px;
+    }
+
+    .complex-denominator {
+      padding: 3px 5px;
+    }
+
+    /* Summation symbol styling */
+    .sum-table {
+      display: inline-table;
+      text-align: center;
+      vertical-align: middle;
+    }
+
+    .sum-symbol {
+      font-size: 1.8em;
+      font-weight: normal;
+      line-height: 0.8;
+    }
+
+    .sum-upper, .sum-lower {
+      font-size: 0.7em;
+      line-height: 1;
+    }
+
+    .sum-cell {
+      padding: 0 2px;
+    }
+
+    /* Nested summation styling */
+    .nested-sum-table {
+      display: inline-table;
+      border-collapse: collapse;
+    }
+
+    /* Formula explanation styling */
+    .formula-explanation {
+      background-color: rgba(52, 152, 219, 0.05);
+      padding: 15px;
+      border-radius: 8px;
+      margin-top: 15px;
+    }
+
+    .formula-explanation p {
+      margin-bottom: 10px;
+    }
+
+    .formula-explanation ul {
+      margin-left: 20px;
+    }
+
+    .formula-explanation ul li {
+      margin-bottom: 5px;
+    }
+
+    /* Calculation Example Styling */
+    .calculation-example {
+      background-color: white;
+      border-radius: var(--border-radius);
+      box-shadow: var(--box-shadow);
+      padding: 25px;
+      margin: 30px 0;
+      border-left: 5px solid var(--primary-color);
+    }
+
+    .calculation-box {
+      background-color: var(--light-bg);
+      border-radius: var(--border-radius);
+      padding: 20px;
+      margin: 15px 0;
+    }
+
+    .calculation-step {
+      margin-bottom: 20px;
+      padding-bottom: 15px;
+      border-bottom: 1px dashed #ddd;
+    }
+
+    .calculation-step:last-child {
+      border-bottom: none;
+    }
+
+    .calculation-step p strong {
+      color: var(--secondary-color);
+    }
+
+    .calculation-detail {
+      background-color: white;
+      border-radius: var(--border-radius);
+      padding: 15px;
+      margin: 10px 0;
+      border-left: 3px solid var(--accent-color);
+    }
+
+    .formula {
+      font-family: 'Times New Roman', Times, serif;
+      background-color: rgba(52, 152, 219, 0.1);
+      padding: 15px;
+      border-radius: var(--border-radius);
+      text-align: center;
+      margin: 15px 0;
+      font-size: 1.1em;
+      color: var(--math-color);
+    }
+
+    /* Note and Info Styling */
+    .note, .info {
+      padding: 15px;
+      border-radius: var(--border-radius);
+      margin: 15px 0;
+      position: relative;
+      padding-left: 45px;
+    }
+
+    .note {
+      background-color: rgba(241, 196, 15, 0.1);
+      border-left: 4px solid #f1c40f;
+    }
+
+    .info {
+      background-color: rgba(52, 152, 219, 0.1);
+      border-left: 4px solid var(--primary-color);
+    }
+
+    .note:before, .info:before {
+      font-family: 'Font Awesome 6 Free';
+      font-weight: 900;
+      position: absolute;
+      left: 15px;
+      top: 15px;
+    }
+
+    .note:before {
+      content: '\f05a';
+      color: #f1c40f;
+    }
+
+    .info:before {
+      content: '\f129';
+      color: var(--primary-color);
+    }
+
+    /* Image Styling */
+    div[style*="text-align: center"] {
+      margin: 25px 0;
+    }
+
+    div[style*="text-align: center"] img {
+      max-width: 100%;
+      height: auto;
+      border-radius: var(--border-radius);
+      box-shadow: var(--box-shadow);
+      transition: var(--transition);
+    }
+
+    /* div[style*="text-align: center"] img:hover {
+      transform: scale(1.01);
+      box-shadow: 0 8px 15px rgba(0, 0, 0, 0.15);
+    } */
+
+    div[style*="text-align: center"] p {
+      margin-top: 10px;
+      color: var(--text-light);
+    }
+
+    /* Responsive Design */
+    @media (max-width: 992px) {
+      .canvas-group-wrapper, .controls-group {
+        flex-direction: column;
+        align-items: center;
+      }
+      
+      .canvas-item, .magnifier-item {
+        width: 100%;
+        max-width: 400px;
+      }
+      
+      .formula-content {
+        flex-direction: column;
+      }
+    }
+
+    @media (max-width: 768px) {
+      .pertemuan-content-area {
+        padding: 15px;
+      }
+      
+      .math-formula {
+        font-size: 0.95em;
+        overflow-x: auto;
+      }
+      
+      .calculation-box {
+        padding: 15px;
+      }
+      
+      .calculation-detail {
+        padding: 10px;
+      }
+    }
+
+    @media (max-width: 576px) {
+      .control-item {
+        flex-direction: column;
+        align-items: flex-start;
+      }
+      
+      .math-formula {
+        font-size: 0.9em;
+      }
+      
+      .sum-symbol {
+        font-size: 1.3em;
+      }
+    }
+    </style>
+</head>
+<body>
+    <!-- Sidebar Structure - TIDAK DIUBAH -->
+    <div id="sidebar" class="sidebar">
+        <div class="sidebar-header">
+            <h3><i class="fas fa-graduation-cap"></i> Menu</h3>
+            <a href="javascript:void(0)" class="closebtn" onclick="closeNav()">&times;</a>
+        </div>
+        <a href="index.html" class="menu-item "><i class="fas fa-chart-pie"></i> DASHBOARD</a>
+        <a href="per1.html" class="menu-item "><i class="fas fa-book"></i> Pertemuan 1</a>
+        <a href="per2.html" class="menu-item "><i class="fas fa-book"></i> Pertemuan 2</a>
+        <a href="per3.html" class="menu-item "><i class="fas fa-book"></i> Pertemuan 3</a>
+        <a href="per4.html" class="menu-item "><i class="fas fa-book"></i> Pertemuan 4</a>
+        <a href="per5.html" class="menu-item "><i class="fas fa-book"></i> Pertemuan 5</a>
+        <a href="per6.html" class="menu-item "><i class="fas fa-book"></i> Pertemuan 6</a>
+        <a href="per7.html" class="menu-item "><i class="fas fa-book"></i> Pertemuan 7</a>
+        <a href="per8.html" class="menu-item "><i class="fas fa-book"></i> Pertemuan 8</a>
+        <a href="per9.html" class="menu-item "><i class="fas fa-book"></i> Pertemuan 9</a>
+        <a href="per10.html" class="menu-item "><i class="fas fa-book"></i> Pertemuan 10</a>
+        <a href="per11.html" class="menu-item active"><i class="fas fa-book"></i> Pertemuan 11</a>
+        <a href="per12.html" class="menu-item "><i class="fas fa-book"></i> Pertemuan 12</a>
+        <a href="per13.html" class="menu-item "><i class="fas fa-book"></i> Pertemuan 13</a>
+        <a href="per14.html" class="menu-item "><i class="fas fa-book"></i> Pertemuan 14</a>
+    </div>
+
+    <!-- Main Content Structure -->
+    <div id="main">
+        <button class="openbtn" onclick="openNav()"><i class="fas fa-bars"></i> Menu</button>
+        <div id="content-container">
+            <!-- Pertemuan 11 Content -->
+            <div class="pertemuan-content-area">
+                <h1>Pertemuan 11: Antialiasing</h1>
+
+                <!-- BAGIAN 1: VISUAL INTERAKTIF (ATAS) -->
+                <div class="interactive-section" id="antialiasing-visual">
+                    <h3><i class="fas fa-magic"></i> Visualisasi Interaktif: Antialiasing</h3>
+                    <p>Berikut adalah visualisasi interaktif untuk memahami efek antialiasing. Anda dapat menggambar garis pada kanvas untuk melihat perbedaan antara garis dengan antialiasing (lebih halus) dan tanpa antialiasing (bergerigi).</p>
+
+                    <!-- Group for Main Canvases -->
+                    <div class="canvas-group-wrapper main-canvas-group">
+                        <div class="canvas-item">
+                            <canvas id="drawingCanvas" width="300" height="200"></canvas>
+                            <p>Kanvas Gambar</p>
+                        </div>
+                    </div>
+
+                    <!-- Group for Comparison Views -->
+                    <div class="canvas-group-wrapper comparison-group">
+                        <div class="magnifier-item">
+                            <div id="antialiasingOn" class="pixel-grid"></div>
+                            <p>Antialiasing: Aktif</p>
+                        </div>
+                        <div class="magnifier-item">
+                            <div id="antialiasingOff" class="pixel-grid"></div>
+                            <p>Antialiasing: Nonaktif</p>
+                        </div>
+                    </div>
+
+                    <!-- Group for Controls -->
+                    <div class="controls-group">
+                        <div class="control-item">
+                            <button id="clearCanvas">Bersihkan Kanvas</button>
+                        </div>
+                        <div class="control-item">
+                            <button id="drawDiagonalLine">Gambar Garis Diagonal</button>
+                        </div>
+                        <div class="control-item">
+                            <label for="lineColor">Warna Garis:</label>
+                            <input type="color" id="lineColor" value="#000000">
+                        </div>
+                        <div class="control-item">
+                            <label for="lineWidth">Lebar Garis:</label>
+                            <input type="range" id="lineWidth" min="1" max="5" value="2">
+                            <span id="lineWidthValue">2</span>px
+                        </div>
+                    </div>
+
+                    <p class="info">Klik dan seret pada kanvas untuk menggambar, atau gunakan tombol untuk menggambar bentuk otomatis. Perhatikan perbedaan pada tampilan antialiasing: sisi kiri menunjukkan garis dengan piksel abu-abu di tepi (halus), sementara sisi kanan hanya menampilkan piksel hitam-putih (bergerigi).</p>
+                </div>
+
+                <!-- BAGIAN 2: RUMUS (TENGAH) -->
+                <div class="output formula-section antialiasing-math" id="antialiasing-formal-formulas">
+                    <h3><i class="fas fa-square-root-alt"></i> Rumus Formal Antialiasing</h3>
+                    
+                    <p>Berikut adalah rumus-rumus formal yang mendasari teknik antialiasing dalam grafika komputer:</p>
+                    
+                    <div class="formula-box">
+                        <h4>1. Rumus Dasar Antialiasing (Weighted Area Sampling)</h4>
+                        
+                        <div class="formula-content">
+                            <div class="formula-display">
+                                <p>Untuk setiap piksel (x, y) pada tepi objek:</p>
+                                <div class="math-formula">
+                                    <table class="formula-table">
+                                        <tr>
+                                            <td>I(x, y) = α · F + (1 - α) · B</td>
+                                        </tr>
+                                    </table>
+                                </div>
+                                <p>Dimana:</p>
+                                <ul>
+                                    <li>I(x, y) = Intensitas warna akhir piksel pada koordinat (x, y)</li>
+                                    <li>F = Warna foreground (warna objek)</li>
+                                    <li>B = Warna background (warna latar belakang)</li>
+                                    <li>α = Faktor coverage (tingkat cakupan objek pada piksel), dengan nilai 0 ≤ α ≤ 1</li>
+                                </ul>
+                            </div>
+                            
+                            <div class="formula-explanation">
+                                <p>Faktor coverage (α) dapat dihitung dengan:</p>
+                                <div class="math-formula">
+                                    <table class="formula-table">
+                                        <tr>
+                                            <td>α =</td>
+                                            <td>
+                                                <table class="fraction-table">
+                                                    <tr><td class="numerator">A<sub>covered</sub></td></tr>
+                                                    <tr><td class="denominator">A<sub>total</sub></td></tr>
+                                                </table>
+                                            </td>
+                                        </tr>
+                                    </table>
+                                </div>
+                                <p>Dimana:</p>
+                                <ul>
+                                    <li>A<sub>covered</sub> = Luas area piksel yang tercakup oleh objek</li>
+                                    <li>A<sub>total</sub> = Luas total piksel</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="formula-box">
+                        <h4>2. Rumus Supersampling Anti-Aliasing (SSAA)</h4>
+                        
+                        <div class="formula-content">
+                            <div class="formula-display">
+                                <p>Untuk setiap piksel yang dibagi menjadi n × n subpiksel:</p>
+                                <div class="math-formula">
+                                    <table class="formula-table">
+                                        <tr>
+                                            <td>I(x, y) =</td>
+                                            <td>
+                                                <table class="fraction-table">
+                                                    <tr><td class="numerator">1</td></tr>
+                                                    <tr><td class="denominator">n<sup>2</sup></td></tr>
+                                                </table>
+                                            </td>
+                                            <td class="sum-cell">
+                                                <table class="sum-table">
+                                                    <tr>
+                                                        <td></td>
+                                                        <td class="sum-upper">n<sup>2</sup></td>
+                                                        <td></td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td></td>
+                                                        <td class="sum-symbol">∑</td>
+                                                        <td></td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td></td>
+                                                        <td class="sum-lower">i=1</td>
+                                                        <td></td>
+                                                    </tr>
+                                                </table>
+                                            </td>
+                                            <td>S<sub>i</sub></td>
+                                        </tr>
+                                    </table>
+                                </div>
+                                <p>Dimana:</p>
+                                <ul>
+                                    <li>I(x, y) = Intensitas warna akhir piksel pada koordinat (x, y)</li>
+                                    <li>S<sub>i</sub> = Nilai warna subpiksel ke-i</li>
+                                    <li>n² = Jumlah total subpiksel dalam satu piksel</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="formula-box">
+                        <h4>3. Rumus Multisampling Anti-Aliasing (MSAA)</h4>
+                        
+                        <div class="formula-content">
+                            <div class="formula-display">
+                                <p>Untuk setiap piksel pada tepi objek dengan m sampel:</p>
+                                <div class="math-formula">
+                                    <table class="formula-table">
+                                        <tr>
+                                            <td>I(x, y) =</td>
+                                            <td>
+                                                <table class="fraction-table">
+                                                    <tr><td class="numerator">1</td></tr>
+                                                    <tr><td class="denominator">m</td></tr>
+                                                </table>
+                                            </td>
+                                            <td class="sum-cell">
+                                                <table class="sum-table">
+                                                    <tr>
+                                                        <td></td>
+                                                        <td class="sum-upper">m</td>
+                                                        <td></td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td></td>
+                                                        <td class="sum-symbol">∑</td>
+                                                        <td></td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td></td>
+                                                        <td class="sum-lower">i=1</td>
+                                                        <td></td>
+                                                    </tr>
+                                                </table>
+                                            </td>
+                                            <td>C<sub>i</sub> · V<sub>i</sub></td>
+                                        </tr>
+                                    </table>
+                                </div>
+                                <p>Dimana:</p>
+                                <ul>
+                                    <li>I(x, y) = Intensitas warna akhir piksel</li>
+                                    <li>C<sub>i</sub> = Warna sampel ke-i</li>
+                                    <li>V<sub>i</sub> = Nilai visibilitas sampel ke-i (1 jika terlihat, 0 jika tidak)</li>
+                                    <li>m = Jumlah sampel per piksel</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="formula-box">
+                        <h4>4. Rumus Fast Approximate Anti-Aliasing (FXAA)</h4>
+                        
+                        <div class="formula-content">
+                            <div class="formula-display">
+                                <p>FXAA menggunakan deteksi tepi dan blur selektif:</p>
+                                <div class="math-formula">
+                                    <table class="formula-table">
+                                        <tr>
+                                            <td>E(x, y) = |∇I(x, y)|</td>
+                                        </tr>
+                                    </table>
+                                </div>
+                                <p>Dimana:</p>
+                                <ul>
+                                    <li>E(x, y) = Nilai tepi pada piksel (x, y)</li>
+                                    <li>∇I(x, y) = Gradien intensitas pada piksel (x, y)</li>
+                                </ul>
+                                <p>Jika E(x, y) melebihi ambang batas, maka piksel diproses dengan filter blur:</p>
+                                <div class="math-formula">
+                                    <table class="formula-table">
+                                        <tr>
+                                            <td>I'(x, y) =</td>
+                                            <td>
+                                                <table class="complex-fraction-table">
+                                                    <tr>
+                                                        <td class="complex-numerator">
+                                                            <table class="nested-sum-table">
+                                                                <tr>
+                                                                    <td class="sum-cell">
+                                                                        <table class="sum-table">
+                                                                            <tr>
+                                                                                <td></td>
+                                                                                <td class="sum-upper">n</td>
+                                                                                <td></td>
+                                                                            </tr>
+                                                                            <tr>
+                                                                                <td></td>
+                                                                                <td class="sum-symbol">∑</td>
+                                                                                <td></td>
+                                                                            </tr>
+                                                                            <tr>
+                                                                                <td></td>
+                                                                                <td class="sum-lower">i=1</td>
+                                                                                <td></td>
+                                                                            </tr>
+                                                                        </table>
+                                                                    </td>
+                                                                    <td>w<sub>i</sub> · I(x<sub>i</sub>, y<sub>i</sub>)</td>
+                                                                </tr>
+                                                            </table>
+                                                        </td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td class="complex-denominator">
+                                                            <table class="nested-sum-table">
+                                                                <tr>
+                                                                    <td class="sum-cell">
+                                                                        <table class="sum-table">
+                                                                            <tr>
+                                                                                <td></td>
+                                                                                <td class="sum-upper">n</td>
+                                                                                <td></td>
+                                                                            </tr>
+                                                                            <tr>
+                                                                                <td></td>
+                                                                                <td class="sum-symbol">∑</td>
+                                                                                <td></td>
+                                                                            </tr>
+                                                                            <tr>
+                                                                                <td></td>
+                                                                                <td class="sum-lower">i=1</td>
+                                                                                <td></td>
+                                                                            </tr>
+                                                                        </table>
+                                                                    </td>
+                                                                    <td>w<sub>i</sub></td>
+                                                                </tr>
+                                                            </table>
+                                                        </td>
+                                                    </tr>
+                                                </table>
+                                            </td>
+                                        </tr>
+                                    </table>
+                                </div>
+                                <p>Dimana:</p>
+                                <ul>
+                                    <li>I'(x, y) = Intensitas warna piksel setelah diproses</li>
+                                    <li>w<sub>i</sub> = Bobot untuk piksel tetangga ke-i</li>
+                                    <li>I(x<sub>i</sub>, y<sub>i</sub>) = Intensitas warna piksel tetangga ke-i</li>
+                                    <li>n = Jumlah piksel tetangga yang dipertimbangkan</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- BAGIAN 3: PENJELASAN CONTOH PERHITUNGAN (BAWAH) -->
+                <div class="output calculation-example" id="antialiasing-calculation-example">
+                    <h3><i class="fas fa-calculator"></i> Contoh Perhitungan Antialiasing pada Piksel</h3>
+                    
+                    <p>Berikut adalah contoh perhitungan konkret untuk memahami bagaimana antialiasing bekerja pada tingkat piksel. Perhitungan ini menunjukkan bagaimana warna piksel ditentukan berdasarkan tingkat cakupan garis pada piksel tersebut.</p>
+                    
+                    <div class="calculation-box">
+                        <h4>Contoh Perhitungan Warna Piksel pada Tepi Garis</h4>
+                        
+                        <div class="calculation-step">
+                            <p><strong>Langkah 1: Menentukan Parameter Awal</strong></p>
+                            <ul>
+                                <li>Warna Garis (G) = Hitam (nilai RGB: 0,0,0)</li>
+                                <li>Warna Latar Belakang (L) = Putih (nilai RGB: 255,255,255)</li>
+                                <li>Persentase Cakupan Garis pada Piksel (C) = 50% (atau 0.5)</li>
+                            </ul>
+                        </div>
+                        
+                        <div class="calculation-step">
+                            <p><strong>Langkah 2: Menerapkan Rumus Interpolasi Linear</strong></p>
+                            <div class="formula">
+                                Warna Piksel Hasil (P) = (C × Warna Garis) + ((1 - C) × Warna Latar Belakang)
+                            </div>
+                        </div>
+                        
+                        <div class="calculation-step">
+                            <p><strong>Langkah 3: Menghitung Nilai Warna Piksel</strong></p>
+                            <div class="calculation-detail">
+                                <p>Untuk piksel dengan cakupan 50%:</p>
+                                <p>P = (0.5 × 0) + ((1 - 0.5) × 255)</p>
+                                <p>P = 0 + (0.5 × 255)</p>
+                                <p>P = 127.5 ≈ 128 (warna abu-abu tengah)</p>
+                            </div>
+                            
+                            <div class="calculation-detail">
+                                <p>Untuk piksel dengan cakupan 25%:</p>
+                                <p>P = (0.25 × 0) + ((1 - 0.25) × 255)</p>
+                                <p>P = 0 + (0.75 × 255)</p>
+                                <p>P = 191.25 ≈ 191 (warna abu-abu terang)</p>
+                            </div>
+                            
+                            <div class="calculation-detail">
+                                <p>Untuk piksel dengan cakupan 75%:</p>
+                                <p>P = (0.75 × 0) + ((1 - 0.75) × 255)</p>
+                                <p>P = 0 + (0.25 × 255)</p>
+                                <p>P = 63.75 ≈ 64 (warna abu-abu gelap)</p>
+                            </div>
+                        </div>
+                        
+                        <div class="calculation-step">
+                            <p><strong>Langkah 4: Hasil Akhir</strong></p>
+                            <p>Dengan menerapkan perhitungan ini pada setiap piksel di sepanjang tepi garis, kita mendapatkan gradasi warna dari putih ke hitam yang menciptakan ilusi garis yang lebih halus. Semakin banyak tingkat cakupan yang diperhitungkan, semakin halus transisi warna yang dihasilkan.</p>
+                        </div>
+                    </div>
+                    
+                    <p class="note">Catatan: Visualisasi interaktif di atas menggunakan prinsip serupa untuk menghaluskan garis. Tampilan "Antialiasing: Aktif" menerapkan perhitungan seperti ini untuk menghasilkan piksel-piksel abu-abu di tepi garis.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- JavaScript untuk fungsi sidebar dan interaktivitas -->
+    <script>
+        // Fungsi untuk sidebar
+        function openNav() {
+            document.getElementById("sidebar").style.width = "250px";
+            document.getElementById("main").style.marginLeft = "250px";
+        }
+        
+        function closeNav() {
+            document.getElementById("sidebar").style.width = "0";
+            document.getElementById("main").style.marginLeft = "0";
+        }
+        
+        // Fungsi untuk visualisasi antialiasing
+        document.addEventListener('DOMContentLoaded', function() {
+            // Canvas setup
+            const canvas = document.getElementById('drawingCanvas');
+            const ctx = canvas.getContext('2d');
+            
+            // Pixel grid containers
+            const antialiasingOn = document.getElementById('antialiasingOn');
+            const antialiasingOff = document.getElementById('antialiasingOff');
+            
+            // Set background
+            ctx.fillStyle = 'white';
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+            
+            // Drawing state
+            let isDrawing = false;
+            let lastX = 0;
+            let lastY = 0;
+            let lineColor = '#000000';
+            let lineWidth = 2;
+            
+            // Controls
+            const colorPicker = document.getElementById('lineColor');
+            const lineWidthSlider = document.getElementById('lineWidth');
+            const lineWidthValue = document.getElementById('lineWidthValue');
+            const clearButton = document.getElementById('clearCanvas');
+            const drawDiagonalButton = document.getElementById('drawDiagonalLine');
+            
+            // Update line properties
+            colorPicker.addEventListener('input', function() {
+                lineColor = this.value;
+            });
+            
+            lineWidthSlider.addEventListener('input', function() {
+                lineWidth = this.value;
+                lineWidthValue.textContent = this.value;
+            });
+            
+            // Clear canvas
+            clearButton.addEventListener('click', function() {
+                ctx.fillStyle = 'white';
+                ctx.fillRect(0, 0, canvas.width, canvas.height);
+                clearPixelGrids();
+            });
+            
+            // Draw diagonal line button
+            drawDiagonalButton.addEventListener('click', function() {
+                // Clear canvas first
+                ctx.fillStyle = 'white';
+                ctx.fillRect(0, 0, canvas.width, canvas.height);
+                
+                // Draw diagonal line
+                ctx.strokeStyle = lineColor;
+                ctx.lineWidth = lineWidth;
+                ctx.beginPath();
+                ctx.moveTo(50, 50);
+                ctx.lineTo(250, 150);
+                ctx.stroke();
+                
+                // Update pixel grids
+                updatePixelGrids(150, 100);
+            });
+            
+            // Drawing functions
+            function startDrawing(e) {
+                isDrawing = true;
+                const rect = canvas.getBoundingClientRect();
+                lastX = e.clientX - rect.left;
+                lastY = e.clientY - rect.top;
+            }
+            
+            function draw(e) {
+                if (!isDrawing) return;
+                
+                const rect = canvas.getBoundingClientRect();
+                const x = e.clientX - rect.left;
+                const y = e.clientY - rect.top;
+                
+                // Draw on canvas
+                ctx.strokeStyle = lineColor;
+                ctx.lineWidth = lineWidth;
+                ctx.lineCap = 'round';
+                ctx.beginPath();
+                ctx.moveTo(lastX, lastY);
+                ctx.lineTo(x, y);
+                ctx.stroke();
+                
+                lastX = x;
+                lastY = y;
+                
+                // Update pixel grids
+                updatePixelGrids(x, y);
+            }
+            
+            function stopDrawing() {
+                isDrawing = false;
+            }
+            
+            // Create pixel grids
+            function createPixelGrids() {
+                // Clear existing grids
+                antialiasingOn.innerHTML = '';
+                antialiasingOff.innerHTML = '';
+                
+                // Create 10x10 grid of pixels
+                for (let i = 0; i < 100; i++) {
+                    const pixelOn = document.createElement('div');
+                    pixelOn.className = 'pixel';
+                    pixelOn.style.backgroundColor = 'white';
+                    antialiasingOn.appendChild(pixelOn);
+                    
+                    const pixelOff = document.createElement('div');
+                    pixelOff.className = 'pixel';
+                    pixelOff.style.backgroundColor = 'white';
+                    antialiasingOff.appendChild(pixelOff);
+                }
+            }
+            
+            // Clear pixel grids
+            function clearPixelGrids() {
+                const pixelsOn = antialiasingOn.querySelectorAll('.pixel');
+                const pixelsOff = antialiasingOff.querySelectorAll('.pixel');
+                
+                pixelsOn.forEach(pixel => {
+                    pixel.style.backgroundColor = 'white';
+                });
+                
+                pixelsOff.forEach(pixel => {
+                    pixel.style.backgroundColor = 'white';
+                });
+            }
+            
+            // Update pixel grids based on canvas content
+            function updatePixelGrids(x, y) {
+                // Get a small area around the current position
+                const size = 10;
+                const sourceX = Math.max(0, Math.min(x - size/2, canvas.width - size));
+                const sourceY = Math.max(0, Math.min(y - size/2, canvas.height - size));
+                
+                try {
+                    // Get image data from canvas
+                    const imageData = ctx.getImageData(sourceX, sourceY, size, size);
+                    const data = imageData.data;
+                    
+                    // Update antialiasing ON grid (with gray pixels)
+                    const pixelsOn = antialiasingOn.querySelectorAll('.pixel');
+                    for (let i = 0; i < 100; i++) {
+                        const row = Math.floor(i / 10);
+                        const col = i % 10;
+                        const index = (row * size + col) * 4;
+                        
+                        // Get pixel color
+                        const r = data[index];
+                        const g = data[index + 1];
+                        const b = data[index + 2];
+                        
+                        // Set pixel color
+                        pixelsOn[i].style.backgroundColor = `rgb(${r}, ${g}, ${b})`;
+                    }
+                    
+                    // Update antialiasing OFF grid (black and white only)
+                    const pixelsOff = antialiasingOff.querySelectorAll('.pixel');
+                    for (let i = 0; i < 100; i++) {
+                        const row = Math.floor(i / 10);
+                        const col = i % 10;
+                        const index = (row * size + col) * 4;
+                        
+                        // Get pixel color
+                        const r = data[index];
+                        const g = data[index + 1];
+                        const b = data[index + 2];
+                        
+                        // Calculate grayscale value
+                        const gray = (r + g + b) / 3;
+                        
+                        // Set pixel color (black or white only)
+                        pixelsOff[i].style.backgroundColor = gray < 128 ? 'black' : 'white';
+                    }
+                } catch (e) {
+                    console.log("Error updating pixel grids:", e);
+                }
+            }
+            
+            // Event listeners for canvas
+            canvas.addEventListener('mousedown', startDrawing);
+            canvas.addEventListener('mousemove', draw);
+            canvas.addEventListener('mouseup', stopDrawing);
+            canvas.addEventListener('mouseout', stopDrawing);
+            
+            // Touch support for mobile devices
+            function handleTouchStart(e) {
+                e.preventDefault();
+                if (e.touches.length === 1) {
+                    const touch = e.touches[0];
+                    const rect = canvas.getBoundingClientRect();
+                    lastX = touch.clientX - rect.left;
+                    lastY = touch.clientY - rect.top;
+                    isDrawing = true;
+                }
+            }
+            
+            function handleTouchMove(e) {
+                e.preventDefault();
+                if (!isDrawing || e.touches.length !== 1) return;
+                
+                const touch = e.touches[0];
+                const rect = canvas.getBoundingClientRect();
+                const x = touch.clientX - rect.left;
+                const y = touch.clientY - rect.top;
+                
+                // Draw on canvas
+                ctx.strokeStyle = lineColor;
+                ctx.lineWidth = lineWidth;
+                ctx.lineCap = 'round';
+                ctx.beginPath();
+                ctx.moveTo(lastX, lastY);
+                ctx.lineTo(x, y);
+                ctx.stroke();
+                
+                lastX = x;
+                lastY = y;
+                
+                // Update pixel grids
+                updatePixelGrids(x, y);
+            }
+            
+            function handleTouchEnd(e) {
+                e.preventDefault();
+                isDrawing = false;
+            }
+            
+            // Add touch event listeners
+            canvas.addEventListener('touchstart', handleTouchStart);
+            canvas.addEventListener('touchmove', handleTouchMove);
+            canvas.addEventListener('touchend', handleTouchEnd);
+            
+            // Initialize pixel grids
+            createPixelGrids();
+            
+            // Draw initial diagonal line to show the difference immediately
+            setTimeout(function() {
+                drawDiagonalButton.click();
+            }, 500);
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,716 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Materi Pertemuan 6 - Algoritma Pewarnaan Welch-Powell</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="style.css">
+    <style>
+        /* Styling dasar */
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: #333;
+        }
+        
+        .pertemuan-content-area {
+            padding: 20px;
+            background-color: #fff;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+        }
+        
+        h1 {
+            color: #2c3e50;
+            border-bottom: 2px solid #3498db;
+            padding-bottom: 10px;
+            margin-bottom: 25px;
+        }
+        
+        h3, h4 {
+            color: #2c3e50;
+            margin-top: 25px;
+            margin-bottom: 15px;
+        }
+        
+        /* Styling untuk tabel */
+        .pdf-table {
+            border-collapse: collapse;
+            width: auto;
+            margin: 20px 0;
+            border: 1px solid #ddd;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+        
+        .pdf-table th, .pdf-table td {
+            border: 1px solid #ddd;
+            padding: 12px;
+            text-align: center;
+        }
+        
+        .pdf-table th {
+            background-color: #f2f8ff;
+            color: #2c3e50;
+            font-weight: 600;
+        }
+        
+        .pdf-table tr:nth-child(even) {
+            background-color: #f9f9f9;
+        }
+        
+        .pdf-table tr:hover {
+            background-color: #f0f7ff;
+        }
+        
+        /* Styling untuk bagian interaktif */
+        .interactive-section {
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 30px;
+            background: #eef7ff;
+            border: 1px solid #d0e3ff;
+            box-shadow: 0 3px 10px rgba(0,0,0,0.05);
+        }
+        
+        .penjelasan-algoritma {
+            margin-top: 30px;
+            background: #f9f9f9;
+            padding: 25px;
+            border-radius: 8px;
+            border: 1px solid #e0e0e0;
+            box-shadow: 0 3px 10px rgba(0,0,0,0.05);
+        }
+        
+        .controls textarea { 
+            width: 90%; 
+            margin-bottom: 15px; 
+            box-sizing: border-box; 
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            font-family: 'Consolas', monospace;
+        }
+        
+        .controls button { 
+            margin: 3px; 
+            padding: 10px 15px; 
+            cursor: pointer; 
+            background-color: #3498db;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            transition: background-color 0.3s;
+        }
+        
+        .controls button:hover {
+            background-color: #2980b9;
+        }
+        
+        #welchPowellCanvasV3 { 
+            border: 1px solid #ddd; 
+            margin-top: 15px; 
+            background-color: #fff; 
+            display: block; 
+            margin-left: auto; 
+            margin-right: auto;
+            border-radius: 4px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+        
+        .output table { 
+            border-collapse: collapse; 
+            width: 100%; 
+            margin-top: 20px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+        
+        .output th, .output td { 
+            border: 1px solid #ddd; 
+            padding: 12px; 
+            text-align: center; 
+        }
+        
+        .output th {
+            background-color: #f2f8ff;
+            color: #2c3e50;
+        }
+        
+        .static-graph-container {
+            text-align: center; 
+            margin: 25px 0;
+            padding: 15px;
+            background-color: #fff;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+        }
+        
+        /* LaTeX-like styling untuk rumus dan notasi matematika */
+        .math {
+            font-family: 'Times New Roman', Times, serif;
+            font-style: italic;
+            display: inline-block;
+            margin: 0 3px;
+        }
+        
+        .math-block {
+            display: block;
+            text-align: center;
+            margin: 15px auto;
+            font-family: 'Times New Roman', Times, serif;
+            font-style: italic;
+            font-size: 1.1em;
+            padding: 10px;
+        }
+        
+        .math-symbol {
+            font-family: 'Symbol', serif;
+        }
+        
+        .math-greek {
+            font-family: 'Symbol', serif;
+        }
+        
+        .math-op {
+            margin: 0 3px;
+        }
+        
+        .math-frac {
+            display: inline-block;
+            vertical-align: middle;
+            text-align: center;
+        }
+        
+        .math-frac > span {
+            display: block;
+        }
+        
+        .math-frac .math-num {
+            border-bottom: 1px solid;
+            padding: 0 3px;
+        }
+        
+        .math-frac .math-den {
+            padding: 0 3px;
+        }
+        
+        .math-sub {
+            vertical-align: sub;
+            font-size: smaller;
+            margin-left: 1px;
+        }
+        
+        .math-sup {
+            vertical-align: super;
+            font-size: smaller;
+            margin-left: 1px;
+        }
+        
+        .math-box {
+            border: 1px solid #ddd;
+            background-color: #f9f9f9;
+            padding: 15px;
+            margin: 20px 0;
+            border-radius: 5px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+        }
+        
+        .step-box {
+            background-color: #f0f7ff;
+            border-left: 4px solid #3498db;
+            padding: 15px;
+            margin: 15px 0;
+            border-radius: 0 5px 5px 0;
+        }
+        
+        .highlight {
+            background-color: #fffde7;
+            padding: 2px 5px;
+            border-radius: 3px;
+        }
+        
+        .definition {
+            background-color: #e8f5e9;
+            border-left: 4px solid #4caf50;
+            padding: 15px;
+            margin: 15px 0;
+            border-radius: 0 5px 5px 0;
+        }
+        
+        .note {
+            background-color: #fff8e1;
+            border-left: 4px solid #ffc107;
+            padding: 15px;
+            margin: 15px 0;
+            border-radius: 0 5px 5px 0;
+        }
+        
+        /* Styling untuk graf SVG */
+        svg {
+            max-width: 100%;
+            height: auto;
+            margin: 15px 0;
+            border-radius: 8px;
+            background-color: #fff;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        
+        /* Animasi untuk hover pada node */
+        svg circle:hover {
+            stroke-width: 3px;
+            stroke: #3498db;
+            transition: stroke-width 0.2s, stroke 0.2s;
+        }
+    </style>
+</head>
+<body>
+    <div id="sidebar" class="sidebar">
+        <div class="sidebar-header">
+            <h3><i class="fas fa-graduation-cap"></i> Menu</h3>
+            <a href="javascript:void(0)" class="closebtn" onclick="closeNav()">&times;</a>
+        </div>
+        <a href="index.html" class="menu-item"><i class="fas fa-chart-pie"></i> DASHBOARD</a>
+        <a href="per1.html" class="menu-item"><i class="fas fa-book"></i> Pertemuan 1</a>
+        <a href="per2.html" class="menu-item"><i class="fas fa-book"></i> Pertemuan 2</a>
+        <a href="per3.html" class="menu-item"><i class="fas fa-book"></i> Pertemuan 3</a>
+        <a href="per4.html" class="menu-item"><i class="fas fa-book"></i> Pertemuan 4</a>
+        <a href="per5.html" class="menu-item"><i class="fas fa-book"></i> Pertemuan 5</a>
+        <a href="per6.html" class="menu-item active"><i class="fas fa-book"></i> Pertemuan 6</a>
+        <a href="per7.html" class="menu-item"><i class="fas fa-book"></i> Pertemuan 7</a>
+        <a href="per8.html" class="menu-item"><i class="fas fa-book"></i> Pertemuan 8</a>
+        <a href="per9.html" class="menu-item"><i class="fas fa-book"></i> Pertemuan 9</a>
+        <a href="per10.html" class="menu-item"><i class="fas fa-book"></i> Pertemuan 10</a>
+        <a href="per11.html" class="menu-item"><i class="fas fa-book"></i> Pertemuan 11</a>
+        <a href="per12.html" class="menu-item"><i class="fas fa-book"></i> Pertemuan 12</a>
+        <a href="per13.html" class="menu-item"><i class="fas fa-book"></i> Pertemuan 13</a>
+        <a href="per14.html" class="menu-item"><i class="fas fa-book"></i> Pertemuan 14</a>
+    </div>
+
+    <div id="main">
+        <button class="openbtn" onclick="openNav()"><i class="fas fa-bars"></i> Menu</button>
+        <div id="content-container">
+            <div class="pertemuan-content-area">
+                <h1>Pertemuan 6: Algoritma Pewarnaan Bidang (Welch-Powell)</h1>
+
+                <div class="interactive-section">
+                    <h3>Contoh Interaktif: Algoritma Pewarnaan Graf Welch-Powell</h3>
+                    <p>Algoritma pewarnaan graf bertujuan untuk memberikan "warna" pada simpul-simpul graf sehingga tidak ada dua simpul yang bertetangga (terhubung langsung) memiliki warna yang sama, dengan menggunakan jumlah warna sesedikit mungkin. Coba algoritma Welch-Powell secara interaktif di bawah ini.</p>
+                    <div class="controls">
+                        <label for="graphInput">Input Sisi Graf (pisahkan dengan koma, contoh: v1-v2, v2-v3):</label><br>
+                        <textarea id="graphInput" rows="3" placeholder="Contoh: v1-v2, v2-v3, v3-v4, v4-v1, v1-v3"></textarea><br>
+                        <button id="loadCustomGraphBtn">Muat Graf dari Input</button>
+                        <button id="loadRandomGraphBtn">Muat Graf Acak</button>
+                        <button id="colorGraphBtn">Warnai Graf</button>
+                        <button id="resetGraphBtn">Reset Graf & Input</button>
+                    </div>
+                    <canvas id="welchPowellCanvasV3" width="600" height="400"></canvas>
+                    <div class="output" id="welchPowellOutputV3">
+                        <strong>Hasil Pewarnaan Interaktif:</strong><br>
+                        Bilangan Kromatik (<span class="math-greek">χ</span>): <span id="chromaticNumberWPV3">N/A</span>
+                        <table id="welchPowellTableV3">
+                            <thead>
+                                <tr><th>Simpul</th><th>Derajat</th><th>Warna</th></tr>
+                            </thead>
+                            <tbody>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <div class="penjelasan-algoritma">
+                    <h3>Algoritma Welch-Powell dan Contoh Perhitungan</h3>
+                    
+                    <div class="definition">
+                        <p>Algoritma Welch-Powell adalah metode heuristik untuk pewarnaan graf. Meskipun tidak selalu menghasilkan jumlah warna minimum optimal (bilangan kromatik, <span class="math-greek">χ</span>(G)), algoritma ini memberikan pendekatan yang sistematis.</p>
+                    </div>
+                    
+                    <h4>Langkah-langkah Algoritma Welch-Powell :</h4>
+                    <ol>
+                        <li>Urutkan simpul-simpul dari graf G dalam urutan derajat yang menyusut (derajat tertinggi ke terendah). Jika ada derajat yang sama, urutannya bisa acak atau berdasarkan kriteria lain (misalnya, nama simpul).</li>
+                        <li>Ambil warna pertama (misalnya, Warna 1).
+                            <ul>
+                                <li>Warnai simpul pertama dalam urutan (yang memiliki derajat tertinggi dan belum diwarnai) dengan Warna 1.</li>
+                                <li>Secara berurutan, periksa setiap simpul berikutnya dalam daftar. Jika sebuah simpul belum diwarnai DAN tidak bertetangga dengan simpul manapun yang sudah diwarnai dengan Warna 1, maka warnai simpul tersebut dengan Warna 1.</li>
+                            </ul>
+                        </li>
+                        <li>Jika masih ada simpul yang belum diwarnai: Ambil warna baru berikutnya (misalnya, Warna 2). Ulangi proses pada langkah 2 (yaitu, warnai simpul pertama yang belum diwarnai dalam urutan dengan Warna 2, lalu periksa sisa daftar untuk mewarnai simpul lain yang valid dengan Warna 2).</li>
+                        <li>Ulangi langkah 3 (mengambil warna baru dan menerapkannya) hingga seluruh simpul dalam graf telah terwarnai.</li>
+                    </ol>
+
+                    <div class="math-box">
+                        <p class="math-block">Bilangan Kromatik <span class="math-greek">χ</span>(G) = jumlah warna minimum yang diperlukan</p>
+                        <p>Untuk setiap simpul <span class="math">v<span class="math-sub">i</span></span> dan <span class="math">v<span class="math-sub">j</span></span> yang bertetangga, harus memiliki warna berbeda:</p>
+                        <p class="math-block">Jika (v<span class="math-sub">i</span>, v<span class="math-sub">j</span>) ∈ E, maka warna(v<span class="math-sub">i</span>) ≠ warna(v<span class="math-sub">j</span>)</p>
+                    </div>
+
+                    <h4>Contoh Perhitungan :</h4>
+                    <p>Berikut adalah penerapan Algoritma Welch-Powell untuk memberi warna pada graf G dan menentukan bilangan kromatiknya.</p>
+                    <div class="static-graph-container">
+                        <p><strong>Representasi Visual Graf G :</strong></p>
+                        <svg width="300" height="300" xmlns="http://www.w3.org/2000/svg">
+                            <defs>
+                                <marker id="arrowhead" markerWidth="10" markerHeight="7" refX="0" refY="3.5" orient="auto">
+                                    <polygon points="0 0, 10 3.5, 0 7" />
+                                </marker>
+                            </defs>
+                            <!-- Edges -->
+                            <line x1="150" y1="50" x2="228" y2="88" stroke="#888" stroke-width="2"/> <!-- v1-v2 -->
+                            <line x1="150" y1="50" x2="247" y2="172" stroke="#888" stroke-width="2"/> <!-- v1-v3 -->
+                            <line x1="150" y1="50" x2="193" y2="240" stroke="#888" stroke-width="2"/> <!-- v1-v4 -->
+                            <line x1="150" y1="50" x2="107" y2="240" stroke="#888" stroke-width="2"/> <!-- v1-v5 -->
+                            <line x1="150" y1="50" x2="53" y2="172" stroke="#888" stroke-width="2"/> <!-- v1-v6 -->
+
+                            <line x1="193" y1="240" x2="247" y2="172" stroke="#888" stroke-width="2"/> <!-- v4-v3 -->
+                            <line x1="193" y1="240" x2="107" y2="240" stroke="#888" stroke-width="2"/> <!-- v4-v5 -->
+                            <line x1="193" y1="240" x2="72" y2="88" stroke="#888" stroke-width="2"/> <!-- v4-v7 -->
+
+                            <line x1="107" y1="240" x2="228" y2="88" stroke="#888" stroke-width="2"/> <!-- v5-v2 -->
+                            <line x1="107" y1="240" x2="72" y2="88" stroke="#888" stroke-width="2"/> <!-- v5-v7 -->
+
+                            <line x1="53" y1="172" x2="228" y2="88" stroke="#888" stroke-width="2"/> <!-- v6-v2 -->
+                            <line x1="53" y1="172" x2="247" y2="172" stroke="#888" stroke-width="2"/> <!-- v6-v3 -->
+                            <line x1="53" y1="172" x2="72" y2="88" stroke="#888" stroke-width="2"/> <!-- v6-v7 -->
+
+                            <!-- Nodes -->
+                            <circle cx="150" cy="50" r="15" fill="#FF6347" stroke="#333" stroke-width="1"/>
+                            <text x="150" y="50" font-family="Arial" font-size="12" font-weight="bold" text-anchor="middle" dy=".3em">v1</text>
+                            <circle cx="228" cy="88" r="15" fill="#4682B4" stroke="#333" stroke-width="1"/>
+                            <text x="228" y="88" font-family="Arial" font-size="12" font-weight="bold" text-anchor="middle" dy=".3em">v2</text>
+                            <circle cx="247" cy="172" r="15" fill="#FFD700" stroke="#333" stroke-width="1"/>
+                            <text x="247" y="172" font-family="Arial" font-size="12" font-weight="bold" text-anchor="middle" dy=".3em">v3</text>
+                            <circle cx="193" cy="240" r="15" fill="#4682B4" stroke="#333" stroke-width="1"/>
+                            <text x="193" y="240" font-family="Arial" font-size="12" font-weight="bold" text-anchor="middle" dy=".3em">v4</text>
+                            <circle cx="107" cy="240" r="15" fill="#32CD32" stroke="#333" stroke-width="1"/>
+                            <text x="107" y="240" font-family="Arial" font-size="12" font-weight="bold" text-anchor="middle" dy=".3em">v5</text>
+                            <circle cx="53" cy="172" r="15" fill="#32CD32" stroke="#333" stroke-width="1"/>
+                            <text x="53" y="172" font-family="Arial" font-size="12" font-weight="bold" text-anchor="middle" dy=".3em">v6</text>
+                            <circle cx="72" cy="88" r="15" fill="#FF6347" stroke="#333" stroke-width="1"/>
+                            <text x="72" y="88" font-family="Arial" font-size="12" font-weight="bold" text-anchor="middle" dy=".3em">v7</text>
+                        </svg>
+                    </div>
+                    
+                    <div class="step-box">
+                        <p><strong>Penyelesaian :</strong></p>
+                        <p>Urutan simpul berdasarkan derajat (tertinggi ke terendah, lalu berdasarkan label jika sama) yang digunakan adalah:</p>
+                        <p class="math-block">v<span class="math-sub">1</span> (derajat 5), v<span class="math-sub">4</span> (derajat 4), v<span class="math-sub">5</span> (derajat 4), v<span class="math-sub">6</span> (derajat 4), v<span class="math-sub">2</span> (derajat 3), v<span class="math-sub">3</span> (derajat 3), v<span class="math-sub">7</span> (derajat 3)</p>
+                    </div>
+                    
+                    <p>Langkah-langkah pewarnaan graf G adalah sebagai berikut:</p>
+                    
+                    <div class="step-box">
+                        <p><strong>Penggunaan Warna 1 (misalnya 'a'):</strong></p>
+                        <ul>
+                            <li>Warnai simpul <strong>v<span class="math-sub">1</span></strong> dengan warna 'a'.</li>
+                            <li>Periksa simpul berikutnya dalam urutan:
+                                <ul>
+                                    <li>v<span class="math-sub">4</span>: bertetangga dengan v<span class="math-sub">1</span> (tidak bisa diwarnai 'a').</li>
+                                    <li>v<span class="math-sub">5</span>: bertetangga dengan v<span class="math-sub">1</span> (tidak bisa diwarnai 'a').</li>
+                                    <li>v<span class="math-sub">6</span>: bertetangga dengan v<span class="math-sub">1</span> (tidak bisa diwarnai 'a').</li>
+                                    <li>v<span class="math-sub">2</span>: bertetangga dengan v<span class="math-sub">1</span> (tidak bisa diwarnai 'a').</li>
+                                    <li>v<span class="math-sub">3</span>: bertetangga dengan v<span class="math-sub">1</span> (tidak bisa diwarnai 'a').</li>
+                                    <li>v<span class="math-sub">7</span>: <em>tidak</em> bertetangga dengan v<span class="math-sub">1</span> (berdasarkan graf yang direkonstruksi). Warnai simpul <strong>v<span class="math-sub">7</span></strong> dengan warna 'a'.</li>
+                                </ul>
+                            </li>
+                            <li>Simpul yang diwarnai 'a': {v<span class="math-sub">1</span>, v<span class="math-sub">7</span>}.</li>
+                        </ul>
+                    </div>
+                    
+                    <div class="step-box">
+                        <p><strong>Penggunaan Warna 2 (misalnya 'b'):</strong></p>
+                        <ul>
+                            <li>Ambil simpul pertama yang belum diwarnai dalam urutan: <strong>v<span class="math-sub">4</span></strong>. Warnai v<span class="math-sub">4</span> dengan warna 'b'.</li>
+                            <li>Periksa simpul berikutnya yang belum diwarnai:
+                                <ul>
+                                    <li>v<span class="math-sub">5</span>: bertetangga dengan v<span class="math-sub">4</span> (tidak bisa diwarnai 'b').</li>
+                                    <li>v<span class="math-sub">6</span>: (v<span class="math-sub">6</span> akan diwarnai 'c'. Untuk graf yang direkonstruksi, v<span class="math-sub">6</span> tidak bertetangga dengan v<span class="math-sub">4</span>).</li>
+                                    <li>v<span class="math-sub">2</span>: <em>tidak</em> bertetangga dengan v<span class="math-sub">4</span> (berdasarkan graf yang direkonstruksi). Warnai simpul <strong>v<span class="math-sub">2</span></strong> dengan warna 'b'.</li>
+                                    <li>v<span class="math-sub">3</span>: bertetangga dengan v<span class="math-sub">4</span> (tidak bisa diwarnai 'b').</li>
+                                </ul>
+                            </li>
+                            <li>Simpul yang diwarnai 'b': {v<span class="math-sub">4</span>, v<span class="math-sub">2</span>}.</li>
+                        </ul>
+                    </div>
+                    
+                    <div class="step-box">
+                        <p><strong>Penggunaan Warna 3 (misalnya 'c'):</strong></p>
+                        <ul>
+                            <li>Ambil simpul pertama yang belum diwarnai dalam urutan: <strong>v<span class="math-sub">5</span></strong>. Warnai v<span class="math-sub">5</span> dengan warna 'c'.</li>
+                            <li>Periksa simpul berikutnya yang belum diwarnai:
+                                <ul>
+                                    <li>v<span class="math-sub">6</span>: <em>tidak</em> bertetangga dengan v<span class="math-sub">5</span> (berdasarkan graf yang direkonstruksi). Warnai simpul <strong>v<span class="math-sub">6</span></strong> dengan warna 'c'.</li>
+                                </ul>
+                            </li>
+                            <li>Simpul yang diwarnai 'c': {v<span class="math-sub">5</span>, v<span class="math-sub">6</span>}.</li>
+                        </ul>
+                    </div>
+                    
+                    <div class="step-box">
+                        <p><strong>Penggunaan Warna 4 (misalnya 'd'):</strong></p>
+                        <ul>
+                            <li>Ambil simpul pertama yang belum diwarnai dalam urutan: <strong>v<span class="math-sub">3</span></strong>. Warnai v<span class="math-sub">3</span> dengan warna 'd'.</li>
+                            <li>Simpul yang diwarnai 'd': {v<span class="math-sub">3</span>}.</li>
+                        </ul>
+                    </div>
+                    
+                    <p>Semua simpul telah diwarnai. Hasil pewarnaan akhir untuk graf G dari Gambar 6.2 menggunakan Algoritma Welch-Powell, beserta urutan simpul berdasarkan derajat dan warna yang ditetapkan adalah sebagai berikut:</p>
+                    <table class="pdf-table">
+                        <thead>
+                            <tr><th>Simpul</th><th>Derajat</th><th>Warna (Hasil)</th></tr>
+                        </thead>
+                        <tbody>
+                            <tr><td>v<span class="math-sub">1</span></td><td>5</td><td>a</td></tr>
+                            <tr><td>v<span class="math-sub">4</span></td><td>4</td><td>b</td></tr>
+                            <tr><td>v<span class="math-sub">5</span></td><td>4</td><td>c</td></tr>
+                            <tr><td>v<span class="math-sub">6</span></td><td>4</td><td>c</td></tr>
+                            <tr><td>v<span class="math-sub">2</span></td><td>3</td><td>b</td></tr>
+                            <tr><td>v<span class="math-sub">3</span></td><td>3</td><td>d</td></tr>
+                            <tr><td>v<span class="math-sub">7</span></td><td>3</td><td>a</td></tr>
+                        </tbody>
+                    </table>
+                    
+                    <div class="note">
+                        <p>Jadi, paling tidak ada 4 warna (a, b, c, d) diperlukan untuk mewarnai graf G pada contoh ini, sehingga bilangan kromatiknya <span class="math-greek">χ</span>(G) = 4.</p>
+                    </div>
+                    
+                    <p>Anda dapat menggunakan visual interaktif di bagian atas halaman ini untuk mencoba Algoritma Welch-Powell pada graf yang Anda input sendiri atau pada graf yang dihasilkan secara acak oleh tombol "Muat Graf Acak".</p>
+                </div>
+
+            </div>
+        </div>
+    </div>
+    <script src="script.js"></script>
+    <script>
+    document.addEventListener("DOMContentLoaded", () => {
+        const canvas = document.getElementById("welchPowellCanvasV3");
+        const ctx = canvas.getContext("2d");
+        const graphInput = document.getElementById("graphInput");
+        const chromaticNumberSpan = document.getElementById("chromaticNumberWPV3");
+        const resultsTableBody = document.querySelector("#welchPowellTableV3 tbody");
+
+        let nodes = {}; 
+        let edges = []; 
+        const nodeRadius = 20;
+        const availableColors = ["#FF6347", "#4682B4", "#32CD32", "#FFD700", "#BA55D3", "#FFA500", "#00CED1", "#FF69B4"];
+        let colorMap = {}; 
+
+        function generateRandomGraphString() {
+            const numNodes = Math.floor(Math.random() * 4) + 5; // 5 to 8 nodes
+            const nodeNames = [];
+            for (let i = 1; i <= numNodes; i++) {
+                nodeNames.push(`v${i}`);
+            }
+            const randomEdges = [];
+            const edgeProbability = 0.4; 
+            for (let i = 0; i < numNodes; i++) {
+                for (let j = i + 1; j < numNodes; j++) {
+                    if (Math.random() < edgeProbability) {
+                        randomEdges.push(`${nodeNames[i]}-${nodeNames[j]}`);
+                    }
+                }
+            }
+            if (randomEdges.length === 0 && numNodes > 1) {
+                 for(let k=0; k < numNodes -1; k++) { 
+                    randomEdges.push(`${nodeNames[k]}-${nodeNames[k+1]}`);
+                 }
+            }
+            return randomEdges.join(", ");
+        }
+
+        function parseGraph(inputString) {
+            nodes = {};
+            edges = [];
+            const edgeStrings = inputString.split(",").map(s => s.trim()).filter(s => s.includes("-"));
+            const nodeSet = new Set();
+            edgeStrings.forEach(edgeStr => {
+                const parts = edgeStr.split("-");
+                if (parts.length === 2) {
+                    const from = parts[0].trim();
+                    const to = parts[1].trim();
+                    if (from && to) {
+                        edges.push({ from, to });
+                        nodeSet.add(from);
+                        nodeSet.add(to);
+                    }
+                }
+            });
+            let idx = 0; 
+            const numGraphNodes = nodeSet.size; 
+            const angleStep = numGraphNodes > 0 ? (2 * Math.PI) / numGraphNodes : 0; 
+            const canvasCenterX = canvas.width / 2;
+            const canvasCenterY = canvas.height / 2;
+            const layoutRadius = Math.min(canvasCenterX, canvasCenterY) * 0.75; 
+            
+            // Consistent layout for specific node names if present, otherwise default sort
+            const sortedNodeIds = Array.from(nodeSet).sort((a,b) => {
+                const aNum = parseInt(a.substring(1));
+                const bNum = parseInt(b.substring(1));
+                if (!isNaN(aNum) && !isNaN(bNum)) return aNum - bNum;
+                return a.localeCompare(b);
+            });
+
+            sortedNodeIds.forEach(nodeId => {
+                let x = canvasCenterX + layoutRadius * Math.cos(idx * angleStep - Math.PI / 2);
+                let y = canvasCenterY + layoutRadius * Math.sin(idx * angleStep - Math.PI / 2);
+                idx++;
+                nodes[nodeId] = { id: nodeId, x, y, color: "#D3D3D3", degree: 0, label: nodeId, adj: [] };
+            });
+            edges.forEach(edge => {
+                if (nodes[edge.from] && nodes[edge.to]) {
+                    nodes[edge.from].adj.push(edge.to);
+                    nodes[edge.to].adj.push(edge.from);
+                    nodes[edge.from].degree++;
+                    nodes[edge.to].degree++;
+                }
+            });
+        }
+
+        function drawGraph() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            ctx.strokeStyle = "#888";
+            ctx.lineWidth = 2;
+            edges.forEach(edge => {
+                if (nodes[edge.from] && nodes[edge.to]) {
+                    ctx.beginPath();
+                    ctx.moveTo(nodes[edge.from].x, nodes[edge.from].y);
+                    ctx.lineTo(nodes[edge.to].x, nodes[edge.to].y);
+                    ctx.stroke();
+                }
+            });
+            Object.values(nodes).forEach(node => {
+                ctx.beginPath();
+                ctx.arc(node.x, node.y, nodeRadius, 0, 2 * Math.PI);
+                ctx.fillStyle = node.color || "#D3D3D3";
+                ctx.fill();
+                ctx.strokeStyle = "#333";
+                ctx.lineWidth = 1;
+                ctx.stroke();
+                ctx.fillStyle = "#000";
+                ctx.font = "bold 12px Arial";
+                ctx.textAlign = "center";
+                ctx.textBaseline = "middle";
+                ctx.fillText(node.label, node.x, node.y);
+            });
+        }
+
+        function updateResultsTable(sortedNodesInfo, chromaticNum) {
+            resultsTableBody.innerHTML = "";
+            sortedNodesInfo.forEach(nodeInfo => {
+                const row = resultsTableBody.insertRow();
+                row.insertCell().textContent = nodeInfo.id;
+                row.insertCell().textContent = nodeInfo.degree;
+                const colorCell = row.insertCell();
+                colorCell.textContent = nodeInfo.assignedColorName || "N/A";
+                if (nodeInfo.color) {
+                    colorCell.style.backgroundColor = nodeInfo.color;
+                    const hex = nodeInfo.color.replace("#", "");
+                    const r = parseInt(hex.substring(0,2), 16);
+                    const g = parseInt(hex.substring(2,4), 16);
+                    const b = parseInt(hex.substring(4,6), 16);
+                    if ((r*0.299 + g*0.587 + b*0.114) > 186) {
+                         colorCell.style.color = "#000000";
+                    } else {
+                         colorCell.style.color = "#FFFFFF";
+                    }
+                }
+            });
+            chromaticNumberSpan.textContent = chromaticNum === 0 ? "N/A" : chromaticNum;
+        }
+
+        function colorGraphWelchPowellV3() {
+            if (Object.keys(nodes).length === 0) {
+                alert("Graf belum dimuat. Masukkan sisi graf atau muat graf acak.");
+                return;
+            }
+            Object.values(nodes).forEach(n => { n.color = "#D3D3D3"; }); 
+            colorMap = {};
+            let colorNameCounter = 0;
+            const assignedColorNames = {};
+            const sortedNodes = Object.values(nodes).sort((a, b) => {
+                if (b.degree === a.degree) return a.id.localeCompare(b.id);
+                return b.degree - a.degree;
+            });
+            let colorIndex = 0;
+            let coloredCount = 0;
+            while (coloredCount < sortedNodes.length) {
+                const currentColor = availableColors[colorIndex % availableColors.length];
+                let currentAssignedColorName;
+                if (!colorMap[currentColor]) {
+                    colorMap[currentColor] = String.fromCharCode(65 + colorNameCounter++); 
+                }
+                currentAssignedColorName = colorMap[currentColor];
+                for (const node of sortedNodes) {
+                    if (node.color === "#D3D3D3") { 
+                        let canColor = true;
+                        for (const neighborId of node.adj) {
+                            if (nodes[neighborId] && nodes[neighborId].color === currentColor) { 
+                                canColor = false; break;
+                            }
+                        }
+                        if (canColor) {
+                            node.color = currentColor;
+                            assignedColorNames[node.id] = currentAssignedColorName;
+                            coloredCount++;
+                        }
+                    }
+                }
+                if (coloredCount >= sortedNodes.length) break; 
+                colorIndex++;
+                 if (colorIndex >= availableColors.length * sortedNodes.length) { 
+                    console.error("Too many colors needed, breaking loop.");
+                    break;
+                }
+            }
+            const chromaticNum = Object.keys(colorMap).length; 
+            const resultsForTable = sortedNodes.map(n => ({ id: n.id, degree: n.degree, color: n.color, assignedColorName: assignedColorNames[n.id] || 'N/A' }));       
+            updateResultsTable(resultsForTable, chromaticNum);
+            drawGraph();
+        }
+
+        function loadGraphAndDraw(inputStr) {
+            parseGraph(inputStr);
+            if (Object.keys(nodes).length > 0) {
+                drawGraph(); 
+                updateResultsTable(Object.values(nodes).map(n => ({id: n.id, degree: n.degree, color: n.color, assignedColorName: 'N/A'})), 0);
+            } else {
+                ctx.clearRect(0, 0, canvas.width, canvas.height);
+                resultsTableBody.innerHTML = "";
+                chromaticNumberSpan.textContent = "N/A";
+            }
+        }
+
+        function loadCustomGraph() {
+            const customGraphString = graphInput.value;
+            if (!customGraphString.trim()) {
+                alert("Input sisi graf tidak boleh kosong.");
+                return;
+            }
+            loadGraphAndDraw(customGraphString);
+        }
+
+        function loadRandomGraph() { 
+            const randomGraphStr = generateRandomGraphString();
+            graphInput.value = randomGraphStr; 
+            loadGraphAndDraw(randomGraphStr);
+        }
+
+        function resetGraphCanvasV3() {
+            graphInput.value = "";
+            nodes = {};
+            edges = [];
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            resultsTableBody.innerHTML = "";
+            chromaticNumberSpan.textContent = "N/A";
+            colorMap = {};
+        }
+
+        document.getElementById('loadCustomGraphBtn').addEventListener('click', loadCustomGraph);
+        document.getElementById('loadRandomGraphBtn').addEventListener('click', loadRandomGraph);
+        document.getElementById('colorGraphBtn').addEventListener('click', colorGraphWelchPowellV3);
+        document.getElementById('resetGraphBtn').addEventListener('click', resetGraphCanvasV3);
+
+        resetGraphCanvasV3(); 
+        loadRandomGraph(); 
+    });
+    </script>
+</body>
+</html>

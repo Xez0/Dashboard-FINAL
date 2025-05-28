@@ -1,0 +1,1280 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Materi Pertemuan 8 - Transformasi, Translasi, dan Rotasi</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="style.css"> <!-- Link external CSS -->
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap">
+
+    <style>
+        /* Warna dan variabel */
+        :root {
+            --primary-color: #4a6fa5;
+            --primary-color-light: #6989b9;
+            --secondary-color: #ff9800;
+            --accent-color: #e91e63;
+            --text-color: #333;
+            --text-color-light: #666;
+            --border-color: #ddd;
+            --bg-color: #f9f9f9;
+            --card-bg: #fff;
+            --card-shadow: 0 4px 8px rgba(0,0,0,0.1);
+            --success-color: #4CAF50;
+            --info-color: #2196F3;
+            --warning-color: #FF9800;
+        }
+
+        /* Peningkatan desain umum */
+        body {
+            font-family: 'Poppins', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: var(--text-color);
+            background-color: var(--bg-color);
+            margin: 0;
+            padding: 0;
+            overflow-x: hidden;
+        }
+
+        h1, h2, h3, h4, h5, h6 {
+            font-weight: 600;
+            color: var(--primary-color);
+            margin-top: 1.5em;
+            margin-bottom: 0.8em;
+            position: relative;
+        }
+
+        h1 {
+            font-size: 2.2rem;
+            border-bottom: 2px solid var(--primary-color);
+            padding-bottom: 0.3em;
+            margin-bottom: 1em;
+        }
+
+        h2 {
+            font-size: 1.8rem;
+            border-left: 4px solid var(--primary-color);
+            padding-left: 15px;
+        }
+
+        h3 {
+            font-size: 1.5rem;
+            color: var(--primary-color-light);
+        }
+
+        h4 {
+            font-size: 1.3rem;
+            color: var(--secondary-color);
+        }
+
+        p {
+            margin-bottom: 1.2em;
+            text-align: justify;
+        }
+
+        /* Peningkatan desain konten */
+        .pertemuan-content-area {
+            background-color: var(--card-bg);
+            border-radius: 10px;
+            padding: 25px;
+            box-shadow: var(--card-shadow);
+            margin-bottom: 30px;
+        }
+
+        /* Bagian input interaktif */
+        .input-group {
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            border: 1px solid var(--border-color);
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+            margin-bottom: 20px;
+            transition: all 0.3s ease;
+        }
+
+        .input-group:hover {
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .input-row {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 15px;
+            margin-bottom: 15px;
+            align-items: center;
+        }
+
+        .input-pair {
+            display: flex;
+            align-items: center;
+            background-color: #f8f9fa;
+            padding: 5px 10px;
+            border-radius: 6px;
+            border: 1px solid #e9ecef;
+        }
+
+        .input-pair label {
+            margin-right: 5px;
+            font-weight: 500;
+            color: var(--text-color);
+        }
+
+        .input-pair input[type="number"] {
+            width: 70px;
+            padding: 8px 10px;
+            border: 1px solid var(--border-color);
+            border-radius: 4px;
+            transition: all 0.3s;
+            font-family: 'Consolas', monospace;
+        }
+
+        .input-pair input[type="number"]:focus {
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 2px rgba(74, 111, 165, 0.2);
+            outline: none;
+        }
+
+        .input-row button {
+            padding: 10px 18px;
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-family: "Poppins", sans-serif;
+            font-weight: 500;
+            margin-right: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .input-row button:hover {
+            background-color: var(--primary-color-light);
+            transform: translateY(-2px);
+        }
+
+        .input-row button:active {
+            transform: translateY(0);
+        }
+
+        /* Tombol dengan ikon */
+        .input-row button i {
+            margin-right: 8px;
+        }
+
+        /* Canvas styling */
+        #transformCanvas {
+            border: 2px solid var(--border-color) !important;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+            background-color: #fff;
+            margin: 20px 0;
+            max-width: 100%;
+            height: auto;
+        }
+
+        /* Output styling */
+        .output {
+            background-color: #f8f9fa;
+            padding: 15px 20px;
+            border-radius: 8px;
+            border: 1px solid var(--border-color);
+            margin: 20px 0;
+            font-family: 'Consolas', 'Courier New', monospace;
+            position: relative;
+        }
+
+        .output::before {
+            content: "Hasil Transformasi";
+            position: absolute;
+            top: -12px;
+            left: 15px;
+            background-color: var(--primary-color);
+            color: white;
+            padding: 2px 10px;
+            border-radius: 4px;
+            font-size: 0.85rem;
+            font-weight: 500;
+        }
+
+        /* Bagian rumus dan penjelasan */
+        .rumus-section, .penjelasan-hasil-visual {
+            background-color: #fff;
+            padding: 25px;
+            border-radius: 8px;
+            border: 1px solid var(--border-color);
+            margin: 25px 0;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+            position: relative;
+        }
+
+        .rumus-section::before {
+            content: "Rumus Transformasi";
+            position: absolute;
+            top: -12px;
+            left: 15px;
+            background-color: var(--info-color);
+            color: white;
+            padding: 2px 10px;
+            border-radius: 4px;
+            font-size: 0.85rem;
+            font-weight: 500;
+        }
+
+        .penjelasan-hasil-visual::before {
+            content: "Panduan Interpretasi";
+            position: absolute;
+            top: -12px;
+            left: 15px;
+            background-color: var(--secondary-color);
+            color: white;
+            padding: 2px 10px;
+            border-radius: 4px;
+            font-size: 0.85rem;
+            font-weight: 500;
+        }
+
+        /* Styling untuk contoh dan kotak informasi */
+        .example-box {
+            background-color: #f0f7ff;
+            border-left: 5px solid var(--info-color);
+            padding: 20px;
+            margin: 25px 0;
+            border-radius: 0 8px 8px 0;
+            position: relative;
+        }
+
+        .example-box h4 {
+            color: var(--info-color);
+            margin-top: 0;
+            font-size: 1.2rem;
+        }
+
+        .example-box::before {
+            content: "Contoh";
+            position: absolute;
+            top: -12px;
+            left: 15px;
+            background-color: var(--info-color);
+            color: white;
+            padding: 2px 10px;
+            border-radius: 4px;
+            font-size: 0.85rem;
+            font-weight: 500;
+        }
+
+        /* LaTeX-style math formatting - IMPROVED */
+        .math-container {
+            font-family: 'Georgia', 'Times New Roman', serif;
+            margin: 1.5em 0;
+            overflow-x: auto;
+            padding: 0.5em 0;
+            -webkit-overflow-scrolling: touch;
+        }
+
+        .math-inline {
+            font-family: 'Georgia', 'Times New Roman', serif;
+            font-style: italic;
+            white-space: nowrap;
+            display: inline-block;
+        }
+
+        .math-block {
+            display: block;
+            margin: 1em auto;
+            text-align: center;
+            padding: 0.8em;
+            background-color: #f9f9f9;
+            border-radius: 5px;
+            max-width: 100%;
+            overflow-x: auto;
+            font-size: 1.1em;
+            -webkit-overflow-scrolling: touch;
+        }
+
+        /* Improved matrix styling */
+        .math-matrix {
+            display: inline-table;
+            vertical-align: middle;
+            border-collapse: collapse;
+            margin: 0.2em 0;
+            text-align: center;
+        }
+
+        .math-matrix-bracket {
+            display: inline-block;
+            font-size: 1.5em;
+            font-weight: normal;
+            vertical-align: middle;
+            line-height: 1;
+        }
+
+        .math-matrix-content {
+            display: inline-table;
+            vertical-align: middle;
+        }
+
+        .math-matrix-row {
+            display: table-row;
+        }
+
+        .math-matrix-cell {
+            display: table-cell;
+            text-align: center;
+            padding: 0.2em 0.5em;
+            min-width: 1.5em;
+        }
+
+        .math-fraction {
+            display: inline-block;
+            vertical-align: middle;
+            text-align: center;
+            margin: 0 0.2em;
+        }
+
+        .math-numerator {
+            border-bottom: 1px solid black;
+            padding: 0 0.3em;
+            display: block;
+        }
+
+        .math-denominator {
+            padding: 0 0.3em;
+            display: block;
+        }
+
+        /* Styling untuk rumus */
+        .formula {
+            background-color: #f8f9fa;
+            padding: 15px 20px;
+            border-radius: 8px;
+            border-left: 4px solid var(--info-color);
+            margin: 20px 0;
+            font-family: 'Georgia', 'Times New Roman', serif;
+            text-align: center;
+            font-size: 1.1em;
+            line-height: 2;
+            overflow-x: auto;
+            -webkit-overflow-scrolling: touch;
+        }
+
+        /* Improved responsive design */
+        @media (max-width: 768px) {
+            .input-row {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+            
+            .input-pair {
+                width: 100%;
+                margin-bottom: 10px;
+            }
+            
+            .input-row button {
+                width: 100%;
+                margin-right: 0;
+                margin-bottom: 10px;
+            }
+            
+            .formula, .math-block {
+                font-size: 0.95em;
+                padding: 10px;
+                overflow-x: auto;
+                -webkit-overflow-scrolling: touch;
+            }
+            
+            h1 {
+                font-size: 1.8rem;
+            }
+            
+            h2 {
+                font-size: 1.5rem;
+            }
+            
+            h3 {
+                font-size: 1.3rem;
+            }
+
+            /* Improved matrix display on mobile */
+            .math-matrix {
+                max-width: 100%;
+                font-size: 0.9em;
+            }
+
+            .math-matrix-cell {
+                padding: 0.1em 0.3em;
+                min-width: 1.2em;
+            }
+
+            .math-container {
+                padding: 0.3em 0;
+            }
+        }
+
+        /* Smaller screens adjustments */
+        @media (max-width: 480px) {
+            .pertemuan-content-area {
+                padding: 15px;
+            }
+
+            .formula, .math-block {
+                font-size: 0.9em;
+                padding: 8px;
+            }
+
+            .math-matrix {
+                font-size: 0.85em;
+            }
+
+            .math-matrix-bracket {
+                font-size: 1.3em;
+            }
+
+            .math-matrix-cell {
+                padding: 0.1em 0.2em;
+                min-width: 1em;
+            }
+
+            h1 {
+                font-size: 1.6rem;
+            }
+            
+            h2 {
+                font-size: 1.4rem;
+            }
+            
+            h3 {
+                font-size: 1.2rem;
+            }
+        }
+
+        /* Animasi untuk elemen interaktif */
+        @keyframes highlight {
+            0% { background-color: rgba(33, 150, 243, 0.1); }
+            50% { background-color: rgba(33, 150, 243, 0.3); }
+            100% { background-color: rgba(33, 150, 243, 0.1); }
+        }
+
+        .highlight {
+            animation: highlight 2s ease-in-out;
+        }
+
+        /* Improved canvas responsiveness */
+        @media (max-width: 520px) {
+            #transformCanvas {
+                width: 100% !important;
+                height: auto !important;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Sidebar Structure - Tidak diubah sesuai permintaan -->
+    <div id="sidebar" class="sidebar">
+        <div class="sidebar-header">
+            <h3><i class="fas fa-graduation-cap"></i> Menu</h3>
+            <a href="javascript:void(0)" class="closebtn" onclick="closeNav()">&times;</a>
+        </div>
+        <!-- Assuming files are in the same directory -->
+        <a href="index.html" class="menu-item"><i class="fas fa-chart-pie"></i> DASHBOARD</a>
+        <a href="per1.html" class="menu-item"><i class="fas fa-book"></i> Pertemuan 1</a>
+        <a href="per2.html" class="menu-item"><i class="fas fa-book"></i> Pertemuan 2</a>
+        <a href="per3.html" class="menu-item"><i class="fas fa-book"></i> Pertemuan 3</a>
+        <a href="per4.html" class="menu-item"><i class="fas fa-book"></i> Pertemuan 4</a>
+        <a href="per5.html" class="menu-item"><i class="fas fa-book"></i> Pertemuan 5</a>
+        <a href="per6.html" class="menu-item"><i class="fas fa-book"></i> Pertemuan 6</a>
+        <a href="per7.html" class="menu-item"><i class="fas fa-book"></i> Pertemuan 7</a>
+        <a href="per8.html" class="menu-item active"><i class="fas fa-book"></i> Pertemuan 8</a> <!-- Active link -->
+        <a href="per9.html" class="menu-item"><i class="fas fa-book"></i> Pertemuan 9</a>
+        <a href="per10.html" class="menu-item"><i class="fas fa-book"></i> Pertemuan 10</a>
+        <a href="per11.html" class="menu-item"><i class="fas fa-book"></i> Pertemuan 11</a>
+        <a href="per12.html" class="menu-item"><i class="fas fa-book"></i> Pertemuan 12</a>
+        <a href="per13.html" class="menu-item"><i class="fas fa-book"></i> Pertemuan 13</a>
+        <a href="per14.html" class="menu-item"><i class="fas fa-book"></i> Pertemuan 14</a>
+    </div>
+
+    <!-- Main Content Structure -->
+    <div id="main">
+        <button class="openbtn" onclick="openNav()"><i class="fas fa-bars"></i> Menu</button>
+        <div id="content-container">
+            <!-- Pertemuan 8 Content -->
+            <div class="pertemuan-content-area">
+                <h1><i class="fas fa-vector-square"></i> Pertemuan 8: Transformasi, Translasi, dan Rotasi</h1>
+                
+                <h2>Visualisasi Interaktif: Transformasi Geometris 2D</h2>
+                <div class="input-group">
+                    <div class="input-row">
+                        <div class="input-pair">
+                            <label>P1.x: <input type="number" id="p1x_in" value="50"></label>
+                        </div>
+                        <div class="input-pair">
+                            <label>P1.y: <input type="number" id="p1y_in" value="50"></label>
+                        </div>
+                    </div>
+                    <div class="input-row">
+                        <div class="input-pair">
+                            <label>P2.x: <input type="number" id="p2x_in" value="150"></label>
+                        </div>
+                        <div class="input-pair">
+                            <label>P2.y: <input type="number" id="p2y_in" value="50"></label>
+                        </div>
+                    </div>
+                    <div class="input-row">
+                        <div class="input-pair">
+                            <label>P3.x: <input type="number" id="p3x_in" value="100"></label>
+                        </div>
+                        <div class="input-pair">
+                            <label>P3.y: <input type="number" id="p3y_in" value="150"></label>
+                        </div>
+                    </div>
+                    <div class="input-row">
+                        <div class="input-pair">
+                            <label>tx: <input type="number" id="tx_in" value="0"></label>
+                        </div>
+                        <div class="input-pair">
+                            <label>ty: <input type="number" id="ty_in" value="0"></label>
+                        </div>
+                    </div>
+                    <div class="input-row">
+                        <label>Sudut (derajat): <input type="number" id="angle_in" value="0"></label>
+                    </div>
+                    <div class="input-row">
+                        <div class="input-pair">
+                            <label>Pivot X (xp): <input type="number" id="pivotX_in" value="0"></label>
+                        </div>
+                        <div class="input-pair">
+                            <label>Pivot Y (yp): <input type="number" id="pivotY_in" value="0"></label>
+                        </div>
+                    </div>
+                    <div class="input-row">
+                        <button onclick="applyTransformations()"><i class="fas fa-sync-alt"></i> Terapkan Transformasi</button>
+                        <button onclick="resetCanvas()"><i class="fas fa-undo"></i> Reset Visual</button>
+                        <button onclick="generateRandomVisual()"><i class="fas fa-random"></i> Generate Random Visual</button>
+                    </div>
+                </div>
+                
+                <canvas id="transformCanvas" width="500" height="350"></canvas>
+                
+                <div class="output" id="outputMath">
+                    <p>P1': (<span id="p1tx_out">N/A</span>, <span id="p1ty_out">N/A</span>)</p>
+                    <p>P2': (<span id="p2tx_out">N/A</span>, <span id="p2ty_out">N/A</span>)</p>
+                    <p>P3': (<span id="p3tx_out">N/A</span>, <span id="p3ty_out">N/A</span>)</p>
+                </div>
+                
+                <div class="rumus-section">
+                    <h3>Translasi</h3>
+                    <p>Translasi menggeser setiap titik objek sejauh (tx, ty). Rumus:</p>
+                    <div class="math-block">
+                        x' = x + tx<br>
+                        y' = y + ty
+                    </div>
+                    
+                    <h3>Rotasi</h3>
+                    <p>Rotasi memutar setiap titik objek mengelilingi titik pivot (xp, yp) sebesar sudut θ. Rumus (θ dalam radian):</p>
+                    <div class="math-block">
+                        x' = x<sub>p</sub> + (x - x<sub>p</sub>) · cos(θ) - (y - y<sub>p</sub>) · sin(θ)<br>
+                        y' = y<sub>p</sub> + (x - x<sub>p</sub>) · sin(θ) + (y - y<sub>p</sub>) · cos(θ)
+                    </div>
+                </div>
+                
+                <div class="penjelasan-hasil-visual">
+                    <p>Visualisasi ini mendemonstrasikan efek translasi dan rotasi pada objek 2D (segitiga).</p>
+                    <p>Sudut positif berarti rotasi berlawanan arah jarum jam. Sudut dalam input diubah dari derajat ke radian untuk kalkulasi (radian = derajat · π / 180).</p>
+                    <p>Segitiga biru adalah bentuk asli, dan segitiga merah adalah bentuk setelah transformasi diterapkan.</p>
+
+                    <p><strong>Menginterpretasikan Hasil Visual:</strong></p>
+                    <p>Setelah Anda memasukkan parameter pada bagian input, lalu menekan tombol "Terapkan Transformasi":</p>
+                    <ul>
+                        <li><strong>Visual di Canvas:</strong> Anda akan melihat dua segitiga pada area canvas. Segitiga berwarna <strong>biru</strong> merepresentasikan posisi dan bentuk awal objek sebelum transformasi. Segitiga berwarna <strong>merah</strong> menunjukkan posisi dan bentuk objek setelah transformasi translasi dan/atau rotasi diterapkan berdasarkan input Anda. Amati bagaimana perubahan nilai tx, ty, sudut rotasi (θ), dan titik pivot (xp, yp) secara visual mempengaruhi segitiga merah relatif terhadap segitiga biru.</li>
+                        <li><strong>Koordinat Hasil Transformasi:</strong> Di bawah canvas, pada bagian "Hasil Transformasi", akan ditampilkan nilai numerik (x', y') untuk setiap titik sudut segitiga yang telah ditransformasi (P1', P2', P3'). Nilai-nilai ini adalah hasil kalkulasi matematis menggunakan rumus translasi dan rotasi yang telah dijelaskan di atas, berdasarkan parameter input yang Anda berikan.</li>
+                        <li><strong>Eksplorasi Interaktif:</strong> Cobalah untuk mengubah nilai-nilai input secara bertahap:
+                            <ul>
+                                <li>Ubah nilai <strong>tx</strong> dan <strong>ty</strong> untuk melihat bagaimana segitiga merah bergeser secara horizontal dan vertikal.</li>
+                                <li>Ubah nilai <strong>Sudut</strong> untuk melihat segitiga merah berputar. Perhatikan arah putaran (positif untuk berlawanan arah jarum jam).</li>
+                                <li>Ubah nilai <strong>Pivot X (xp)</strong> dan <strong>Pivot Y (yp)</strong> untuk melihat bagaimana titik pusat rotasi mempengaruhi hasil akhir perputaran. Rotasi akan terjadi mengelilingi titik pivot ini.</li>
+                            </ul>
+                        </li>
+                    </ul>
+                    <p>Tombol "Reset Visual" akan mengembalikan segitiga ke posisi dan parameter awal, serta membersihkan transformasi sebelumnya dari canvas.</p>
+                </div>
+
+                <h2>A. Tujuan Pembelajaran</h2>
+                <div class="card">
+                    <p>Setelah menyelesaikan materi pada pertemuan ini, mahasiswa diharapkan mampu:</p>
+                    <ul>
+                        <li>Memahami konsep dasar transformasi dalam grafika komputer</li>
+                        <li>Mengaplikasikan transformasi translasi pada objek 2D</li>
+                        <li>Mengaplikasikan transformasi rotasi pada objek 2D</li>
+                        <li>Menghitung koordinat hasil transformasi menggunakan rumus matematika</li>
+                    </ul>
+                </div>
+
+                <h2>B. Uraian Materi</h2>
+
+                <h3>1. Pengertian Transformasi</h3>
+                <p>Grafika komputer adalah bidang yang diminati banyak orang. Salah satu subbagiannya adalah pemodelan objek. Pada pemodelan objek dua dimensi (2D), objek yang dimodelkan seringkali perlu dimodifikasi. Modifikasi ini dapat dilakukan melalui berbagai operasi fungsional atau operasi transformasi geometris. Transformasi dapat berupa transformasi dasar atau kombinasi dari berbagai transformasi geometris.</p>
+                
+                <p>Contoh transformasi geometris meliputi <strong>translasi</strong> (pergeseran), <strong>penskalaan</strong> (perubahan ukuran), <strong>rotasi</strong> (perputaran), <strong>inversi</strong>, <strong>geser</strong> (shear), dan <strong>peracikan</strong> (compositing). Transformasi ini sering disebut transformasi affine. Pada dasarnya, transformasi ini bertujuan memindahkan atau mengubah objek tanpa merusak bentuk dasarnya.</p>
+                
+                <div class="card info-card">
+                    <h4><i class="fas fa-lightbulb"></i> Tujuan dari transformasi:</h4>
+                    <ul>
+                        <li>Mengubah atau menyesuaikan komposisi pemandangan (scene)</li>
+                        <li>Memudahkan pembuatan objek yang simetris</li>
+                        <li>Melihat objek dari sudut pandang yang berbeda</li>
+                        <li>Memindahkan satu atau beberapa objek dari satu tempat ke tempat lain, yang biasa dipakai untuk animasi komputer</li>
+                    </ul>
+                </div>
+                
+                <p>Proses transformasi dilakukan dengan cara mengalikan matriks objek (yang berisi koordinat titik-titik objek) dengan matriks transformasi untuk menghasilkan matriks baru yang berisi koordinat objek setelah transformasi.</p>
+                
+                <div class="example-box">
+                    <h4>Contoh Transformasi Garis dengan Matriks</h4>
+                    <p>Apabila sebuah garis yang melalui titik A(0,1) dan titik B(2,3) ditransformasikan dengan matriks T:</p>
+                    
+                    <div class="math-block">
+                        <div class="math-matrix">
+                            <span class="math-matrix-bracket">[</span>
+                            <div class="math-matrix-content">
+                                <div class="math-matrix-row">
+                                    <div class="math-matrix-cell">1</div>
+                                    <div class="math-matrix-cell">2</div>
+                                </div>
+                                <div class="math-matrix-row">
+                                    <div class="math-matrix-cell">3</div>
+                                    <div class="math-matrix-cell">1</div>
+                                </div>
+                            </div>
+                            <span class="math-matrix-bracket">]</span>
+                        </div>
+                    </div>
+                    
+                    <p>Maka hasilnya (L*) adalah hasil perkalian matriks T dengan matriks koordinat garis L [A B]:</p>
+                    
+                    <div class="math-block">
+                        L = 
+                        <div class="math-matrix">
+                            <span class="math-matrix-bracket">[</span>
+                            <div class="math-matrix-content">
+                                <div class="math-matrix-row">
+                                    <div class="math-matrix-cell">0</div>
+                                    <div class="math-matrix-cell">2</div>
+                                </div>
+                                <div class="math-matrix-row">
+                                    <div class="math-matrix-cell">1</div>
+                                    <div class="math-matrix-cell">3</div>
+                                </div>
+                            </div>
+                            <span class="math-matrix-bracket">]</span>
+                        </div>
+                    </div>
+                    
+                    <div class="math-block">
+                        L* = T × L = 
+                        <div class="math-matrix">
+                            <span class="math-matrix-bracket">[</span>
+                            <div class="math-matrix-content">
+                                <div class="math-matrix-row">
+                                    <div class="math-matrix-cell">1</div>
+                                    <div class="math-matrix-cell">2</div>
+                                </div>
+                                <div class="math-matrix-row">
+                                    <div class="math-matrix-cell">3</div>
+                                    <div class="math-matrix-cell">1</div>
+                                </div>
+                            </div>
+                            <span class="math-matrix-bracket">]</span>
+                        </div>
+                        ×
+                        <div class="math-matrix">
+                            <span class="math-matrix-bracket">[</span>
+                            <div class="math-matrix-content">
+                                <div class="math-matrix-row">
+                                    <div class="math-matrix-cell">0</div>
+                                    <div class="math-matrix-cell">2</div>
+                                </div>
+                                <div class="math-matrix-row">
+                                    <div class="math-matrix-cell">1</div>
+                                    <div class="math-matrix-cell">3</div>
+                                </div>
+                            </div>
+                            <span class="math-matrix-bracket">]</span>
+                        </div>
+                        =
+                        <div class="math-matrix">
+                            <span class="math-matrix-bracket">[</span>
+                            <div class="math-matrix-content">
+                                <div class="math-matrix-row">
+                                    <div class="math-matrix-cell">2</div>
+                                    <div class="math-matrix-cell">8</div>
+                                </div>
+                                <div class="math-matrix-row">
+                                    <div class="math-matrix-cell">1</div>
+                                    <div class="math-matrix-cell">9</div>
+                                </div>
+                            </div>
+                            <span class="math-matrix-bracket">]</span>
+                        </div>
+                    </div>
+                    
+                    <p>Jadi, garis yang semula melalui titik A(0,1) dan B(2,3) setelah ditransformasi menjadi garis yang melalui titik A'(2,1) dan B'(8,9).</p>
+                </div>
+
+                <h3>2. Transformasi Translasi</h3>
+                <p>Translasi adalah transformasi yang memindahkan objek dari satu posisi ke posisi lain. Translasi dilakukan dengan menambahkan vektor translasi (tx, ty) ke setiap titik pada objek.</p>
+                
+                <div class="math-block">
+                    x' = x + tx<br>
+                    y' = y + ty
+                </div>
+                
+                <p>Dalam bentuk matriks, translasi dapat dinyatakan sebagai:</p>
+                
+                <div class="math-block">
+                    <div class="math-matrix">
+                        <span class="math-matrix-bracket">[</span>
+                        <div class="math-matrix-content">
+                            <div class="math-matrix-row">
+                                <div class="math-matrix-cell">x'</div>
+                            </div>
+                            <div class="math-matrix-row">
+                                <div class="math-matrix-cell">y'</div>
+                            </div>
+                            <div class="math-matrix-row">
+                                <div class="math-matrix-cell">1</div>
+                            </div>
+                        </div>
+                        <span class="math-matrix-bracket">]</span>
+                    </div>
+                    =
+                    <div class="math-matrix">
+                        <span class="math-matrix-bracket">[</span>
+                        <div class="math-matrix-content">
+                            <div class="math-matrix-row">
+                                <div class="math-matrix-cell">1</div>
+                                <div class="math-matrix-cell">0</div>
+                                <div class="math-matrix-cell">tx</div>
+                            </div>
+                            <div class="math-matrix-row">
+                                <div class="math-matrix-cell">0</div>
+                                <div class="math-matrix-cell">1</div>
+                                <div class="math-matrix-cell">ty</div>
+                            </div>
+                            <div class="math-matrix-row">
+                                <div class="math-matrix-cell">0</div>
+                                <div class="math-matrix-cell">0</div>
+                                <div class="math-matrix-cell">1</div>
+                            </div>
+                        </div>
+                        <span class="math-matrix-bracket">]</span>
+                    </div>
+                    ×
+                    <div class="math-matrix">
+                        <span class="math-matrix-bracket">[</span>
+                        <div class="math-matrix-content">
+                            <div class="math-matrix-row">
+                                <div class="math-matrix-cell">x</div>
+                            </div>
+                            <div class="math-matrix-row">
+                                <div class="math-matrix-cell">y</div>
+                            </div>
+                            <div class="math-matrix-row">
+                                <div class="math-matrix-cell">1</div>
+                            </div>
+                        </div>
+                        <span class="math-matrix-bracket">]</span>
+                    </div>
+                </div>
+
+                <div class="example-box">
+                    <h4>Contoh Translasi</h4>
+                    <p>Sebuah segitiga memiliki titik sudut (1, 1), (4, 1), dan (2, 3). Translasikan segitiga tersebut dengan vektor translasi (2, -1).</p>
+                    
+                    <p><strong>Jawab:</strong></p>
+                    <p>Titik A(1, 1) → A'(1+2, 1+(-1)) = A'(3, 0)</p>
+                    <p>Titik B(4, 1) → B'(4+2, 1+(-1)) = B'(6, 0)</p>
+                    <p>Titik C(2, 3) → C'(2+2, 3+(-1)) = C'(4, 2)</p>
+                    
+                    <p>Jadi, segitiga hasil translasi memiliki titik sudut A'(3, 0), B'(6, 0), dan C'(4, 2).</p>
+                </div>
+
+                <h3>3. Transformasi Rotasi</h3>
+                <p>Rotasi adalah transformasi yang memutar objek mengelilingi suatu titik pivot. Rotasi dapat dilakukan terhadap titik pusat (0,0) atau terhadap titik pivot sembarang (xp, yp).</p>
+                
+                <h4>a. Rotasi terhadap Titik Pusat (0,0)</h4>
+                <p>Rumus rotasi terhadap titik pusat (0,0) sebesar sudut θ adalah:</p>
+                
+                <div class="math-block">
+                    x' = x · cos(θ) - y · sin(θ)<br>
+                    y' = x · sin(θ) + y · cos(θ)
+                </div>
+                
+                <p>Dalam bentuk matriks, rotasi terhadap titik pusat (0,0) dapat dinyatakan sebagai:</p>
+                
+                <div class="math-block">
+                    <div class="math-matrix">
+                        <span class="math-matrix-bracket">[</span>
+                        <div class="math-matrix-content">
+                            <div class="math-matrix-row">
+                                <div class="math-matrix-cell">x'</div>
+                            </div>
+                            <div class="math-matrix-row">
+                                <div class="math-matrix-cell">y'</div>
+                            </div>
+                        </div>
+                        <span class="math-matrix-bracket">]</span>
+                    </div>
+                    =
+                    <div class="math-matrix">
+                        <span class="math-matrix-bracket">[</span>
+                        <div class="math-matrix-content">
+                            <div class="math-matrix-row">
+                                <div class="math-matrix-cell">cos(θ)</div>
+                                <div class="math-matrix-cell">-sin(θ)</div>
+                            </div>
+                            <div class="math-matrix-row">
+                                <div class="math-matrix-cell">sin(θ)</div>
+                                <div class="math-matrix-cell">cos(θ)</div>
+                            </div>
+                        </div>
+                        <span class="math-matrix-bracket">]</span>
+                    </div>
+                    ×
+                    <div class="math-matrix">
+                        <span class="math-matrix-bracket">[</span>
+                        <div class="math-matrix-content">
+                            <div class="math-matrix-row">
+                                <div class="math-matrix-cell">x</div>
+                            </div>
+                            <div class="math-matrix-row">
+                                <div class="math-matrix-cell">y</div>
+                            </div>
+                        </div>
+                        <span class="math-matrix-bracket">]</span>
+                    </div>
+                </div>
+
+                <h4>b. Rotasi terhadap Titik Pivot Sembarang (xp, yp)</h4>
+                <p>Untuk melakukan rotasi terhadap titik pivot sembarang (xp, yp), langkah-langkahnya adalah:</p>
+                <ol>
+                    <li>Translasikan objek sehingga titik pivot berimpit dengan titik pusat (0,0). Vektor translasi: (-xp, -yp).</li>
+                    <li>Lakukan rotasi sebesar sudut θ terhadap titik pusat (0,0).</li>
+                    <li>Translasikan kembali objek sehingga titik pivot kembali ke posisi semula (xp, yp). Vektor translasi: (xp, yp).</li>
+                </ol>
+                
+                <p>Rumus gabungan untuk rotasi titik (x, y) terhadap pivot (xp, yp) adalah:</p>
+                
+                <div class="math-block">
+                    x' = x<sub>p</sub> + (x - x<sub>p</sub>) · cos(θ) - (y - y<sub>p</sub>) · sin(θ)<br>
+                    y' = y<sub>p</sub> + (x - x<sub>p</sub>) · sin(θ) + (y - y<sub>p</sub>) · cos(θ)
+                </div>
+
+                <div class="example-box">
+                    <h4>Contoh 1: Rotasi Segitiga terhadap (0,0)</h4>
+                    <p>Sebuah segitiga memiliki titik sudut (3, -1), (4, 1), (2, 1). Rotasikan objek sebesar 90 derajat berlawanan arah jarum jam (θ = 90°) terhadap titik pusat (0,0).</p>
+                    
+                    <p>Matriks rotasi untuk θ = 90° (cos(90°)=0, sin(90°)=1):</p>
+                    
+                    <div class="math-block">
+                        R = 
+                        <div class="math-matrix">
+                            <span class="math-matrix-bracket">[</span>
+                            <div class="math-matrix-content">
+                                <div class="math-matrix-row">
+                                    <div class="math-matrix-cell">0</div>
+                                    <div class="math-matrix-cell">-1</div>
+                                </div>
+                                <div class="math-matrix-row">
+                                    <div class="math-matrix-cell">1</div>
+                                    <div class="math-matrix-cell">0</div>
+                                </div>
+                            </div>
+                            <span class="math-matrix-bracket">]</span>
+                        </div>
+                    </div>
+                    
+                    <p>Transformasi titik-titik:</p>
+                    
+                    <div class="math-container">
+                        <p><strong>Titik (3, -1):</strong></p>
+                        <div class="math-block">
+                            P' = R × 
+                            <div class="math-matrix">
+                                <span class="math-matrix-bracket">[</span>
+                                <div class="math-matrix-content">
+                                    <div class="math-matrix-row">
+                                        <div class="math-matrix-cell">3</div>
+                                    </div>
+                                    <div class="math-matrix-row">
+                                        <div class="math-matrix-cell">-1</div>
+                                    </div>
+                                </div>
+                                <span class="math-matrix-bracket">]</span>
+                            </div>
+                            = 
+                            <div class="math-matrix">
+                                <span class="math-matrix-bracket">[</span>
+                                <div class="math-matrix-content">
+                                    <div class="math-matrix-row">
+                                        <div class="math-matrix-cell">(0×3)+(-1×-1)</div>
+                                    </div>
+                                    <div class="math-matrix-row">
+                                        <div class="math-matrix-cell">(1×3)+(0×-1)</div>
+                                    </div>
+                                </div>
+                                <span class="math-matrix-bracket">]</span>
+                            </div>
+                            = 
+                            <div class="math-matrix">
+                                <span class="math-matrix-bracket">[</span>
+                                <div class="math-matrix-content">
+                                    <div class="math-matrix-row">
+                                        <div class="math-matrix-cell">1</div>
+                                    </div>
+                                    <div class="math-matrix-row">
+                                        <div class="math-matrix-cell">3</div>
+                                    </div>
+                                </div>
+                                <span class="math-matrix-bracket">]</span>
+                            </div>
+                            → (1, 3)
+                        </div>
+                        
+                        <p><strong>Titik (4, 1):</strong></p>
+                        <div class="math-block">
+                            P' = R × 
+                            <div class="math-matrix">
+                                <span class="math-matrix-bracket">[</span>
+                                <div class="math-matrix-content">
+                                    <div class="math-matrix-row">
+                                        <div class="math-matrix-cell">4</div>
+                                    </div>
+                                    <div class="math-matrix-row">
+                                        <div class="math-matrix-cell">1</div>
+                                    </div>
+                                </div>
+                                <span class="math-matrix-bracket">]</span>
+                            </div>
+                            = 
+                            <div class="math-matrix">
+                                <span class="math-matrix-bracket">[</span>
+                                <div class="math-matrix-content">
+                                    <div class="math-matrix-row">
+                                        <div class="math-matrix-cell">(0×4)+(-1×1)</div>
+                                    </div>
+                                    <div class="math-matrix-row">
+                                        <div class="math-matrix-cell">(1×4)+(0×1)</div>
+                                    </div>
+                                </div>
+                                <span class="math-matrix-bracket">]</span>
+                            </div>
+                            = 
+                            <div class="math-matrix">
+                                <span class="math-matrix-bracket">[</span>
+                                <div class="math-matrix-content">
+                                    <div class="math-matrix-row">
+                                        <div class="math-matrix-cell">-1</div>
+                                    </div>
+                                    <div class="math-matrix-row">
+                                        <div class="math-matrix-cell">4</div>
+                                    </div>
+                                </div>
+                                <span class="math-matrix-bracket">]</span>
+                            </div>
+                            → (-1, 4)
+                        </div>
+                        
+                        <p><strong>Titik (2, 1):</strong></p>
+                        <div class="math-block">
+                            P' = R × 
+                            <div class="math-matrix">
+                                <span class="math-matrix-bracket">[</span>
+                                <div class="math-matrix-content">
+                                    <div class="math-matrix-row">
+                                        <div class="math-matrix-cell">2</div>
+                                    </div>
+                                    <div class="math-matrix-row">
+                                        <div class="math-matrix-cell">1</div>
+                                    </div>
+                                </div>
+                                <span class="math-matrix-bracket">]</span>
+                            </div>
+                            = 
+                            <div class="math-matrix">
+                                <span class="math-matrix-bracket">[</span>
+                                <div class="math-matrix-content">
+                                    <div class="math-matrix-row">
+                                        <div class="math-matrix-cell">(0×2)+(-1×1)</div>
+                                    </div>
+                                    <div class="math-matrix-row">
+                                        <div class="math-matrix-cell">(1×2)+(0×1)</div>
+                                    </div>
+                                </div>
+                                <span class="math-matrix-bracket">]</span>
+                            </div>
+                            = 
+                            <div class="math-matrix">
+                                <span class="math-matrix-bracket">[</span>
+                                <div class="math-matrix-content">
+                                    <div class="math-matrix-row">
+                                        <div class="math-matrix-cell">-1</div>
+                                    </div>
+                                    <div class="math-matrix-row">
+                                        <div class="math-matrix-cell">2</div>
+                                    </div>
+                                </div>
+                                <span class="math-matrix-bracket">]</span>
+                            </div>
+                            → (-1, 2)
+                        </div>
+                    </div>
+                    
+                    <p>Koordinat baru adalah (1, 3), (-1, 4), dan (-1, 2).</p>
+                </div>
+
+                <div class="example-box">
+                    <h4>Contoh 2: Rotasi Segitiga terhadap Pivot Sembarang</h4>
+                    <p>Rotasikan segitiga dengan koordinat A(10,10), B(30,10), dan C(10,30) sebesar θ = 30° terhadap titik pivot P(10,10).</p>
+                    
+                    <p>Diketahui: x<sub>p</sub>=10, y<sub>p</sub>=10, θ=30° (cos(30°) ≈ 0.866, sin(30°) = 0.5)</p>
+                    
+                    <p><strong>Jawab:</strong></p>
+                    
+                    <div class="math-container">
+                        <p><strong>Titik A(10,10):</strong> Karena A adalah titik pivot, A' = A = (10, 10).</p>
+                        <div class="math-block">
+                            <em>Verifikasi rumus:</em><br>
+                            x' = 10 + (10 - 10)·cos(30°) - (10 - 10)·sin(30°) = 10 + 0 - 0 = 10<br>
+                            y' = 10 + (10 - 10)·sin(30°) + (10 - 10)·cos(30°) = 10 + 0 + 0 = 10
+                        </div>
+                        
+                        <p><strong>Titik B(30,10):</strong></p>
+                        <div class="math-block">
+                            x' = 10 + (30 - 10)·cos(30°) - (10 - 10)·sin(30°)<br>
+                            = 10 + 20·0.866 - 0<br>
+                            = 10 + 17.32<br>
+                            = 27.32<br><br>
+                            
+                            y' = 10 + (30 - 10)·sin(30°) + (10 - 10)·cos(30°)<br>
+                            = 10 + 20·0.5 + 0<br>
+                            = 10 + 10<br>
+                            = 20<br><br>
+                            
+                            B' ≈ (27.32, 20)
+                        </div>
+                        
+                        <p><strong>Titik C(10,30):</strong></p>
+                        <div class="math-block">
+                            x' = 10 + (10 - 10)·cos(30°) - (30 - 10)·sin(30°)<br>
+                            = 10 + 0 - 20·0.5<br>
+                            = 10 - 10<br>
+                            = 0<br><br>
+                            
+                            y' = 10 + (10 - 10)·sin(30°) + (30 - 10)·cos(30°)<br>
+                            = 10 + 0 + 20·0.866<br>
+                            = 10 + 17.32<br>
+                            = 27.32<br><br>
+                            
+                            C' ≈ (0, 27.32)
+                        </div>
+                    </div>
+                    
+                    <p>Jadi, koordinat segitiga baru adalah A'(10,10), B'(27.32, 20), dan C'(0, 27.32).</p>
+                </div>
+            </div>
+            <!-- End Pertemuan 8 Content -->
+        </div>
+    </div>
+
+    <script src="script.js"></script> <!-- Link external JS -->
+
+    <!-- JavaScript for Interactive Transformation -->
+    <script>
+        const canvas = document.getElementById('transformCanvas');
+        const ctx = canvas ? canvas.getContext('2d') : null;
+
+        let P1_coords = { x: 50, y: 50 };
+        let P2_coords = { x: 150, y: 50 };
+        let P3_coords = { x: 100, y: 150 };
+
+        function drawTriangle(p1, p2, p3, color) {
+            if (!ctx) return;
+            ctx.beginPath();
+            ctx.moveTo(p1.x, p1.y);
+            ctx.lineTo(p2.x, p2.y);
+            ctx.lineTo(p3.x, p3.y);
+            ctx.closePath();
+            ctx.strokeStyle = color;
+            ctx.lineWidth = 2;
+            ctx.stroke();
+        }
+
+        function drawGrid() {
+            if (!ctx) return;
+            ctx.strokeStyle = '#e0e0e0'; 
+            ctx.lineWidth = 0.5;
+            for (let x = 0; x <= canvas.width; x += 20) {
+                ctx.beginPath(); ctx.moveTo(x, 0); ctx.lineTo(x, canvas.height); ctx.stroke();
+            }
+            for (let y = 0; y <= canvas.height; y += 20) {
+                ctx.beginPath(); ctx.moveTo(0, y); ctx.lineTo(canvas.width, y); ctx.stroke();
+            }
+            ctx.strokeStyle = '#888'; 
+            ctx.lineWidth = 1;
+            const midX = canvas.width / 2;
+            const midY = canvas.height / 2;
+            ctx.beginPath(); ctx.moveTo(0, midY); ctx.lineTo(canvas.width, midY); ctx.stroke();
+            ctx.beginPath(); ctx.moveTo(midX, 0); ctx.lineTo(midX, canvas.height); ctx.stroke();
+            
+            // Label axes
+            ctx.fillStyle = '#555';
+            ctx.font = '12px Arial';
+            ctx.fillText('O', midX - 15, midY + 15);
+            ctx.fillText('X', canvas.width - 15, midY + 15);
+            ctx.fillText('Y', midX - 15, 15);
+        }
+        
+        function updateInitialPoints() {
+            P1_coords.x = parseFloat(document.getElementById('p1x_in').value);
+            P1_coords.y = parseFloat(document.getElementById('p1y_in').value);
+            P2_coords.x = parseFloat(document.getElementById('p2x_in').value);
+            P2_coords.y = parseFloat(document.getElementById('p2y_in').value);
+            P3_coords.x = parseFloat(document.getElementById('p3x_in').value);
+            P3_coords.y = parseFloat(document.getElementById('p3y_in').value);
+        }
+        
+        function resetCanvas() {
+            if (!ctx) return;
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            drawGrid();
+            updateInitialPoints();
+            drawTriangle(P1_coords, P2_coords, P3_coords, 'blue');
+            
+            // Reset output
+            document.getElementById('p1tx_out').textContent = 'N/A';
+            document.getElementById('p1ty_out').textContent = 'N/A';
+            document.getElementById('p2tx_out').textContent = 'N/A';
+            document.getElementById('p2ty_out').textContent = 'N/A';
+            document.getElementById('p3tx_out').textContent = 'N/A';
+            document.getElementById('p3ty_out').textContent = 'N/A';
+        }
+        
+        function applyTransformations() {
+            if (!ctx) return;
+            
+            // Get input values
+            updateInitialPoints();
+            const tx = parseFloat(document.getElementById('tx_in').value);
+            const ty = parseFloat(document.getElementById('ty_in').value);
+            const angle = parseFloat(document.getElementById('angle_in').value);
+            const pivotX = parseFloat(document.getElementById('pivotX_in').value);
+            const pivotY = parseFloat(document.getElementById('pivotY_in').value);
+            
+            // Convert angle to radians
+            const angleRad = angle * Math.PI / 180;
+            
+            // Apply transformations
+            const P1_transformed = transformPoint(P1_coords.x, P1_coords.y, tx, ty, angleRad, pivotX, pivotY);
+            const P2_transformed = transformPoint(P2_coords.x, P2_coords.y, tx, ty, angleRad, pivotX, pivotY);
+            const P3_transformed = transformPoint(P3_coords.x, P3_coords.y, tx, ty, angleRad, pivotX, pivotY);
+            
+            // Clear canvas and redraw
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            drawGrid();
+            
+            // Draw original triangle
+            drawTriangle(P1_coords, P2_coords, P3_coords, 'blue');
+            
+            // Draw transformed triangle
+            drawTriangle(P1_transformed, P2_transformed, P3_transformed, 'red');
+            
+            // Update output
+            document.getElementById('p1tx_out').textContent = P1_transformed.x.toFixed(2);
+            document.getElementById('p1ty_out').textContent = P1_transformed.y.toFixed(2);
+            document.getElementById('p2tx_out').textContent = P2_transformed.x.toFixed(2);
+            document.getElementById('p2ty_out').textContent = P2_transformed.y.toFixed(2);
+            document.getElementById('p3tx_out').textContent = P3_transformed.x.toFixed(2);
+            document.getElementById('p3ty_out').textContent = P3_transformed.y.toFixed(2);
+            
+            // Highlight the output
+            document.getElementById('outputMath').classList.add('highlight');
+            setTimeout(() => {
+                document.getElementById('outputMath').classList.remove('highlight');
+            }, 2000);
+        }
+        
+        function transformPoint(x, y, tx, ty, angle, pivotX, pivotY) {
+            // First apply translation
+            let x_translated = x + tx;
+            let y_translated = y + ty;
+            
+            // Then apply rotation around pivot
+            const dx = x_translated - pivotX;
+            const dy = y_translated - pivotY;
+            
+            const x_rotated = pivotX + dx * Math.cos(angle) - dy * Math.sin(angle);
+            const y_rotated = pivotY + dx * Math.sin(angle) + dy * Math.cos(angle);
+            
+            return { x: x_rotated, y: y_rotated };
+        }
+        
+        function generateRandomVisual() {
+            if (!ctx) return;
+            
+            const canvasWidth = canvas.width;
+            const canvasHeight = canvas.height;
+            const margin = 20;
+            
+            // Random triangle points (within canvas margins)
+            document.getElementById('p1x_in').value = Math.floor(Math.random() * (canvasWidth - 2*margin)) + margin;
+            document.getElementById('p1y_in').value = Math.floor(Math.random() * (canvasHeight - 2*margin)) + margin;
+            document.getElementById('p2x_in').value = Math.floor(Math.random() * (canvasWidth - 2*margin)) + margin;
+            document.getElementById('p2y_in').value = Math.floor(Math.random() * (canvasHeight - 2*margin)) + margin;
+            document.getElementById('p3x_in').value = Math.floor(Math.random() * (canvasWidth - 2*margin)) + margin;
+            document.getElementById('p3y_in').value = Math.floor(Math.random() * (canvasHeight - 2*margin)) + margin;
+            
+            // Random translation values (reasonable range to keep triangle visible)
+            document.getElementById('tx_in').value = Math.floor(Math.random() * 100) - 50; // -50 to 50
+            document.getElementById('ty_in').value = Math.floor(Math.random() * 100) - 50; // -50 to 50
+            
+            // Random rotation angle (0 to 360 degrees)
+            document.getElementById('angle_in').value = Math.floor(Math.random() * 360);
+            
+            // Random pivot point (within canvas)
+            document.getElementById('pivotX_in').value = Math.floor(Math.random() * canvasWidth);
+            document.getElementById('pivotY_in').value = Math.floor(Math.random() * canvasHeight);
+            
+            // Apply the transformations to see the result
+            applyTransformations();
+        }
+        
+        // Initialize canvas when page loads
+        function initCanvas() {
+            if (document.getElementById('transformCanvas')) {
+                resetCanvas();
+            }
+        }
+        
+        // Check if DOM is already loaded
+        if (document.readyState === 'loading') {
+            document.addEventListener('DOMContentLoaded', initCanvas);
+        } else {
+            initCanvas();
+        }
+
+        // Add sidebar functionality if not already defined in script.js
+        function openNav() {
+            document.getElementById("sidebar").style.width = "250px";
+            document.getElementById("main").style.marginLeft = "250px";
+        }
+        
+        function closeNav() {
+            document.getElementById("sidebar").style.width = "0";
+            document.getElementById("main").style.marginLeft = "0";
+        }
+    </script>
+</body>
+</html>

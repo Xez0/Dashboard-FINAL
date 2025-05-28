@@ -1,0 +1,420 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Materi Pertemuan 14 - Aplikasi Grafika Komputer</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="style.css">
+    <style>
+        
+        .formula-section, .explanation-section {
+            border-radius: 10px;
+            padding: 25px;
+            margin-bottom: 30px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+            transition: all 0.3s ease;
+        }
+     
+        .formula-section {
+            background: linear-gradient(to right, #f9f9f9, #f5f5f5);
+            border-left: 4px solid var(--primary-color);
+        }
+        
+        .explanation-section {
+            background: linear-gradient(to right, #f0f8ff, #e6f3ff);
+            border-left: 4px solid #4a9eff;
+        }
+        
+        .formula-section h3, .explanation-section h3 {
+            margin-top: 0;
+            color: #333;
+            font-size: 1.4rem;
+            border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+            padding-bottom: 10px;
+            margin-bottom: 20px;
+        }
+        
+        pre {
+            background: #f0f0f0;
+            padding: 15px;
+            border-radius: 8px;
+            overflow-x: auto;
+            border: 1px solid #e0e0e0;
+            font-family: 'Courier New', monospace;
+            font-size: 0.9rem;
+            line-height: 1.5;
+        }
+        
+        /* Responsive adjustments */
+        @media (max-width: 768px) {
+            .formula-section, .explanation-section {
+                padding: 15px;
+            }
+            
+            pre {
+                font-size: 0.8rem;
+                padding: 10px;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            h1 {
+                font-size: 1.5rem;
+            }
+            
+            .formula-section h3, .explanation-section h3 {
+                font-size: 1.2rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Sidebar Structure -->
+    <div id="sidebar" class="sidebar">
+        <div class="sidebar-header">
+            <h3><i class="fas fa-graduation-cap"></i> Menu</h3>
+            <a href="javascript:void(0)" class="closebtn" onclick="closeNav()">&times;</a>
+        </div>
+        <a href="index.html" class="menu-item "><i class="fas fa-chart-pie"></i> DASHBOARD</a>
+        <a href="per1.html" class="menu-item "><i class="fas fa-book"></i> Pertemuan 1</a>
+        <a href="per2.html" class="menu-item "><i class="fas fa-book"></i> Pertemuan 2</a>
+        <a href="per3.html" class="menu-item "><i class="fas fa-book"></i> Pertemuan 3</a>
+        <a href="per4.html" class="menu-item "><i class="fas fa-book"></i> Pertemuan 4</a>
+        <a href="per5.html" class="menu-item "><i class="fas fa-book"></i> Pertemuan 5</a>
+        <a href="per6.html" class="menu-item "><i class="fas fa-book"></i> Pertemuan 6</a>
+        <a href="per7.html" class="menu-item "><i class="fas fa-book"></i> Pertemuan 7</a>
+        <a href="per8.html" class="menu-item "><i class="fas fa-book"></i> Pertemuan 8</a>
+        <a href="per9.html" class="menu-item "><i class="fas fa-book"></i> Pertemuan 9</a>
+        <a href="per10.html" class="menu-item "><i class="fas fa-book"></i> Pertemuan 10</a>
+        <a href="per11.html" class="menu-item "><i class="fas fa-book"></i> Pertemuan 11</a>
+        <a href="per12.html" class="menu-item "><i class="fas fa-book"></i> Pertemuan 12</a>
+        <a href="per13.html" class="menu-item "><i class="fas fa-book"></i> Pertemuan 13</a>
+        <a href="per14.html" class="menu-item active"><i class="fas fa-book"></i> Pertemuan 14</a>
+    </div>
+
+    <!-- Main Content Structure -->
+    <div id="main">
+        <button class="openbtn" onclick="openNav()"><i class="fas fa-bars"></i> Menu</button>
+        <div id="content-container">
+            <!-- Pertemuan 14 Content Area -->
+            <div class="pertemuan-content-area">
+                <h1>Pertemuan 14: Aplikasi Grafika Komputer</h1>
+
+                <!-- Visual Interaktif di Bagian Atas -->
+                <div class="interactive-section">
+                    <h3>Visualisasi Interaktif: Animasi Orang</h3>
+                    <p>Visualisasi ini menampilkan animasi orang berjalan dengan perubahan posisi dan bentuk, meniru konsep multi-threading pada contoh Java.</p>
+                    <!-- Controls and canvas - exactly as in reference image -->
+                    <div class="controls">
+                        <button id="toggleVizBtn"><i class="fas fa-play"></i> Mulai</button>
+                        <input type="range" id="vizSpeedSlider" min="20" max="200" value="100" step="10">
+                    </div>
+                    <canvas id="visualizationCanvas" width="500" height="250"></canvas>
+                </div>
+
+                <!-- Rumus/Formula di Tengah -->
+                <div class="formula-section">
+                    <h3>Rumus Animasi Pergerakan Objek</h3>
+                    <p>Pergerakan objek dalam animasi menggunakan rumus interpolasi posisi:</p>
+                    <pre>
+P(t) = P₀ + t × (P₁ - P₀)
+
+Dimana:
+P(t) = Posisi pada waktu t
+P₀ = Posisi awal
+P₁ = Posisi akhir
+t = Parameter waktu (0 ≤ t ≤ 1)
+                    </pre>
+                    
+                    <p>Untuk animasi yang lebih halus, kita dapat menggunakan kurva Bezier kubik:</p>
+                    <pre>
+B(t) = (1−t)³ × P₀ 
+     + 3(1−t)² × t × P₁ 
+     + 3(1−t) × t² × P₂ 
+     + t³ × P₃
+                    </pre>
+                </div>
+
+                <!-- Penjelasan Contoh Perhitungan di Bagian Bawah -->
+                <div class="explanation-section">
+                    <h3>Contoh Perhitungan Detail</h3>
+                    <p><strong>Contoh Perhitungan untuk Animasi Linear (t = 0.5):</strong></p>
+                    <p>Misalkan kita memiliki objek yang bergerak dari posisi awal x = 0 ke posisi akhir x = 100:</p>
+                    <pre>
+P(0.5) = 0 + 0.5 × (100 - 0)
+P(0.5) = 0 + 0.5 × 100
+P(0.5) = 50
+                    </pre>
+                    <p>Jadi pada t = 0.5 (setengah waktu animasi), objek berada pada posisi x = 50.</p>
+                    
+                    <p><strong>Contoh Perhitungan untuk Kurva Bezier (t = 0.5):</strong></p>
+                    <p>Misalkan kita memiliki 4 titik kontrol untuk kurva Bezier:</p>
+                    <ul>
+                        <li>P₀ = (50, 300)</li>
+                        <li>P₁ = (150, 100)</li>
+                        <li>P₂ = (300, 100)</li>
+                        <li>P₃ = (400, 300)</li>
+                    </ul>
+                    
+                    <p>Maka perhitungan untuk koordinat X pada t = 0.5 adalah:</p>
+                    <pre>
+X = (1-0.5)³ × 50 
+  + 3×(1-0.5)² × 0.5 × 150 
+  + 3×(1-0.5) × 0.5² × 300 
+  + 0.5³ × 400
+
+X = 0.125 × 50 + 0.375 × 150 + 0.375 × 300 + 0.125 × 400
+X = 6.25 + 56.25 + 112.5 + 50
+X = 225
+                    </pre>
+                    
+                    <p>Dan untuk koordinat Y pada t = 0.5:</p>
+                    <pre>
+Y = (1-0.5)³ × 300 
+  + 3×(1-0.5)² × 0.5 × 100 
+  + 3×(1-0.5) × 0.5² × 100 
+  + 0.5³ × 300
+
+Y = 0.125 × 300 + 0.375 × 100 + 0.375 × 100 + 0.125 × 300
+Y = 37.5 + 37.5 + 37.5 + 37.5
+Y = 150
+                    </pre>
+                    
+                    <p>Sehingga pada t = 0.5, objek berada pada posisi (225, 150) pada kurva Bezier.</p>
+                    
+                    <p>Dalam animasi orang berjalan di atas, kita menggunakan prinsip yang sama untuk menggerakkan objek dari kiri ke kanan dengan perubahan posisi kaki untuk memberikan efek berjalan yang realistis.</p>
+                </div>
+            </div> <!-- End pertemuan-content-area -->
+        </div> <!-- End content-container -->
+    </div> <!-- End main -->
+
+    <script src="script.js"></script>
+    <!-- Script for interactive visualization -->
+    <script>
+        // JavaScript for the Pertemuan 14 visualization (Java Animation Concept)
+        document.addEventListener("DOMContentLoaded", function() {
+            const vizCanvas = document.getElementById("visualizationCanvas");
+            const vizCtx = vizCanvas.getContext("2d");
+            const toggleVizBtn = document.getElementById("toggleVizBtn");
+            const vizSpeedSlider = document.getElementById("vizSpeedSlider");
+
+            // Make canvas responsive
+            function resizeCanvas() {
+                const container = vizCanvas.parentElement;
+                const containerWidth = container.clientWidth;
+                const ratio = vizCanvas.height / vizCanvas.width;
+                
+                // Set canvas display size (css pixels)
+                const maxWidth = 500;
+                const displayWidth = Math.min(containerWidth, maxWidth);
+                const displayHeight = displayWidth * ratio;
+                
+                vizCanvas.style.width = displayWidth + 'px';
+                vizCanvas.style.height = displayHeight + 'px';
+                
+                // Set canvas actual size in memory (scaled to account for extra pixel density)
+                const scale = window.devicePixelRatio;
+                vizCanvas.width = displayWidth * scale;
+                vizCanvas.height = displayHeight * scale;
+                
+                // Normalize coordinate system to use css pixels
+                vizCtx.scale(scale, scale);
+                
+                // Redraw if animation is not running
+                if (!isAnimating) {
+                    drawOrang(vizCtx, xOrang, yOrang, v);
+                }
+            }
+
+            // Animation variables - exactly as in Java code
+            let xOrang = -100, yOrang = 100; // Position for the moving object (person)
+            let v = 1; // State for the object's appearance/movement pattern
+            let x = 10, y = 10, a = 10, batas = 240; // Text position and color variables
+            let speedDelay = 200 - parseInt(vizSpeedSlider.value); // Invert slider value for speed
+            
+            let objectAnimationId = null;
+            let textAnimationId = null;
+            let isAnimating = false;
+
+            // --- Drawing Functions ---
+            function drawOrang(ctx, x, y, v) {
+                ctx.clearRect(0, 0, ctx.canvas.width / window.devicePixelRatio, ctx.canvas.height / window.devicePixelRatio);
+                
+                // Draw text with random color
+                drawText(ctx);
+                
+                // Set stroke style exactly as in Java code
+                ctx.strokeStyle = "white";
+                ctx.lineWidth = 6;
+                ctx.lineCap = "round";
+                ctx.lineJoin = "round";
+                
+                if (v == 1) {
+                    // First pose - exactly as in Java code
+                    // Head (Ellipse2D kepala)
+                    ctx.beginPath();
+                    ctx.ellipse(x + 38 + 10, y + 10 + 10, 10, 10, 0, 0, Math.PI * 2);
+                    ctx.fillStyle = "white";
+                    ctx.fill();
+                    ctx.stroke();
+                    
+                    // Body and limbs (GeneralPath gp)
+                    ctx.beginPath();
+                    // Left arm
+                    ctx.moveTo(x + 46, y + 32);
+                    ctx.lineTo(x + 34, y + 52);
+                    ctx.lineTo(x + 27, y + 73);
+                    // Right arm
+                    ctx.moveTo(x + 46, y + 32);
+                    ctx.lineTo(x + 54, y + 55);
+                    ctx.lineTo(x + 71, y + 72);
+                    // Torso and left leg
+                    ctx.moveTo(x + 46, y + 32);
+                    ctx.lineTo(x + 46, y + 69);
+                    ctx.lineTo(x + 46, y + 93);
+                    ctx.lineTo(x + 26, y + 112);
+                    // Right leg
+                    ctx.moveTo(x + 46, y + 69);
+                    ctx.lineTo(x + 59, y + 93);
+                    ctx.lineTo(x + 66, y + 118);
+                    ctx.stroke();
+                } else if (v == 2) {
+                    // Second pose - exactly as in Java code
+                    // Head (Ellipse2D kepala1)
+                    ctx.beginPath();
+                    ctx.ellipse(x + 42 + 10, y + 10 + 10, 10, 10, 0, 0, Math.PI * 2);
+                    ctx.fillStyle = "white";
+                    ctx.fill();
+                    ctx.stroke();
+                    
+                    // Body and limbs (GeneralPath gp1)
+                    ctx.beginPath();
+                    // Left arm
+                    ctx.moveTo(x + 46, y + 29);
+                    ctx.lineTo(x + 40, y + 48);
+                    ctx.lineTo(x + 40, y + 77);
+                    // Right arm
+                    ctx.moveTo(x + 46, y + 29);
+                    ctx.lineTo(x + 49, y + 58);
+                    ctx.lineTo(x + 51, y + 74);
+                    // Torso and left leg
+                    ctx.moveTo(x + 46, y + 29);
+                    ctx.lineTo(x + 46, y + 68);
+                    ctx.lineTo(x + 52, y + 90);
+                    ctx.lineTo(x + 46, y + 120);
+                    // Right leg
+                    ctx.moveTo(x + 46, y + 68);
+                    ctx.lineTo(x + 60, y + 92);
+                    ctx.lineTo(x + 38, y + 106);
+                    ctx.stroke();
+                }
+            }
+
+            function drawText(ctx) {
+                ctx.font = "35px Comic Sans MS";
+                ctx.fontWeight = "bold";
+                
+                // Generate random color as in Java code
+                let r = Math.min(255, Math.floor(Math.random() * 250));
+                let g = Math.min(255, Math.floor(Math.random() * 250));
+                let b = Math.min(255, Math.floor(Math.random() * 250));
+                ctx.fillStyle = `rgb(${r}, ${g}, ${b})`;
+                
+                // Draw text at position with small random offset
+                ctx.fillText("Hadi Sulaiman", 20 + x, 50 + y);
+            }
+
+            // --- Animation Loops ---
+            function animateObject() {
+                // Move object exactly as in Java code
+                if (xOrang < 500) {
+                    if (v == 1) {
+                        xOrang = xOrang + 10;
+                        v = 2;
+                    } else {
+                        xOrang = xOrang + 10;
+                        v = 1;
+                    }
+                } else {
+                    xOrang = -100;
+                }
+                
+                // Draw the current frame
+                drawOrang(vizCtx, xOrang, yOrang, v);
+                
+                // Schedule next frame if still animating
+                if (isAnimating) {
+                    objectAnimationId = setTimeout(animateObject, speedDelay);
+                }
+            }
+
+            // Text animation function - separate thread in Java
+            function animateText() {
+                // Update color variable exactly as in Java code
+                if (a < batas) {
+                    a = a + 15;
+                    batas = 240;
+                } else {
+                    a = a - 15;
+                    batas = 15;
+                }
+                
+                // Random text position as in Java code
+                x = Math.floor(Math.random() * 10);
+                y = Math.floor(Math.random() * 10);
+                
+                // Redraw if animating
+                if (isAnimating) {
+                    textAnimationId = setTimeout(animateText, 10); // Faster than object animation
+                }
+            }
+
+            // --- Control Functions ---
+            function toggleAnimation() {
+                if (!isAnimating) {
+                    // Start animation
+                    isAnimating = true;
+                    speedDelay = 200 - parseInt(vizSpeedSlider.value); // Invert slider value for speed
+                    toggleVizBtn.innerHTML = '<i class="fas fa-stop"></i> Stop';
+                    animateObject();
+                    animateText(); // Start text animation too
+                } else {
+                    // Stop animation
+                    isAnimating = false;
+                    if (objectAnimationId) {
+                        clearTimeout(objectAnimationId);
+                        objectAnimationId = null;
+                    }
+                    if (textAnimationId) {
+                        clearTimeout(textAnimationId);
+                        textAnimationId = null;
+                    }
+                    toggleVizBtn.innerHTML = '<i class="fas fa-play"></i> Mulai';
+                }
+            }
+
+            // Initial setup
+            window.addEventListener('resize', resizeCanvas);
+            resizeCanvas(); // Initial call to set size
+            
+            // Initial draw with black background
+            vizCanvas.style.backgroundColor = "black";
+            drawOrang(vizCtx, xOrang, yOrang, v);
+            
+            // Set up event listeners
+            if (toggleVizBtn) {
+                toggleVizBtn.addEventListener("click", toggleAnimation);
+            }
+            
+            if (vizSpeedSlider) {
+                // Update speed immediately when slider changes
+                vizSpeedSlider.addEventListener("input", function() {
+                    // Invert the slider value: higher value = lower delay = faster animation
+                    speedDelay = 200 - parseInt(vizSpeedSlider.value);
+                });
+            }
+        });
+    </script>
+</body>
+</html>

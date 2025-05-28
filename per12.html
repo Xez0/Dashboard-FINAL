@@ -1,0 +1,456 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Materi Pertemuan 12 - Grafika 3 Dimensi</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Link to existing style.css -->
+    <link rel="stylesheet" href="style.css">
+    <style>
+        .canvas-container {
+            display: flex;
+            justify-content: center;
+            margin: 20px 0;
+        }
+        canvas {
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        }
+        .controls {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 15px;
+            margin-bottom: 20px;
+            justify-content: center;
+        }
+        .control-item {
+            display: flex;
+            flex-direction: column;
+            min-width: 150px;
+        }
+        .control-item label {
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+        .control-item select {
+            padding: 8px;
+            border-radius: 4px;
+            border: 1px solid #ccc;
+            width: 100%;
+            min-width: 150px; /* Ensure minimum width */
+            font-size: 14px; /* Slightly smaller font size */
+            appearance: menulist; /* Standard dropdown appearance */
+            -webkit-appearance: menulist; /* For Safari */
+            -moz-appearance: menulist; /* For Firefox */
+        }
+        .control-item input {
+            padding: 8px;
+            border-radius: 4px;
+            border: 1px solid #ccc;
+        }
+        .output {
+            background: #f9f9f9;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+            margin: 30px 0;
+        }
+        .output h3 {
+            color: #2c3e50;
+            border-bottom: 2px solid #3498db;
+            padding-bottom: 10px;
+            margin-bottom: 20px;
+        }
+        .penjelasan-bawah {
+            background: #f0f8ff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+            margin: 30px 0;
+        }
+        .penjelasan-bawah h4 {
+            color: #2c3e50;
+            margin-top: 20px;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+        }
+        table, th, td {
+            border: 1px solid #ddd;
+        }
+        th {
+            background-color: #f2f2f2;
+            padding: 12px;
+            text-align: center;
+        }
+        td {
+            padding: 12px;
+            vertical-align: top;
+        }
+        pre {
+            background-color: #f5f5f5;
+            padding: 15px;
+            border-radius: 5px;
+            overflow-x: auto;
+            font-family: monospace;
+        }
+        .section-title {
+            color: #3498db;
+            font-size: 1.8em;
+            margin: 30px 0 15px 0;
+            text-align: center;
+        }
+        .section-subtitle {
+            color: #2c3e50;
+            font-size: 1.4em;
+            margin: 20px 0 10px 0;
+            border-left: 4px solid #3498db;
+            padding-left: 10px;
+        }
+        .formula {
+            display: flex;
+            flex-direction: column;
+            margin: 10px 0;
+            padding: 10px;
+            background-color: #f8f9fa;
+            border-radius: 5px;
+        }
+        .formula-line {
+            margin: 5px 0;
+            font-family: monospace;
+            font-size: 16px;
+        }
+        .formula-title {
+            font-weight: bold;
+            margin-bottom: 8px;
+            color: #2c3e50;
+        }
+    </style>
+</head>
+<body>
+    <!-- Sidebar Structure -->
+    <div id="sidebar" class="sidebar">
+        <div class="sidebar-header">
+            <h3><i class="fas fa-graduation-cap"></i> Menu</h3>
+            <a href="javascript:void(0)" class="closebtn" onclick="closeNav()">&times;</a>
+        </div>
+        <a href="index.html" class="menu-item "><i class="fas fa-chart-pie"></i> DASHBOARD</a>
+        <a href="per1.html" class="menu-item "><i class="fas fa-book"></i> Pertemuan 1</a>
+        <a href="per2.html" class="menu-item "><i class="fas fa-book"></i> Pertemuan 2</a>
+        <a href="per3.html" class="menu-item "><i class="fas fa-book"></i> Pertemuan 3</a>
+        <a href="per4.html" class="menu-item "><i class="fas fa-book"></i> Pertemuan 4</a>
+        <a href="per5.html" class="menu-item "><i class="fas fa-book"></i> Pertemuan 5</a>
+        <a href="per6.html" class="menu-item "><i class="fas fa-book"></i> Pertemuan 6</a>
+        <a href="per7.html" class="menu-item "><i class="fas fa-book"></i> Pertemuan 7</a>
+        <a href="per8.html" class="menu-item "><i class="fas fa-book"></i> Pertemuan 8</a>
+        <a href="per9.html" class="menu-item "><i class="fas fa-book"></i> Pertemuan 9</a>
+        <a href="per10.html" class="menu-item "><i class="fas fa-book"></i> Pertemuan 10</a>
+        <a href="per11.html" class="menu-item "><i class="fas fa-book"></i> Pertemuan 11</a>
+        <a href="per12.html" class="menu-item active"><i class="fas fa-book"></i> Pertemuan 12</a>
+        <a href="per13.html" class="menu-item "><i class="fas fa-book"></i> Pertemuan 13</a>
+        <a href="per14.html" class="menu-item "><i class="fas fa-book"></i> Pertemuan 14</a>
+    </div>
+
+    <!-- Main Content Structure -->
+    <div id="main">
+        <button class="openbtn" onclick="openNav()"><i class="fas fa-bars"></i> Menu</button>
+        <div id="content-container">
+            <!-- Pertemuan 12 Content Area -->
+            <div class="pertemuan-content-area">
+                <h1>Pertemuan 12: Grafika 3 Dimensi</h1>
+
+                <!-- BAGIAN 1: VISUALISASI INTERAKTIF (di atas) -->
+                <div class="section-title">Visualisasi Interaktif: Proyeksi 3D</div>
+                <p style="text-align: center;">Gunakan slider untuk memutar kubus dan pilih jenis proyeksi untuk memahami konsep dasar grafika 3D.</p>
+                
+                <div class="controls">
+                    <div class="control-item">
+                        <label for="projectionType">Proyeksi:</label>
+                        <select id="projectionType" style="width: 100%; min-width: 180px;">
+                            <option value="orthographic" selected>Orthographic</option>
+                            <option value="perspective">Perspective</option>
+                        </select>
+                    </div>
+                    <div class="control-item">
+                        <label for="rotateX">Rotasi X:</label>
+                        <input type="range" id="rotateX" min="-180" max="180" value="0">
+                    </div>
+                    <div class="control-item">
+                        <label for="rotateY">Rotasi Y:</label>
+                        <input type="range" id="rotateY" min="-180" max="180" value="0">
+                    </div>
+                    <div class="control-item">
+                        <label for="zoom">Zoom:</label>
+                        <input type="range" id="zoom" min="0.5" max="2.5" step="0.1" value="1">
+                    </div>
+                </div>
+
+                <div class="canvas-container">
+                    <canvas id="projectionCanvas" width="600" height="400"></canvas>
+                </div>
+
+                <!-- BAGIAN 2: RUMUS (di tengah) -->
+                <div class="section-title">Rumus Proyeksi 3D</div>
+                
+                <div class="output" id="outputMath">
+                    <h3>Transformasi dan Proyeksi</h3>
+                    
+                    <p><strong>Jumlah titik kubus: </strong><span id="jumlahTitik">8</span></p>
+                    
+                    <div class="section-subtitle">Rotasi X</div>
+                    <div class="formula">
+                        <div class="formula-line">x' = x</div>
+                        <div class="formula-line">y' = y·cos(θ) - z·sin(θ)</div>
+                        <div class="formula-line">z' = y·sin(θ) + z·cos(θ)</div>
+                    </div>
+                    
+                    <div class="section-subtitle">Rotasi Y</div>
+                    <div class="formula">
+                        <div class="formula-line">x' = x·cos(θ) + z·sin(θ)</div>
+                        <div class="formula-line">y' = y</div>
+                        <div class="formula-line">z' = -x·sin(θ) + z·cos(θ)</div>
+                    </div>
+                    
+                    <div class="section-subtitle">Proyeksi Orthographic</div>
+                    <div class="formula">
+                        <div class="formula-line">x_2D = x_3D · scale + offset_x</div>
+                        <div class="formula-line">y_2D = y_3D · scale + offset_y</div>
+                    </div>
+                    
+                    <div class="section-subtitle">Proyeksi Perspective</div>
+                    <div class="formula">
+                        <div class="formula-line">factor = distance ÷ (distance - z_3D)</div>
+                        <div class="formula-line">x_2D = x_3D · factor · scale + offset_x</div>
+                        <div class="formula-line">y_2D = y_3D · factor · scale + offset_y</div>
+                    </div>
+                </div>
+
+                <!-- BAGIAN 3: PENJELASAN CONTOH PERHITUNGAN (di bawah) -->
+                <div class="section-title">Penjelasan Contoh Perhitungan</div>
+                
+                <div class="penjelasan-bawah" id="penjelasan">
+                    <h3>Contoh Perhitungan Detail</h3>
+                    
+                    <p>Misalkan kita memiliki titik (1, 1, 1) pada kubus, dengan rotasi X = 45° dan rotasi Y = 30°:</p>
+                    
+                    <div class="section-subtitle">Langkah 1: Rotasi pada sumbu X (45°)</div>
+                    <div class="formula">
+                        <div class="formula-line">x' = 1</div>
+                        <div class="formula-line">y' = 1·cos(45°) - 1·sin(45°) = 0.707 - 0.707 = 0</div>
+                        <div class="formula-line">z' = 1·sin(45°) + 1·cos(45°) = 0.707 + 0.707 = 1.414</div>
+                    </div>
+                    
+                    <div class="section-subtitle">Langkah 2: Rotasi pada sumbu Y (30°) dari hasil langkah 1</div>
+                    <div class="formula">
+                        <div class="formula-line">x'' = 1·cos(30°) + 1.414·sin(30°) = 0.866 + 0.707 = 1.573</div>
+                        <div class="formula-line">y'' = 0</div>
+                        <div class="formula-line">z'' = -1·sin(30°) + 1.414·cos(30°) = -0.5 + 1.225 = 0.725</div>
+                    </div>
+                    
+                    <div class="section-subtitle">Langkah 3: Proyeksi ke bidang 2D</div>
+                    <p>Dengan parameter: scale = 50, offset_x = 250, offset_y = 200</p>
+                    
+                    <p><strong>Untuk proyeksi orthographic:</strong></p>
+                    <div class="formula">
+                        <div class="formula-line">x_2D = 1.573 · 50 + 250 = 328.65</div>
+                        <div class="formula-line">y_2D = 0 · 50 + 200 = 200</div>
+                    </div>
+                    
+                    <p><strong>Untuk proyeksi perspective (dengan distance = 5):</strong></p>
+                    <div class="formula">
+                        <div class="formula-line">factor = 5 ÷ (5 - 0.725) = 5 ÷ 4.275 = 1.17</div>
+                        <div class="formula-line">x_2D = 1.573 · 1.17 · 50 + 250 = 342.01</div>
+                        <div class="formula-line">y_2D = 0 · 1.17 · 50 + 200 = 200</div>
+                    </div>
+                    
+                    <p>Sehingga titik pada kubus setelah transformasi dan proyeksi orthographic adalah <strong>(328.65, 200)</strong>, dan setelah proyeksi perspective adalah <strong>(342.01, 200)</strong>.</p>
+                    
+                    <h4>Penjelasan Grafika 3 Dimensi</h4>
+                    <p>Grafika 3D memiliki kemampuan untuk membuat visualisasi dari sebuah benda yang nyata yang dapat dilihat dari berbagai sudut pandang. Hal inilah yang membuat grafika 3D banyak dipakai terutama dalam bidang desain dari sebuah produk.</p>
+                    
+                    <p>Dalam dunia 3D, posisi direpresentasikan menggunakan sistem koordinat tiga sumbu (X, Y, Z) seperti yang ditunjukkan pada visualisasi interaktif di atas. Visualisasi tersebut mendemonstrasikan bagaimana sebuah objek 3D (kubus) dapat diproyeksikan ke layar 2D menggunakan dua jenis proyeksi utama:</p>
+                    
+                    <ul>
+                        <li><strong>Proyeksi Orthographic:</strong> Proyeksi ini mengabaikan kedalaman objek, sehingga semua garis yang sejajar tetap sejajar setelah diproyeksikan. Proyeksi ini biasa digunakan dalam gambar teknik dan arsitektur.</li>
+                        <li><strong>Proyeksi Perspective:</strong> Proyeksi ini memperhitungkan kedalaman, sehingga objek yang lebih jauh terlihat lebih kecil. Proyeksi ini lebih mendekati cara mata manusia melihat dunia nyata.</li>
+                    </ul>
+                </div>
+            </div> <!-- End pertemuan-content-area -->
+        </div> <!-- End content-container -->
+    </div> <!-- End main -->
+
+    <!-- Link to existing script.js -->
+    <script src="script.js"></script>
+    <!-- Script for interactive visualization -->
+    <script>
+        // JavaScript for the 3D projection visualization will go here
+        const canvas = document.getElementById('projectionCanvas');
+        const ctx = canvas.getContext('2d');
+        const projectionTypeSelect = document.getElementById('projectionType');
+        const rotateXSlider = document.getElementById('rotateX');
+        const rotateYSlider = document.getElementById('rotateY');
+        const zoomSlider = document.getElementById('zoom');
+
+        let angleX = 0;
+        let angleY = 0;
+        let zoom = 1;
+        let projectionType = 'orthographic';
+
+        // Define cube vertices
+        const vertices = [
+            { x: -1, y: -1, z: -1 }, { x: 1, y: -1, z: -1 },
+            { x: 1, y: 1, z: -1 }, { x: -1, y: 1, z: -1 },
+            { x: -1, y: -1, z: 1 }, { x: 1, y: -1, z: 1 },
+            { x: 1, y: 1, z: 1 }, { x: -1, y: 1, z: 1 }
+        ];
+
+        // Define cube edges (indices into vertices array)
+        const edges = [
+            [0, 1], [1, 2], [2, 3], [3, 0], // back face
+            [4, 5], [5, 6], [6, 7], [7, 4], // front face
+            [0, 4], [1, 5], [2, 6], [3, 7]  // connecting edges
+        ];
+
+        function rotateX(point, angle) {
+            const rad = angle * Math.PI / 180;
+            const cos = Math.cos(rad);
+            const sin = Math.sin(rad);
+            const y = point.y * cos - point.z * sin;
+            const z = point.y * sin + point.z * cos;
+            return { x: point.x, y: y, z: z };
+        }
+
+        function rotateY(point, angle) {
+            const rad = angle * Math.PI / 180;
+            const cos = Math.cos(rad);
+            const sin = Math.sin(rad);
+            const x = point.x * cos + point.z * sin;
+            const z = -point.x * sin + point.z * cos;
+            return { x: x, y: point.y, z: z };
+        }
+
+        function project(point) {
+            const scale = 50 * zoom;
+            let x2d, y2d;
+
+            if (projectionType === 'perspective') {
+                // Simple perspective projection
+                const distance = 5; // Distance from camera to projection plane
+                const perspectiveFactor = distance / (distance - point.z);
+                x2d = point.x * perspectiveFactor * scale + canvas.width / 2;
+                y2d = point.y * perspectiveFactor * scale + canvas.height / 2;
+            } else { // orthographic
+                x2d = point.x * scale + canvas.width / 2;
+                y2d = point.y * scale + canvas.height / 2;
+            }
+            return { x: x2d, y: y2d };
+        }
+
+        function draw() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            
+            // Draw grid for better orientation
+            ctx.strokeStyle = '#e0e0e0';
+            ctx.lineWidth = 0.5;
+            
+            // Horizontal grid lines
+            for (let y = 0; y < canvas.height; y += 40) {
+                ctx.beginPath();
+                ctx.moveTo(0, y);
+                ctx.lineTo(canvas.width, y);
+                ctx.stroke();
+            }
+            
+            // Vertical grid lines
+            for (let x = 0; x < canvas.width; x += 40) {
+                ctx.beginPath();
+                ctx.moveTo(x, 0);
+                ctx.lineTo(x, canvas.height);
+                ctx.stroke();
+            }
+            
+            // Draw axes
+            ctx.strokeStyle = '#999';
+            ctx.lineWidth = 1;
+            
+            // X axis
+            ctx.beginPath();
+            ctx.moveTo(0, canvas.height/2);
+            ctx.lineTo(canvas.width, canvas.height/2);
+            ctx.stroke();
+            
+            // Y axis
+            ctx.beginPath();
+            ctx.moveTo(canvas.width/2, 0);
+            ctx.lineTo(canvas.width/2, canvas.height);
+            ctx.stroke();
+            
+            // Draw cube
+            ctx.strokeStyle = '#333';
+            ctx.lineWidth = 2;
+
+            const projectedPoints = vertices.map(vertex => {
+                let rotated = rotateX(vertex, angleX);
+                rotated = rotateY(rotated, angleY);
+                return project(rotated);
+            });
+
+            // Draw edges
+            edges.forEach(edge => {
+                const p1 = projectedPoints[edge[0]];
+                const p2 = projectedPoints[edge[1]];
+                ctx.beginPath();
+                ctx.moveTo(p1.x, p1.y);
+                ctx.lineTo(p2.x, p2.y);
+                ctx.stroke();
+            });
+            
+            // Draw vertices as red dots
+            ctx.fillStyle = "red";
+            projectedPoints.forEach(p => {
+                ctx.beginPath();
+                ctx.arc(p.x, p.y, 4, 0, 2 * Math.PI);
+                ctx.fill();
+            });
+            
+            // Add labels for axes
+            ctx.fillStyle = "#333";
+            ctx.font = "14px Arial";
+            ctx.fillText("X", canvas.width - 15, canvas.height/2 - 10);
+            ctx.fillText("Y", canvas.width/2 + 10, 15);
+            
+            // Add projection type label
+            ctx.font = "12px Arial";
+            ctx.fillText("Proyeksi: " + (projectionType === 'perspective' ? 'Perspective' : 'Orthographic'), 10, 20);
+            ctx.fillText("Rotasi X: " + angleX + "°", 10, 40);
+            ctx.fillText("Rotasi Y: " + angleY + "°", 10, 60);
+        }
+
+        // Event Listeners
+        projectionTypeSelect.addEventListener('change', (e) => {
+            projectionType = e.target.value;
+            draw();
+        });
+        rotateXSlider.addEventListener('input', (e) => {
+            angleX = parseInt(e.target.value);
+            draw();
+        });
+        rotateYSlider.addEventListener('input', (e) => {
+            angleY = parseInt(e.target.value);
+            draw();
+        });
+        zoomSlider.addEventListener('input', (e) => {
+            zoom = parseFloat(e.target.value);
+            draw();
+        });
+
+        // Initial draw
+        draw();
+
+    </script>
+</body>
+</html>

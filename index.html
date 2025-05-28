@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Website Pertemuan - Dashboard</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div id="sidebar" class="sidebar">
+        <div class="sidebar-header">
+            <h3><i class="fas fa-graduation-cap"></i> Menu</h3>
+            <a href="javascript:void(0)" class="closebtn" onclick="closeNav()">&times;</a>
+        </div>
+        <!-- Menu ke setiap pertemuan -->
+        <a href="index.html" class="menu-item"><i class="fas fa-chart-pie"></i> DASHBOARD</a>
+        <a href="per1.html" class="menu-item"><i class="fas fa-book"></i> Pertemuan 1</a>
+        <a href="per2.html" class="menu-item"><i class="fas fa-book"></i> Pertemuan 2</a>
+        <a href="per3.html" class="menu-item"><i class="fas fa-book"></i> Pertemuan 3</a>
+        <a href="per4.html" class="menu-item"><i class="fas fa-book"></i> Pertemuan 4</a>
+        <a href="per5.html" class="menu-item"><i class="fas fa-book"></i> Pertemuan 5</a>
+        <a href="per6.html" class="menu-item"><i class="fas fa-book"></i> Pertemuan 6</a>
+        <a href="per7.html" class="menu-item"><i class="fas fa-book"></i> Pertemuan 7</a>
+        <a href="per8.html" class="menu-item"><i class="fas fa-book"></i> Pertemuan 8</a>
+        <a href="per9.html" class="menu-item"><i class="fas fa-book"></i> Pertemuan 9</a>
+        <a href="per10.html" class="menu-item"><i class="fas fa-book"></i> Pertemuan 10</a>
+        <a href="per11.html" class="menu-item"><i class="fas fa-book"></i> Pertemuan 11</a>
+        <a href="per12.html" class="menu-item"><i class="fas fa-book"></i> Pertemuan 12</a>
+        <a href="per13.html" class="menu-item"><i class="fas fa-book"></i> Pertemuan 13</a>
+        <a href="per14.html" class="menu-item"><i class="fas fa-book"></i> Pertemuan 14</a>
+    </div>
+
+    <div id="main">
+        <button class="openbtn" onclick="openNav()"><i class="fas fa-bars"></i> Menu</button>
+        <div id="content-container">
+            <!-- isi konten dashboard -->
+            <div class="dashboard-page">
+                <h2 id="db"><i class="fas fa-tachometer-alt"></i> Dashboard</h2>
+                
+                <div class="summary-container">
+                    <p>Ringkasan progres pembelajaran Saya:</p>
+                    
+                    <div class="chart-container">
+                        <canvas id="progressChart"></canvas>
+                    </div>
+                    
+                    <div class="legend">
+                        <div class="legend-item">
+                            <div class="legend-color" style="background-color: rgb(54, 162, 235);"></div>
+                            <span>Quiz: 25%</span>
+                        </div>
+                        <div class="legend-item">
+                            <div class="legend-color" style="background-color: rgb(255, 99, 132);"></div>
+                            <span>Pertemuan: 33.8%</span>
+                        </div>
+                        <div class="legend-item">
+                            <div class="legend-color" style="background-color: rgb(255, 159, 64);"></div>
+                            <span>Materi: 41.3%</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="stats-container">
+                    <div class="stat-card">
+                        <h3><i class="fas fa-book-reader"></i> Pertemuan Selesai</h3>
+                        <p>5 dari 14 pertemuan</p>
+                        <div class="progress-bar-container">
+                            <div class="progress-bar" style="width: 35.7%;"></div>
+                        </div>
+                        <div class="progress-label">
+                            <span>Progres:</span>
+                            <span>35.7%</span>
+                        </div>
+                    </div>
+                    
+                    <div class="stat-card">
+                        <h3><i class="fas fa-clock"></i> Waktu Belajar</h3>
+                        <p>Total: 3 jam</p>
+                        <p>Rata-rata: 1 jam 30 menit/pertemuan</p>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>

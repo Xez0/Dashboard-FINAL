@@ -1,0 +1,1080 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="utf-8"/>
+    <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+    <title>Materi Pertemuan 2 - Titik, Palet Warna, dan Interaktif RGB/HSV</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet"/>
+    <link href="style.css" rel="stylesheet"/>
+    <style>
+        @import url("https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap");
+
+/* General Styling */
+:root {
+    /* Modern Color Palette */
+    --primary-color: #6366f1;
+    --primary-color-light: #818cf8;
+    --primary-color-dark: #4f46e5;
+    --sidebar-bg: #1e293b;
+    --sidebar-text-color: #f1f5f9;
+    --sidebar-icon-color: #94a3b8;
+    --sidebar-hover-bg: #334155;
+    --sidebar-active-bg: var(--primary-color);
+    --sidebar-active-text: #fff;
+    --sidebar-border-color: #334155;
+    --secondary-color: #f8fafc;
+    --text-color: #334155;
+    --heading-color: #0f172a;
+    --card-bg: #fff;
+    --border-color: #e2e8f0;
+    --shadow-color: rgba(0, 0, 0, 0.08);
+    --accent-color: #10b981;
+    --accent-color-light: #34d399;
+    --danger-color: #ef4444;
+    --warning-color: #f59e0b;
+}
+
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    font-family: "Poppins", sans-serif;
+    margin: 0;
+    background-color: var(--secondary-color);
+    color: var(--text-color);
+    line-height: 1.6;
+    overflow-x: hidden;
+    min-height: 100vh;
+}
+
+h2, h3, h4, h5 {
+    color: var(--heading-color);
+    font-weight: 600;
+    margin-bottom: 1rem;
+    line-height: 1.3;
+}
+
+p {
+    margin-bottom: 1rem;
+}
+
+/* --- Sidebar Redesign --- */
+.sidebar {
+    height: 100%;
+    width: 0;
+    position: fixed;
+    z-index: 1001;
+    top: 0;
+    left: 0;
+    background-color: var(--sidebar-bg);
+    box-shadow: 4px 0 15px rgba(0, 0, 0, 0.15);
+    overflow-y: auto;
+    overflow-x: hidden;
+    transition: width 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+    padding-top: 75px;
+    padding-bottom: 15px;
+    box-sizing: border-box;
+    border-right: none;
+}
+
+/* Sidebar Header Redesign */
+.sidebar-header {
+    padding: 0 25px;
+    background-color: rgba(0, 0, 0, 0.1);
+    border-bottom: 1px solid var(--sidebar-border-color);
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    box-sizing: border-box;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    height: 75px;
+    z-index: 10;
+}
+
+.sidebar-header h3 {
+    margin: 0;
+    color: var(--sidebar-text-color);
+    font-size: 1.1em;
+    font-weight: 500;
+    white-space: nowrap;
+    display: flex;
+    align-items: center;
+}
+
+.sidebar-header h3 i {
+    margin-right: 12px;
+    font-size: 1.2em;
+    color: var(--primary-color-light);
+}
+
+/* Sidebar Close Button Redesign */
+.sidebar .closebtn {
+    position: absolute;
+    top: 50%;
+    right: 25px;
+    transform: translatey(-50%);
+    font-size: 24px;
+    font-weight: 400;
+    padding: 8px;
+    color: var(--sidebar-icon-color);
+    text-decoration: none;
+    line-height: 1;
+    transition: color 0.3s ease, transform 0.3s ease, background-color 0.3s ease;
+    z-index: 11;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 36px;
+    height: 36px;
+}
+
+.sidebar .closebtn:hover {
+    color: var(--sidebar-text-color);
+    background-color: var(--sidebar-hover-bg);
+    transform: translatey(-50%) rotate(90deg);
+}
+
+/* Sidebar Menu Items Redesign */
+.sidebar a.menu-item {
+    display: flex;
+    align-items: center;
+    padding: 12px 25px;
+    text-decoration: none;
+    font-size: 15px;
+    font-weight: 400;
+    color: var(--sidebar-text-color);
+    transition: all 0.2s ease;
+    border-left: 4px solid transparent;
+    white-space: nowrap;
+    margin: 0 0 2px 0;
+    position: relative;
+    border-radius: 0;
+}
+
+.sidebar a.menu-item i {
+    margin-right: 15px;
+    width: 20px;
+    text-align: center;
+    transition: color 0.2s ease;
+    flex-shrink: 0;
+    font-size: 1.05em;
+    color: var(--sidebar-icon-color);
+}
+
+.sidebar a.menu-item:hover {
+    background-color: var(--sidebar-hover-bg);
+    color: #fff;
+    border-left-color: var(--primary-color-light);
+}
+
+.sidebar a.menu-item:hover i {
+    color: var(--primary-color-light);
+}
+
+.sidebar a.menu-item.active {
+    background-color: var(--sidebar-active-bg);
+    color: var(--sidebar-active-text);
+    border-left-color: var(--primary-color-light);
+    font-weight: 500;
+}
+
+.sidebar a.menu-item.active i {
+    color: var(--sidebar-active-text);
+}
+
+#db {
+    border-bottom: 2px solid var(--primary-color);
+    padding-bottom: 10px;
+    margin-bottom: 25px;
+    color: var(--primary-color);
+}
+
+/* Main Content Area Styling */
+#main {
+    transition: margin-left 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+    padding: 30px;
+    position: relative;
+    z-index: 1;
+    min-height: 100vh;
+}
+
+.openbtn {
+    font-size: 16px;
+    cursor: pointer;
+    background-color: var(--primary-color);
+    color: white;
+    padding: 10px 18px;
+    border: none;
+    border-radius: 8px;
+    margin-bottom: 30px;
+    transition: all 0.3s ease;
+    box-shadow: 0 3px 8px rgba(99, 102, 241, 0.4);
+    display: inline-flex;
+    align-items: center;
+}
+
+.openbtn i {
+    margin-right: 8px;
+}
+
+.openbtn:hover {
+    background-color: var(--primary-color-dark);
+    box-shadow: 0 5px 12px rgba(99, 102, 241, 0.5);
+    transform: translateY(-2px);
+}
+
+.openbtn:active {
+    transform: translateY(0);
+}
+
+#content-container {
+    background-color: var(--card-bg);
+    padding: 30px;
+    border-radius: 16px;
+    box-shadow: 0 5px 20px var(--shadow-color);
+    min-height: 75vh;
+    border: 1px solid var(--border-color);
+}
+
+/* Interactive Color Section Styling */
+.interactive-color-section {
+    background-color: #f8fafc;
+    border-radius: 12px;
+    padding: 25px;
+    margin-bottom: 30px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+    border: 1px solid #e2e8f0;
+}
+
+.interactive-color-section h3 {
+    color: var(--primary-color);
+    font-size: 1.5rem;
+    margin-bottom: 15px;
+    border-bottom: 2px solid var(--primary-color-light);
+    padding-bottom: 10px;
+    display: inline-block;
+}
+
+.converter-flex-container {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 30px;
+    margin: 25px 0;
+}
+
+.converter-container {
+    flex: 1;
+    min-width: 280px;
+    background-color: white;
+    padding: 20px;
+    border-radius: 12px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+/* .converter-container:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.12);
+} */
+
+.converter-container h4 {
+    font-size: 1.2rem;
+    margin-bottom: 20px;
+    color: var(--heading-color);
+    text-align: center;
+}
+
+.color-display {
+    width: 100%;
+    height: 100px;
+    border-radius: 8px;
+    margin-bottom: 20px;
+    border: 1px solid #e2e8f0;
+    box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.05);
+    transition: all 0.3s ease;
+}
+
+.slider-group {
+    margin-bottom: 15px;
+}
+
+.slider-group label {
+    display: block;
+    margin-bottom: 8px;
+    font-weight: 500;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.value-display {
+    font-weight: 600;
+    color: var(--primary-color);
+    background-color: #f1f5f9;
+    padding: 2px 8px;
+    border-radius: 4px;
+    font-size: 0.9em;
+}
+
+input[type="range"] {
+    width: 100%;
+    height: 8px;
+    -webkit-appearance: none;
+    appearance: none;
+    background: #e2e8f0;
+    border-radius: 4px;
+    outline: none;
+    transition: all 0.3s ease;
+}
+
+input[type="range"]::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 18px;
+    height: 18px;
+    border-radius: 50%;
+    background: var(--primary-color);
+    cursor: pointer;
+    transition: all 0.3s ease;
+    border: 2px solid white;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
+}
+
+input[type="range"]::-moz-range-thumb {
+    width: 18px;
+    height: 18px;
+    border-radius: 50%;
+    background: var(--primary-color);
+    cursor: pointer;
+    transition: all 0.3s ease;
+    border: 2px solid white;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
+}
+
+input[type="range"]:hover::-webkit-slider-thumb {
+    background: var(--primary-color-dark);
+    transform: scale(1.1);
+}
+
+input[type="range"]:hover::-moz-range-thumb {
+    background: var(--primary-color-dark);
+    transform: scale(1.1);
+}
+
+/* Custom slider colors for RGB */
+#rSlider {
+    background: linear-gradient(to right, #f87171, #ef4444, #dc2626);
+}
+
+#gSlider {
+    background: linear-gradient(to right, #4ade80, #22c55e, #16a34a);
+}
+
+#bSlider {
+    background: linear-gradient(to right, #60a5fa, #3b82f6, #2563eb);
+}
+
+/* Custom slider colors for HSV */
+#hSlider {
+    background: linear-gradient(to right, 
+        #ef4444, #f97316, #eab308, 
+        #22c55e, #06b6d4, #3b82f6, 
+        #8b5cf6, #d946ef, #ec4899, #ef4444);
+}
+
+#sSlider {
+    background: linear-gradient(to right, #f1f5f9, var(--primary-color));
+}
+
+#vSlider {
+    background: linear-gradient(to right, #000000, #ffffff);
+}
+
+.output-group {
+    margin-top: 20px;
+    padding: 12px;
+    background-color: #f8fafc;
+    border-radius: 8px;
+    border: 1px solid #e2e8f0;
+}
+
+.output-group strong {
+    margin-right: 8px;
+    color: var(--heading-color);
+}
+
+/* Formulas Section */
+.formulas {
+    background-color: white;
+    padding: 25px;
+    border-radius: 12px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+    margin-top: 30px;
+}
+
+.formulas h4 {
+    color: var(--primary-color);
+    font-size: 1.3rem;
+    margin-bottom: 15px;
+}
+
+.formulas h5 {
+    font-size: 1.1rem;
+    margin: 20px 0 10px;
+    color: var(--heading-color);
+}
+
+.formulas pre {
+    background-color: #f1f5f9;
+    padding: 15px;
+    border-radius: 8px;
+    overflow-x: auto;
+    font-family: "Consolas", monospace;
+    font-size: 0.9rem;
+    line-height: 1.5;
+    border-left: 4px solid var(--primary-color);
+}
+
+/* Explanation Section */
+.explanation-section {
+    background-color: #f8fafc;
+    border-radius: 12px;
+    padding: 25px;
+    margin-top: 30px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+    border: 1px solid #e2e8f0;
+}
+
+.explanation-section h3 {
+    color: var(--primary-color);
+    font-size: 1.5rem;
+    margin-bottom: 15px;
+    border-bottom: 2px solid var(--primary-color-light);
+    padding-bottom: 10px;
+    display: inline-block;
+}
+
+.explanation-section h4 {
+    font-size: 1.2rem;
+    margin: 20px 0 10px;
+    color: var(--heading-color);
+}
+
+.explanation-section pre {
+    background-color: white;
+    padding: 15px;
+    border-radius: 8px;
+    overflow-x: auto;
+    font-family: "Consolas", monospace;
+    font-size: 0.9rem;
+    line-height: 1.5;
+    border-left: 4px solid var(--primary-color);
+    margin-bottom: 15px;
+}
+
+.explanation-section ul {
+    padding-left: 20px;
+    margin-bottom: 15px;
+}
+
+.explanation-section li {
+    margin-bottom: 8px;
+}
+
+/* Responsive Design */
+@media screen and (max-width: 1024px) {
+    .converter-flex-container {
+        gap: 20px;
+    }
+    
+    .converter-container {
+        padding: 15px;
+    }
+    
+    #content-container {
+        padding: 25px;
+    }
+}
+
+@media screen and (max-width: 768px) {
+    #main {
+        padding: 20px;
+        margin-left: 0 !important;
+    }
+    
+    .openbtn {
+        margin-bottom: 20px;
+        padding: 8px 15px;
+    }
+    
+    #content-container {
+        padding: 20px;
+        border-radius: 12px;
+    }
+    
+    .sidebar {
+        padding-top: 60px;
+        padding-bottom: 10px;
+        box-shadow: 3px 0 12px rgba(0, 0, 0, 0.1);
+    }
+    
+    .sidebar-header {
+        height: 60px;
+        padding: 0 15px;
+    }
+    
+    .sidebar-header h3 {
+        font-size: 1em;
+    }
+    
+    .sidebar-header h3 i {
+        margin-right: 8px;
+        font-size: 1.1em;
+    }
+    
+    .sidebar .closebtn {
+        right: 15px;
+        font-size: 22px;
+        width: 32px;
+        height: 32px;
+    }
+    
+    .sidebar a.menu-item {
+        font-size: 14px;
+        padding: 10px 15px;
+    }
+    
+    .sidebar a.menu-item i {
+        margin-right: 12px;
+        font-size: 1em;
+    }
+    
+    .converter-flex-container {
+        flex-direction: column;
+        gap: 20px;
+    }
+    
+    .converter-container {
+        min-width: 100%;
+    }
+    
+    .interactive-color-section, 
+    .formulas, 
+    .explanation-section {
+        padding: 20px;
+    }
+    
+    .interactive-color-section h3,
+    .explanation-section h3 {
+        font-size: 1.3rem;
+    }
+}
+
+@media screen and (max-width: 480px) {
+    #main {
+        padding: 15px;
+    }
+    
+    #content-container {
+        padding: 15px;
+        border-radius: 10px;
+    }
+    
+    .openbtn {
+        font-size: 14px;
+        padding: 8px 12px;
+    }
+    
+    .interactive-color-section, 
+    .formulas, 
+    .explanation-section {
+        padding: 15px;
+        border-radius: 10px;
+    }
+    
+    .converter-container {
+        padding: 15px;
+    }
+    
+    .color-display {
+        height: 80px;
+    }
+    
+    .interactive-color-section h3,
+    .explanation-section h3 {
+        font-size: 1.2rem;
+    }
+    
+    .formulas h4 {
+        font-size: 1.1rem;
+    }
+    
+    .formulas h5 {
+        font-size: 1rem;
+    }
+    
+    .formulas pre,
+    .explanation-section pre {
+        padding: 10px;
+        font-size: 0.8rem;
+    }
+}
+
+@media screen and (max-height: 450px) {
+    .sidebar {
+        padding-top: 10px;
+        padding-bottom: 5px;
+    }
+    
+    .sidebar a.menu-item {
+        font-size: 14px;
+        padding: 8px 15px;
+    }
+    
+    .sidebar-header {
+        display: none;
+    }
+    
+    .sidebar .closebtn {
+        top: 15px;
+        right: 15px;
+        transform: none;
+        background-color: transparent;
+    }
+    
+    .sidebar .closebtn:hover {
+        transform: rotate(90deg);
+        background-color: var(--sidebar-hover-bg);
+    }
+}
+
+/* Animation Effects */
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+@keyframes slideUp {
+    from { transform: translateY(20px); opacity: 0; }
+    to { transform: translateY(0); opacity: 1; }
+}
+
+.pertemuan-content-area {
+    animation: fadeIn 0.5s ease-out;
+}
+
+.converter-container {
+    animation: slideUp 0.5s ease-out;
+}
+
+.converter-container:nth-child(2) {
+    animation-delay: 0.1s;
+}
+
+.formulas, .explanation-section {
+    animation: slideUp 0.5s ease-out;
+    animation-delay: 0.2s;
+    animation-fill-mode: both;
+}
+
+    </style>
+</head>
+<body>
+    <!-- Sidebar Structure -->
+    <div class="sidebar" id="sidebar">
+        <div class="sidebar-header">
+            <h3><i class="fas fa-graduation-cap"></i> Menu</h3>
+            <a class="closebtn" href="javascript:void(0)" onclick="closeNav()">×</a>
+        </div>
+        <a class="menu-item" href="index.html"><i class="fas fa-chart-pie"></i> DASHBOARD</a>
+        <a class="menu-item" href="per1.html"><i class="fas fa-book"></i> Pertemuan 1</a>
+        <a class="menu-item active" href="per2.html"><i class="fas fa-book"></i> Pertemuan 2</a>
+        <a class="menu-item" href="per3.html"><i class="fas fa-book"></i> Pertemuan 3</a>
+        <a class="menu-item" href="per4.html"><i class="fas fa-book"></i> Pertemuan 4</a>
+        <a class="menu-item" href="per5.html"><i class="fas fa-book"></i> Pertemuan 5</a>
+        <a class="menu-item" href="per6.html"><i class="fas fa-book"></i> Pertemuan 6</a>
+        <a class="menu-item" href="per7.html"><i class="fas fa-book"></i> Pertemuan 7</a>
+        <a class="menu-item" href="per8.html"><i class="fas fa-book"></i> Pertemuan 8</a>
+        <a class="menu-item" href="per9.html"><i class="fas fa-book"></i> Pertemuan 9</a>
+        <a class="menu-item" href="per10.html"><i class="fas fa-book"></i> Pertemuan 10</a>
+        <a class="menu-item" href="per11.html"><i class="fas fa-book"></i> Pertemuan 11</a>
+        <a class="menu-item" href="per12.html"><i class="fas fa-book"></i> Pertemuan 12</a>
+        <a class="menu-item" href="per13.html"><i class="fas fa-book"></i> Pertemuan 13</a>
+        <a class="menu-item" href="per14.html"><i class="fas fa-book"></i> Pertemuan 14</a>
+    </div>
+    
+    <!-- Main Content Structure -->
+    <div id="main">
+        <button class="openbtn" onclick="openNav()"><i class="fas fa-bars"></i> Menu</button>
+        <div id="content-container">
+            <!-- Pertemuan 2 Content Area -->
+            <div class="pertemuan-content-area">
+                <h1>Pertemuan 2: TITIK DAN PALET WARNA </h1>
+
+                <div class="interactive-color-section">
+                    <h3>Interaktif: Konverter Warna RGB &amp; HSV</h3>
+                    <p>Gunakan slider di bawah ini untuk menjelajahi hubungan antara model warna RGB dan HSV. Mengubah nilai di satu model akan secara otomatis memperbarui nilai yang setara di model lainnya dan menampilkan warna yang dihasilkan.</p>
+                    
+                    <div class="converter-flex-container">
+                        <div class="converter-container">
+                            <h4>RGB ke HSV</h4>
+                            <div class="color-display" id="colorDisplayRGB"></div>
+                            <div class="slider-group">
+                                <label for="rSlider">Red: <span class="value-display" id="rValue">128</span></label>
+                                <input id="rSlider" max="255" min="0" type="range" value="128"/>
+                            </div>
+                            <div class="slider-group">
+                                <label for="gSlider">Green: <span class="value-display" id="gValue">128</span></label>
+                                <input id="gSlider" max="255" min="0" type="range" value="128"/>
+                            </div>
+                            <div class="slider-group">
+                                <label for="bSlider">Blue: <span class="value-display" id="bValue">128</span></label>
+                                <input id="bSlider" max="255" min="0" type="range" value="128"/>
+                            </div>
+                            <div class="output-group">
+                                <strong>HSV Output:</strong>
+                                <span class="value-display" id="hsvOutput">H: 0, S: 0, V: 50</span>
+                            </div>
+                        </div>
+                        
+                        <div class="converter-container">
+                            <h4>HSV ke RGB</h4>
+                            <div class="color-display" id="colorDisplayHSV"></div>
+                            <div class="slider-group">
+                                <label for="hSlider">Hue: <span class="value-display" id="hValue">0</span></label>
+                                <input id="hSlider" max="360" min="0" type="range" value="0"/>
+                            </div>
+                            <div class="slider-group">
+                                <label for="sSlider">Saturation: <span class="value-display" id="sValue">0</span></label>
+                                <input id="sSlider" max="100" min="0" type="range" value="0"/>
+                            </div>
+                            <div class="slider-group">
+                                <label for="vSlider">Value: <span class="value-display" id="vValue">50</span></label>
+                                <input id="vSlider" max="100" min="0" type="range" value="50"/>
+                            </div>
+                            <div class="output-group">
+                                <strong>RGB Output:</strong>
+                                <span class="value-display" id="rgbOutput">R: 128, G: 128, B: 128</span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="formulas">
+                        <h4>Rumus Konversi</h4>
+                        <p>Berikut adalah rumus yang digunakan untuk konversi antara RGB dan HSV (disederhanakan):</p>
+                        
+                        <h5>Konversi RGB ke HSV</h5>
+                        <pre>
+// 1. Normalisasi R, G, B ke rentang 0-1
+R' = R/255, G' = G/255, B' = B/255
+
+// 2. Cari nilai Max (Cmax) dan Min (Cmin)
+Cmax = max(R', G', B')
+Cmin = min(R', G', B')
+Δ = Cmax - Cmin
+
+// 3. Hitung Hue (H)
+if Δ = 0, H = 0°
+if Cmax = R', H = 60° * (((G' - B') / Δ) mod 6)
+if Cmax = G', H = 60° * (((B' - R') / Δ) + 2)
+if Cmax = B', H = 60° * (((R' - G') / Δ) + 4)
+(Jika H negatif, tambahkan 360°)
+
+// 4. Hitung Saturation (S)
+if Cmax = 0, S = 0
+if Cmax ≠ 0, S = Δ / Cmax
+
+// 5. Hitung Value (V)
+V = Cmax
+
+// 6. Konversi S dan V ke persentase (0-100%)
+S = S * 100%
+V = V * 100%
+                        </pre>
+                        
+                        <h5>Konversi HSV ke RGB</h5>
+                        <pre>
+// 1. Konversi H ke 0-360, S dan V ke 0-1
+H = H (biarkan 0-360)
+S = S / 100
+V = V / 100
+
+// 2. Hitung Chroma (C), X, dan m
+C = V * S
+X = C * (1 - |(H / 60°) mod 2 - 1|)
+m = V - C
+
+// 3. Tentukan (R', G', B') berdasarkan H
+if 0° ≤ H &lt; 60°,    (R', G', B') = (C, X, 0)
+if 60° ≤ H &lt; 120°,   (R', G', B') = (X, C, 0)
+if 120° ≤ H &lt; 180°,  (R', G', B') = (0, C, X)
+if 180° ≤ H &lt; 240°,  (R', G', B') = (0, X, C)
+if 240° ≤ H &lt; 300°,  (R', G', B') = (X, 0, C)
+if 300° ≤ H &lt; 360°,  (R', G', B') = (C, 0, X)
+
+// 4. Tambahkan m ke setiap komponen dan skala ke 0-255
+R = (R' + m) * 255
+G = (G' + m) * 255
+B = (B' + m) * 255
+(Bulatkan hasil R, G, B ke integer terdekat)
+                        </pre>
+                    </div>
+                </div>
+                
+                <div class="explanation-section">
+                    <h3>Penjelasan dengan Contoh Perhitungan Detail</h3>
+                    <h4 style="border-bottom: var(--primary-color) 3px solid; padding-bottom: 2px; display: inline-block; width: fit-content; border-radius: 0 0 5px 5px">Contoh 1: RGB ke HSV</h4>
+                    <p>Berikut adalah contoh perhitungan langkah demi langkah untuk mengkonversi nilai RGB ke HSV, mirip dengan bagaimana perhitungan detail dilakukan untuk kurva Bezier. Kita akan menggunakan nilai RGB contoh: <strong>R = 200, G = 100, B = 50</strong>.</p>
+                    
+                    <h4>Langkah 1: Normalisasi Nilai R, G, B ke Rentang 0-1</h4>
+                    <p>Nilai R, G, B asli (0-255) dibagi dengan 255.</p>
+                    <pre>
+R' = R / 255 = 200 / 255 ≈ 0.7843
+G' = G / 255 = 100 / 255 ≈ 0.3922
+B' = B / 255 =  50 / 255 ≈ 0.1961
+                    </pre>
+                    
+                    <h4>Langkah 2: Tentukan Cmax, Cmin, dan Δ (Delta)</h4>
+                    <p>Cmax adalah nilai maksimum dari R', G', B'.<br/>
+                       Cmin adalah nilai minimum dari R', G', B'.<br/>
+                       Δ adalah selisih antara Cmax dan Cmin.</p>
+                    <pre>
+Cmax = max(0.7843, 0.3922, 0.1961) = 0.7843
+Cmin = min(0.7843, 0.3922, 0.1961) = 0.1961
+Δ = Cmax - Cmin = 0.7843 - 0.1961 = 0.5882
+                    </pre>
+                    
+                    <h4>Langkah 3: Hitung Hue (H)</h4>
+                    <p>Rumus untuk Hue bergantung pada komponen mana (R', G', atau B') yang merupakan Cmax.</p>
+                    <pre>
+Karena Cmax = R' (0.7843), maka rumus yang digunakan:
+H = 60° * (((G' - B') / Δ) mod 6)
+
+H = 60° * (((0.3922 - 0.1961) / 0.5882) mod 6)
+H = 60° * ((0.1961 / 0.5882) mod 6)
+H = 60° * (0.3334 mod 6)
+H = 60° * 0.3334
+H ≈ 20.004° ≈ 20°
+
+(Jika H negatif, tambahkan 360°. Dalam kasus ini, H positif.)
+                    </pre>
+                    
+                    <h4>Langkah 4: Hitung Saturation (S)</h4>
+                    <p>Rumus untuk Saturation:</p>
+                    <pre>
+Jika Cmax = 0, maka S = 0.
+Jika Cmax ≠ 0, maka S = Δ / Cmax.
+
+Karena Cmax = 0.7843 (bukan 0):
+S = 0.5882 / 0.7843
+S ≈ 0.7501
+
+Untuk persentase: S ≈ 0.7501 * 100% = 75.01% ≈ 75%
+                    </pre>
+                    
+                    <h4>Langkah 5: Hitung Value (V)</h4>
+                    <p>Rumus untuk Value:</p>
+                    <pre>
+V = Cmax
+V = 0.7843
+
+Untuk persentase: V ≈ 0.7843 * 100% = 78.43% ≈ 78%
+                    </pre>
+                    
+                    <h4>Hasil Akhir Konversi:</h4>
+                    <p>Untuk RGB (200, 100, 50), nilai HSV yang didapatkan adalah sekitar:</p>
+                    <ul>
+                        <li><strong>H ≈ 20°</strong></li>
+                        <li><strong>S ≈ 75%</strong></li>
+                        <li><strong>V ≈ 78%</strong></li>
+                    </ul>
+                    <p>Visual interaktif di atas akan melakukan perhitungan serupa secara otomatis ketika Anda memasukkan nilai RGB dan menggerakkan slider. Penjelasan ini menunjukkan proses manual di baliknya.</p>
+                    
+                    <h4 style="border-bottom: var(--primary-color) 3px solid; padding-bottom: 2px; display: inline-block; width: fit-content; border-radius: 0 0 5px 5px">Contoh 2: HSV ke RGB</h4>
+                    <p>Berikut adalah contoh perhitungan langkah demi langkah untuk mengkonversi nilai HSV ke RGB. Kita akan menggunakan nilai HSV contoh: <strong>H = 120°, S = 60%, V = 75%</strong>.</p>
+                    
+                    <h4>Langkah 1: Normalisasi Nilai S dan V ke Rentang 0-1</h4>
+                    <p>Nilai S dan V (dalam persentase 0-100%) dibagi dengan 100.</p>
+                    <pre>
+H = 120° (tetap dalam rentang 0-360°)
+S = 60 / 100 = 0.6
+V = 75 / 100 = 0.75
+                    </pre>
+                    
+                    <h4>Langkah 2: Hitung Chroma (C), X, dan m</h4>
+                    <pre>
+C = V * S = 0.75 * 0.6 = 0.45
+X = C * (1 - |((H / 60°) mod 2) - 1|)
+  = 0.45 * (1 - |(120 / 60) mod 2 - 1|)
+  = 0.45 * (1 - |2 mod 2 - 1|)
+  = 0.45 * (1 - |0 - 1|)
+  = 0.45 * (1 - 1)
+  = 0.45 * 0
+  = 0
+
+m = V - C = 0.75 - 0.45 = 0.3
+                    </pre>
+                    
+                    <h4>Langkah 3: Tentukan (R', G', B') Berdasarkan H</h4>
+                    <p>Karena H = 120° berada dalam rentang 120° ≤ H < 180°, maka:</p>
+                    <pre>
+(R', G', B') = (0, C, X) = (0, 0.45, 0)
+                    </pre>
+                    
+                    <h4>Langkah 4: Tambahkan m ke Setiap Komponen dan Skala ke 0-255</h4>
+                    <pre>
+R = (R' + m) * 255 = (0 + 0.3) * 255 = 0.3 * 255 = 76.5 ≈ 77
+G = (G' + m) * 255 = (0.45 + 0.3) * 255 = 0.75 * 255 = 191.25 ≈ 191
+B = (B' + m) * 255 = (0 + 0.3) * 255 = 0.3 * 255 = 76.5 ≈ 77
+                    </pre>
+                    
+                    <h4>Hasil Akhir Konversi:</h4>
+                    <p>Untuk HSV (120°, 60%, 75%), nilai RGB yang didapatkan adalah sekitar:</p>
+                    <ul>
+                        <li><strong>R ≈ 77</strong></li>
+                        <li><strong>G ≈ 191</strong></li>
+                        <li><strong>B ≈ 77</strong></li>
+                    </ul>
+                    <p>Ini menghasilkan warna hijau yang cukup cerah dengan sedikit campuran abu-abu, karena saturation tidak 100% dan value tidak maksimal.</p>
+                    <p>Visual interaktif di atas akan melakukan perhitungan serupa secara otomatis ketika Anda memasukkan nilai HSV dan menggerakkan slider. Penjelasan ini menunjukkan proses manual di baliknya.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <script src="script.js"></script>
+    
+    <!-- JavaScript for Interactive Color Converter -->
+    <script>
+        // Elements for RGB -> HSV
+        const rSlider = document.getElementById('rSlider');
+        const gSlider = document.getElementById('gSlider');
+        const bSlider = document.getElementById('bSlider');
+        const rValue = document.getElementById('rValue');
+        const gValue = document.getElementById('gValue');
+        const bValue = document.getElementById('bValue');
+        const hsvOutput = document.getElementById('hsvOutput');
+        const colorDisplayRGB = document.getElementById('colorDisplayRGB');
+
+        // Elements for HSV -> RGB
+        const hSlider = document.getElementById('hSlider');
+        const sSlider = document.getElementById('sSlider');
+        const vSlider = document.getElementById('vSlider');
+        const hValue = document.getElementById('hValue');
+        const sValue = document.getElementById('sValue');
+        const vValue = document.getElementById('vValue');
+        const rgbOutput = document.getElementById('rgbOutput');
+        const colorDisplayHSV = document.getElementById('colorDisplayHSV');
+
+        // --- Conversion Functions ---
+        function rgbToHsv(r, g, b) {
+            r /= 255, g /= 255, b /= 255;
+            let max = Math.max(r, g, b), min = Math.min(r, g, b);
+            let h, s, v = max;
+            let d = max - min;
+            s = max == 0 ? 0 : d / max;
+
+            if (max == min) {
+                h = 0; // achromatic
+            } else {
+                switch (max) {
+                    case r: h = (g - b) / d + (g < b ? 6 : 0); break;
+                    case g: h = (b - r) / d + 2; break;
+                    case b: h = (r - g) / d + 4; break;
+                }
+                h /= 6;
+            }
+            // Ensure h is in [0, 360)
+            h = Math.round(h * 360);
+            if (h < 0) h += 360;
+
+            return [h, Math.round(s * 100), Math.round(v * 100)];
+        }
+
+        function hsvToRgb(h, s, v) {
+             s /= 100; v /= 100;
+            let r, g, b;
+            let i = Math.floor(h / 60);
+            let f = h / 60 - i;
+            let p = v * (1 - s);
+            let q = v * (1 - f * s);
+            let t = v * (1 - (1 - f) * s);
+
+            switch (i % 6) {
+                case 0: r = v, g = t, b = p; break;
+                case 1: r = q, g = v, b = p; break;
+                case 2: r = p, g = v, b = t; break;
+                case 3: r = p, g = q, b = v; break;
+                case 4: r = t, g = p, b = v; break;
+                case 5: r = v, g = p, b = q; break;
+            }
+            return [Math.round(r * 255), Math.round(g * 255), Math.round(b * 255)];
+        }
+
+        // --- Update Functions ---
+        function updateFromRGB() {
+            const r = parseInt(rSlider.value);
+            const g = parseInt(gSlider.value);
+            const b = parseInt(bSlider.value);
+
+            // Update RGB slider labels
+            rValue.textContent = r;
+            gValue.textContent = g;
+            bValue.textContent = b;
+
+            // Update ONLY the RGB color display
+            const color = `rgb(${r}, ${g}, ${b})`;
+            colorDisplayRGB.style.backgroundColor = color;
+
+            // Calculate and update ONLY the HSV output text in the RGB section
+            const [h, s, v] = rgbToHsv(r, g, b);
+            hsvOutput.textContent = `H: ${h}, S: ${s}%, V: ${v}%`;
+        }
+
+        function updateFromHSV() {
+            const h = parseInt(hSlider.value);
+            const s = parseInt(sSlider.value);
+            const v = parseInt(vSlider.value);
+
+            // Update HSV slider labels
+            hValue.textContent = h;
+            sValue.textContent = s;
+            vValue.textContent = v;
+
+            // Restore conversion and RGB output update
+            const [r, g, b] = hsvToRgb(h, s, v);
+            rgbOutput.textContent = `R: ${r}, G: ${g}, B: ${b}`;
+
+            // Restore color display update
+            const color = `rgb(${r}, ${g}, ${b})`;
+            colorDisplayHSV.style.backgroundColor = color;
+        }
+
+        // --- Event Listeners ---
+        // Add checks to ensure elements exist before adding listeners
+        if (rSlider) rSlider.addEventListener('input', updateFromRGB);
+        if (gSlider) gSlider.addEventListener('input', updateFromRGB);
+        if (bSlider) bSlider.addEventListener('input', updateFromRGB);
+
+        if (hSlider) hSlider.addEventListener('input', updateFromHSV);
+        if (sSlider) sSlider.addEventListener('input', updateFromHSV);
+        if (vSlider) vSlider.addEventListener('input', updateFromHSV);
+
+        // --- Initial Update ---
+        // Initialize both converters independently based on their default slider values
+        if (rSlider && gSlider && bSlider) {
+             updateFromRGB(); // Initialize RGB side
+        }
+        if (hSlider && sSlider && vSlider) {
+            updateFromHSV(); // Initialize HSV side
+        }
+    </script>
+</body>
+</html>
